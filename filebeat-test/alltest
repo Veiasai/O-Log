@@ -1,0 +1,81 @@
+top - 14:18:52 up 66 days, 5 min,  3 users,  load average: 0.02, 0.19, 0.27
+Tasks:   1 total,   0 running,   1 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.2 us,  0.1 sy,  0.0 ni, 99.7 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+KiB Mem : 13174611+total,  9089000 free,  2402796 used, 12025431+buff/cache
+KiB Swap:  4194300 total,  4186492 free,     7808 used. 12420456+avail Mem 
+
+   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
+ 96988 root      20   0 2116868  45596   9900 S 380.0  0.0   0:00.57 filebeat
+
+top - 14:18:55 up 66 days, 5 min,  3 users,  load average: 0.02, 0.19, 0.27
+Tasks:   1 total,   0 running,   1 sleeping,   0 stopped,   0 zombie
+%Cpu(s): 17.1 us,  1.3 sy,  0.0 ni, 81.2 id,  0.4 wa,  0.0 hi,  0.0 si,  0.0 st
+KiB Mem : 13174611+total,  9058716 free,  2432448 used, 12025494+buff/cache
+KiB Swap:  4194300 total,  4186492 free,     7808 used. 12417728+avail Mem 
+
+   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
+ 96988 root      20   0 3888004  63240   9964 S 597.0  0.0   0:18.54 filebeat
+
+top - 14:18:58 up 66 days, 5 min,  3 users,  load average: 0.10, 0.20, 0.27
+Tasks:   1 total,   0 running,   1 sleeping,   0 stopped,   0 zombie
+%Cpu(s): 17.3 us,  1.7 sy,  0.0 ni, 80.6 id,  0.4 wa,  0.0 hi,  0.0 si,  0.0 st
+KiB Mem : 13174611+total,  9049460 free,  2442504 used, 12025414+buff/cache
+KiB Swap:  4194300 total,  4186492 free,     7808 used. 12416696+avail Mem 
+
+   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
+ 96988 root      20   0 3888004  65356  10064 S 611.0  0.0   0:36.87 filebeat
+
+top - 14:19:01 up 66 days, 6 min,  3 users,  load average: 0.33, 0.25, 0.29
+Tasks:   1 total,   0 running,   1 sleeping,   0 stopped,   0 zombie
+%Cpu(s): 17.0 us,  1.6 sy,  0.0 ni, 81.0 id,  0.3 wa,  0.0 hi,  0.0 si,  0.0 st
+KiB Mem : 13174611+total,  9046716 free,  2443848 used, 12025554+buff/cache
+KiB Swap:  4194300 total,  4186492 free,     7808 used. 12416513+avail Mem 
+
+   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
+ 96988 root      20   0 3905968  66116  10084 S 601.3  0.1   0:54.97 filebeat
+
+top - 14:19:04 up 66 days, 6 min,  3 users,  load average: 0.33, 0.25, 0.29
+Tasks:   1 total,   0 running,   1 sleeping,   0 stopped,   0 zombie
+%Cpu(s): 16.7 us,  1.4 sy,  0.0 ni, 81.6 id,  0.3 wa,  0.0 hi,  0.0 si,  0.0 st
+KiB Mem : 13174611+total,  9047428 free,  2444656 used, 12025402+buff/cache
+KiB Swap:  4194300 total,  4186492 free,     7808 used. 12416480+avail Mem 
+
+   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
+ 96988 root      20   0 3905968  67316  10168 S 582.7  0.1   1:12.45 filebeat
+
+top - 14:19:07 up 66 days, 6 min,  3 users,  load average: 0.55, 0.29, 0.30
+Tasks:   1 total,   1 running,   0 sleeping,   0 stopped,   0 zombie
+%Cpu(s): 16.6 us,  1.3 sy,  0.0 ni, 81.8 id,  0.3 wa,  0.0 hi,  0.0 si,  0.0 st
+KiB Mem : 13174611+total,  9045444 free,  2445276 used, 12025539+buff/cache
+KiB Swap:  4194300 total,  4186492 free,     7808 used. 12416369+avail Mem 
+
+   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
+ 96988 root      20   0 3987896  69364  10168 R 577.1  0.1   1:29.82 filebeat
+
+top - 14:19:10 up 66 days, 6 min,  3 users,  load average: 0.55, 0.29, 0.30
+Tasks:   1 total,   0 running,   1 sleeping,   0 stopped,   0 zombie
+%Cpu(s): 16.5 us,  1.3 sy,  0.0 ni, 81.8 id,  0.3 wa,  0.0 hi,  0.0 si,  0.0 st
+KiB Mem : 13174611+total,  9046928 free,  2444976 used, 12025420+buff/cache
+KiB Swap:  4194300 total,  4186492 free,     7808 used. 12416423+avail Mem 
+
+   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
+ 96988 root      20   0 3987896  69608  10272 S 576.0  0.1   1:47.10 filebeat
+
+top - 14:19:13 up 66 days, 6 min,  3 users,  load average: 0.58, 0.31, 0.31
+Tasks:   1 total,   0 running,   1 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  9.2 us,  0.9 sy,  0.0 ni, 89.7 id,  0.1 wa,  0.0 hi,  0.0 si,  0.0 st
+KiB Mem : 13174611+total,  9047812 free,  2442960 used, 12025533+buff/cache
+KiB Swap:  4194300 total,  4186492 free,     7808 used. 12416601+avail Mem 
+
+   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
+ 96988 root      20   0 3987896  69608  10272 S 320.6  0.1   1:56.75 filebeat
+
+top - 14:19:16 up 66 days, 6 min,  3 users,  load average: 0.54, 0.30, 0.30
+Tasks:   1 total,   0 running,   1 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.1 us,  0.1 sy,  0.0 ni, 99.7 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+KiB Mem : 13174611+total,  9048480 free,  2443736 used, 12025388+buff/cache
+KiB Swap:  4194300 total,  4186492 free,     7808 used. 12416568+avail Mem 
+
+   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
+ 96988 root      20   0 3987896  69608  10272 S   0.0  0.1   1:56.75 filebeat
+
