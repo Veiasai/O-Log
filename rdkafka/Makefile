@@ -1,8 +1,18 @@
-CC=gcc
-CFLAGS=-lrdkafka -lz -lpthread -lrt
+CC = gcc
+CXX = g++
+CFLAGS = -lrdkafka -lz -lpthread -lrt
+CXXFLAGS = -std=c++11  -lrdkafka++ -lz -lpthread -lrt
 
-# Demo: Demo.o
-# 	$(CC) -g $^ -o $@
+bin = Demo example
+Target: $(bin)
+all: $(Target)
+
+Demo: Demo.o
+	$(CXX) -g $^ -o $@ $(CXXFLAGS)
 
 example: example.o
-	cc -g $^ -o $@ $(CFLAGS)
+	$(CC) -g $^ -o $@ $(CFLAGS)
+
+clean_files=$(bin) *.o *.d
+clean: 
+	rm $(clean_files) -rf 
