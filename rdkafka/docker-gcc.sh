@@ -1,1 +1,1 @@
-docker run -it --rm -v $(pwd):/home --name rdkaf gcc /bin/bash
+docker run -it --rm -v $(pwd):/home --name rdkaf veiasai/rdkafka:v1 /bin/bash
