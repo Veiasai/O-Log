@@ -5,14 +5,26 @@ import sys
 import string
 import random
 import re
+import copy
 
-LogModules = ["LogModules_1", "LogModules_2", "LogModules_3"]
-size = len(LogModules)
+StreamIDUpBound = 1000
 
-list = [chr(i) for i in range(65,91)] + [chr(i) for i in range(97,123)] + [ str(i) for i in range(10)] + ['!','@','#','$','%','&','_']
+RandomLogSet = []
 
-num = random.sample(list,10) 
-value = "".join(num)
+class PriceFeed:
+    FEEDCODE = "rb1000"         #string:20
+    INSTRUMENT_ID = 2306359659839382000 #int64
+    SEQUENCE = 0                #uint32
+    BID_PRICE = 0.0             #double
+    BID_VOLUME = 0              #int32
+    BID_COUNT = 0               #uint32
+    ASK_PRICE = 0.0             #double
+    ASK_VOLUME = 0              #int32
+    ASK_COUNT = 0               #uint32
+    LAST_TRADE_TICK = 0         #uint32
+    STREAM_ID = 0               #uint32
+    EVENT_TIME = 0              #int64
+    EXCHANGE_TIMESTAMP = 0      #int64
 
 class StatisticsFeed:
     FEEDCODE = "rb1000"         #string:20
@@ -36,12 +48,19 @@ class StatisticsFeed:
     EXCHANGE_TIMESTAMP = 0      #int64
     #SYMBOL_NAME:FEEDCODE
 
-def generateLegalStatisticsFeed(LastLegalStatisticsFeed):
+class Feed:
+    statisticsFeed = StatisticsFeed()
+    priceFeed = PriceFeed()
+
+def generateLegalStatisticsFeed(LastLegalFeed):
     timestamp = int(round(time.time() * 1000))
+    LastLegalStatisticsFeed = LastLegalFeed.statisticsFeed
+    LastLegalPriceFeed = LastLegalFeed.priceFeed
     statisticsFeed = StatisticsFeed()
     statisticsFeed.FEEDCODE = LastLegalStatisticsFeed.FEEDCODE
     statisticsFeed.INSTRUMENT_ID = LastLegalStatisticsFeed.INSTRUMENT_ID
-    statisticsFeed.LAST_PRICE = random.uniform(LastLegalStatisticsFeed.LOWER_PRICE_LIMIT, LastLegalStatisticsFeed.UPPER_PRICE_LIMIT)
+    statisticsFeed.LAST_PRICE = random.uniform(max(LastLegalStatisticsFeed.LOWER_PRICE_LIMIT, LastLegalPriceFeed.BID_PRICE*0.99), 
+                                               min(LastLegalStatisticsFeed.UPPER_PRICE_LIMIT, LastLegalPriceFeed.ASK_PRICE*1.01))
     statisticsFeed.LAST_VOLUME = random.randint(1,10)
     statisticsFeed.HIGH_PRICE = max(statisticsFeed.LAST_PRICE, LastLegalStatisticsFeed.HIGH_PRICE)
     statisticsFeed.LOW_PRICE = min(statisticsFeed.LAST_PRICE, LastLegalStatisticsFeed.LOW_PRICE)
@@ -51,54 +70,106 @@ def generateLegalStatisticsFeed(LastLegalStatisticsFeed):
     statisticsFeed.TURNOVER_VALUE = LastLegalStatisticsFeed.TURNOVER_VALUE + statisticsFeed.LAST_PRICE * statisticsFeed.LAST_VOLUME
     statisticsFeed.TURNOVER_VOLUME = LastLegalStatisticsFeed.TURNOVER_VOLUME + statisticsFeed.LAST_VOLUME
     statisticsFeed.SETTLEMENT_PRICE = LastLegalStatisticsFeed.SETTLEMENT_PRICE
-    statisticsFeed.STREAM_ID = random.randint(0, sys.maxsize)
+    statisticsFeed.STREAM_ID = random.randint(0, StreamIDUpBound)
     statisticsFeed.EVENT_TIME = timestamp * 1000000 + random.randint(0, 999999)
     statisticsFeed.UPPER_PRICE_LIMIT = LastLegalStatisticsFeed.UPPER_PRICE_LIMIT
     statisticsFeed.LOWER_PRICE_LIMIT = LastLegalStatisticsFeed.LOWER_PRICE_LIMIT
     statisticsFeed.OPEN_INTEREST = LastLegalStatisticsFeed.OPEN_INTEREST
     statisticsFeed.EXCHANGE_TIMESTAMP = timestamp / 100 * 100000000
-    return statisticsFeed
+    LastLegalFeed.statisticsFeed = statisticsFeed
+    return LastLegalFeed
+
+def generateLegalPriceFeed(LastLegalFeed):
+    timestamp = int(round(time.time() * 1000))
+    CurrentLegalStatisticsFeed = LastLegalFeed.statisticsFeed
+    LastLegalPriceFeed = LastLegalFeed.priceFeed
+    priceFeed = PriceFeed()
+    priceFeed.FEEDCODE = LastLegalPriceFeed.FEEDCODE
+    priceFeed.INSTRUMENT_ID = LastLegalPriceFeed.INSTRUMENT_ID
+    priceFeed.BID_PRICE = random.uniform(max(CurrentLegalStatisticsFeed.LOWER_PRICE_LIMIT, CurrentLegalStatisticsFeed.LAST_PRICE*0.99), 
+                                         CurrentLegalStatisticsFeed.LAST_PRICE)
+    priceFeed.BID_VOLUME = random.randint(1,30)
+    priceFeed.ASK_PRICE = random.uniform(CurrentLegalStatisticsFeed.LAST_PRICE, 
+                                         min(CurrentLegalStatisticsFeed.UPPER_PRICE_LIMIT, CurrentLegalStatisticsFeed.LAST_PRICE*1.01))
+    priceFeed.ASK_VOLUME = random.randint(1,30)
+    priceFeed.STREAM_ID = random.randint(0, StreamIDUpBound)
+    priceFeed.EVENT_TIME = timestamp * 1000000 + random.randint(0, 999999)
+    priceFeed.EXCHANGE_TIMESTAMP = timestamp / 100 * 100000000
+    LastLegalFeed.priceFeed = priceFeed
+    return LastLegalFeed
+
+def generateRandomData():
+    MessageType = ["Info", "Debug"]
+    resultStr = (' [%-6s]' % (MessageType[random.randint(0,1)]))
+    moduleLevel = 3
+    moduleType = 5
+    finalSet = set()
+    LastSet = set()
+    for typeStr in MessageType:
+        LastSet.add((' [%-6s]' % (typeStr)))
+    
+    NowSet = set()
+    for i in range(moduleLevel):
+        for tempStr in LastSet:
+            for j in range(moduleType):
+                NowSet.add(tempStr + (' [%s]' % ('LogModule_'+str(i)+'_'+str(j))))
+        finalSet = finalSet.union(NowSet)
+        LastSet = copy.deepcopy(NowSet)
+        NowSet = set()
+
+    list = [chr(i) for i in range(65,91)] + [chr(i) for i in range(97,123)] + [ str(i) for i in range(10)] + ['!','@','#','$','%','&','_']
+    for tempStr in finalSet:
+        messageLength = random.randint(2, 10)
+        resultStr = tempStr
+        for i in range(messageLength):
+            num = random.sample(list,10) 
+            value = "".join(num)
+            resultStr = resultStr +  " " + value
+        resultStr = resultStr + '\n'
+        RandomLogSet.append(resultStr)
 
 def GetRandomData():
     timestamp = int(round(time.time() * 1000))
-    MessageType = ["Info", "Debug"]
-    resultStr = '%i [%-6s] ' % (timestamp, MessageType[random.randint(0,1)])
-    moduleLevel = random.randint(1,3)
-    for i in range(moduleLevel):
-        resultStr = resultStr+('[%s] ' % ('LogModule_'+str(i)+'_'+str(random.randint(0,5))))
-    messageLength = random.randint(20, 200)
-    for i in range(messageLength):
-        resultStr = resultStr + random.choice(value)
-    resultStr = resultStr + '\n'
+    dataIndex = random.randint(0, len(RandomLogSet)-1)
+    resultStr = '%i%s' % (timestamp, RandomLogSet[dataIndex])
     return resultStr
     
-def writeData(LastLegalStatisticsFeed, TimeLength):
-    file = open(LastLegalStatisticsFeed.FEEDCODE+".log", "w")
+def writeData(LastLegalFeed, TimeLength):
+    file = open(LastLegalFeed.statisticsFeed.FEEDCODE+".log", "w")
     nowTime = int(round(time.time() * 1000))
     endTime = nowTime + TimeLength*1000
     LastSendTime = 0
     while(nowTime < endTime):
         sendTime = nowTime/100
         if(sendTime != LastSendTime and sendTime%5 == 0):
-            statisticsFeed = generateLegalStatisticsFeed(LastLegalStatisticsFeed)
+            LastLegalFeed = generateLegalStatisticsFeed(LastLegalFeed)
             timestamp = int(round(time.time() * 1000))
+            statisticsFeed = LastLegalFeed.statisticsFeed
             resultStr = '%i [Info  ] [DATA_RECORDER] [Data] LIMon_StatisticsFeed,%s,%i,%f,%f,%f,%f,%s,%f,%i,%f,%i,%i,%f,%i,%i,%f,%f,%i,%i\n' % \
                         (timestamp, statisticsFeed.FEEDCODE, statisticsFeed.INSTRUMENT_ID, statisticsFeed.HIGH_PRICE, statisticsFeed.LOW_PRICE \
                         ,statisticsFeed.OPENING_PRICE, statisticsFeed.CLOSING_PRICE, statisticsFeed.CLOSING_PRICE_TYPE, statisticsFeed.LAST_PRICE \
                         ,statisticsFeed.LAST_VOLUME, statisticsFeed.TURNOVER_VALUE, statisticsFeed.TURNOVER_VOLUME, statisticsFeed.TURNOVER_TRADE_COUNT \
                         ,statisticsFeed.SETTLEMENT_PRICE, statisticsFeed.STREAM_ID, statisticsFeed.EVENT_TIME, statisticsFeed.UPPER_PRICE_LIMIT \
                         ,statisticsFeed.LOWER_PRICE_LIMIT, statisticsFeed.OPEN_INTEREST, statisticsFeed.EXCHANGE_TIMESTAMP)
-            LastLegalStatisticsFeed = statisticsFeed
+            file.write(resultStr)
+            LastLegalFeed = generateLegalPriceFeed(LastLegalFeed)
+            timestamp = int(round(time.time() * 1000))
+            priceFeed = LastLegalFeed.priceFeed
+            resultStr = '%i [Info  ] [DATA_RECORDER] [Data] LIMon_PriceFeed,%s,%i,%i,%f,%i,%i,%f,%i,%i,%i,%i,%i,%i\n' % \
+                        (timestamp, priceFeed.FEEDCODE, priceFeed.INSTRUMENT_ID, priceFeed.SEQUENCE, priceFeed.BID_PRICE, \
+                         priceFeed.BID_VOLUME, priceFeed.BID_COUNT, priceFeed.ASK_PRICE, priceFeed.ASK_VOLUME, priceFeed.ASK_COUNT, \
+                         priceFeed.LAST_TRADE_TICK, priceFeed.STREAM_ID, priceFeed.EVENT_TIME, priceFeed.EXCHANGE_TIMESTAMP)
             file.write(resultStr)
             LastSendTime = sendTime
-        resultStr = GetRandomData()
-        file.write(resultStr)
-        time.sleep(0.001)
+        else:
+            resultStr = GetRandomData()
+            file.write(resultStr)
+        time.sleep(0.005)
         nowTime = int(round(time.time() * 1000))
     file.close()
 
-def generateInitStatisticsFeeds(num):
-    LastLegalStatisticsFeeds = {}
+def generateInitFeeds(num):
+    LastLegalFeeds = {}
     for i in range(num):
         tempStatisticsFeed = StatisticsFeed()
         tempStatisticsFeed.FEEDCODE = tempStatisticsFeed.FEEDCODE[0:len(tempStatisticsFeed.FEEDCODE)-len(str(i))]+str(i)
@@ -111,8 +182,20 @@ def generateInitStatisticsFeeds(num):
         tempStatisticsFeed.OPENING_PRICE = tempStatisticsFeed.SETTLEMENT_PRICE
         tempStatisticsFeed.CLOSING_PRICE = tempStatisticsFeed.SETTLEMENT_PRICE
         tempStatisticsFeed.OPEN_INTEREST = random.randint(0, sys.maxsize)
-        LastLegalStatisticsFeeds[i] = tempStatisticsFeed
-    return LastLegalStatisticsFeeds
+
+        tempPriceFeed = PriceFeed()
+        tempPriceFeed.FEEDCODE = tempStatisticsFeed.FEEDCODE
+        tempPriceFeed.INSTRUMENT_ID += i
+        tempPriceFeed.BID_PRICE = random.uniform(tempStatisticsFeed.SETTLEMENT_PRICE*0.99, tempStatisticsFeed.SETTLEMENT_PRICE*1.01)
+        tempPriceFeed.BID_VOLUME = random.randint(1,30)
+        tempPriceFeed.ASK_PRICE = random.uniform(tempPriceFeed.BID_PRICE, tempPriceFeed.BID_PRICE*1.01)
+        tempPriceFeed.ASK_VOLUME = random.randint(1,30)
+
+        tempFeed = Feed()
+        tempFeed.priceFeed = tempPriceFeed
+        tempFeed.statisticsFeed = tempStatisticsFeed
+        LastLegalFeeds[i] = tempFeed
+    return LastLegalFeeds
 
 def main():
     parse=argparse.ArgumentParser()
@@ -120,14 +203,28 @@ def main():
     parse.add_argument("--timeLength",type=int,default=10,help="time length")
     flags,unparsed=parse.parse_known_args(sys.argv[1:])
 
-    LastLegalStatisticsFeeds = generateInitStatisticsFeeds(flags.fileAmount)
+    generateRandomData()
+
+    LastLegalFeeds = generateInitFeeds(flags.fileAmount)
 
     threads = []
     for i in range(flags.fileAmount):
-        threads.append(threading.Thread(target=writeData,args=(LastLegalStatisticsFeeds[i], flags.timeLength,)))
+        threads.append(threading.Thread(target=writeData,args=(LastLegalFeeds[i], flags.timeLength,)))
 
     for t in threads:
         t.start()
 
     # writeData(LastLegalStatisticsFeeds[0], flags.timeLength)
 main()
+
+def testGenerateLegalStatisticsFeed():
+    LastLegalFeeds = generateInitFeeds(1)
+    LastLegalFeed = LastLegalFeeds[0]
+    totalTime = 0
+    for i in range(100):
+        beginTime = int(round(time.time() * 1000))
+        LastLegalFeed = generateLegalStatisticsFeed(LastLegalFeed)
+        endTime = int(round(time.time() * 1000))
+        totalTime += (endTime-beginTime)
+
+    print totalTime/100
