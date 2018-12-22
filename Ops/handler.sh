@@ -14,7 +14,7 @@ case "$1" in
     "kafka")
         case "$2" in
             "start")
-            ansible -i hosts kafka -m shell -a "source /etc/profile ; nohup /root/kafka_2.12-2.0.0/bin/kafka-server-start.sh config/server.properties >/dev/null 2>&1 &"
+            ansible -i hosts kafka -m shell -a "source /etc/profile ; nohup /root/kafka_2.12-2.0.0/bin/kafka-server-start.sh /root/kafka_2.12-2.0.0/config/server.properties >/dev/null 2>&1 &"
             ;;
             "stop")
             ansible -i hosts kafka -m shell -a "source /etc/profile ; nohup /root/kafka_2.12-2.0.0/bin/kafka-server-stop.sh >/dev/null 2>&1 &"
