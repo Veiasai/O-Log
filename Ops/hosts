@@ -1,0 +1,17 @@
+[slave]
+slave-1
+slave-2
+slave-3
+slave-4
+slave-5
+slave-6
+slave-7
+slave-8
+
+[kafka]
+slave-5
+slave-6
+slave-7
+
+[control]
+slave-8
