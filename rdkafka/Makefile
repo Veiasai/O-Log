@@ -1,17 +1,15 @@
 CC = gcc
 CXX = g++
-CFLAGS = -lrdkafka -lz -lpthread -lrt
-CXXFLAGS = -std=c++11  -lrdkafka++ -lz -lpthread -lrt
+CFLAGS = -lrdkafka -lz -lpthread -lrt 
+CXXFLAGS = -std=c++11  -lrdkafka++ -lz -lpthread -lrt -ljsoncpp
 
-bin = Demo example
+bin = monitor
 Target: $(bin)
+
 all: $(Target)
 
-Demo: Demo.o
+monitor: main.o demo_processor.o utils.o
 	$(CXX) -g $^ -o $@ $(CXXFLAGS)
-
-example: example.o
-	$(CC) -g $^ -o $@ $(CFLAGS)
 
 clean_files=$(bin) *.o *.d
 clean: 
