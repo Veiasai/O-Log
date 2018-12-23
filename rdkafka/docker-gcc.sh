@@ -1,1 +1,1 @@
-docker run -it --rm -v $(pwd):/home --name rdkaf veiasai/rdkafka:v2 /bin/bash
+docker run -it --rm -v $(pwd):/home/rdkafka --name rdkaf veiasai/rdkafka:v4 /bin/bash
