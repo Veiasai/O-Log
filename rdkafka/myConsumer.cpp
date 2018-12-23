@@ -131,13 +131,9 @@ void MyConsumer::subscribe()
 
 void MyConsumer::consume()
 {
-    std::cout<<"begin consume\n";
     RdKafka::Message *msg = consumer->consume(1000);
-    std::cout<<"get message\n";
     msg_consume(msg, NULL);
-    std::cout<<"after handle message\n";
     delete msg;
-    std::cout<<"end consume\n";
 }
 
 
