@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <csignal>
 #include <cstring>
+#include <vector>
 
 #ifndef _MSC_VER
 #include <sys/time.h>
@@ -20,7 +21,7 @@
 #endif
 
 #include <librdkafka/rdkafkacpp.h>
-#include <lib/tinyxml2.h>
+#include "lib/tinyxml2.h"
 
 class MyConsumer
 {
@@ -29,7 +30,8 @@ class MyConsumer
         void msg_consume(RdKafka::Message* message, void* opaque);
         
     public:
-        MyConsumer(string ConfPath);
+	MyConsumer();
+        MyConsumer(std::string ConfPath);
         ~MyConsumer();
         void subscribe();
         void consume();

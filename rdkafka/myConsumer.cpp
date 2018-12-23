@@ -1,5 +1,16 @@
 #include "myConsumer.h"
 
+extern bool run;
+static bool exit_eof = false;
+static int eof_cnt = 0;
+static int partition_cnt = 0;
+static int verbosity = 1;
+static long msg_cnt = 0;
+static int64_t msg_bytes = 0;
+static void sigterm (int sig) {
+	  run = false;
+}
+
 class ExampleRebalanceCb : public RdKafka::RebalanceCb {
     private:
         static void part_list_print (const std::vector<RdKafka::TopicPartition*>&partitions){
@@ -31,8 +42,6 @@ class ExampleRebalanceCb : public RdKafka::RebalanceCb {
 class ExampleEventCb : public RdKafka::EventCb {
     public:
         void event_cb (RdKafka::Event &event) {
-
-            print_time();
 
             switch (event.type())
             {
@@ -66,7 +75,10 @@ class ExampleEventCb : public RdKafka::EventCb {
         }
 };
 
-MyConsumer::MyConsumer(string ConfPath){
+MyConsumer::MyConsumer(){
+}
+
+MyConsumer::MyConsumer(std::string ConfPath){
     
     std::string errstr;
     
@@ -105,7 +117,7 @@ MyConsumer::~MyConsumer()
 
 void MyConsumer::subscribe()
 {
-    vector<string> topics;
+	std::vector<std::string> topics;
     topics.push_back("fluent-newData");
     RdKafka::ErrorCode err = consumer->subscribe(topics);
     if (err) {
