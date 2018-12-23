@@ -11,6 +11,6 @@ all: $(Target)
 monitor: main.o  myConsumer.o
 	$(CXX) -g $^ -o $@ $(CXXFLAGS)
 
-clean_files=$(bin) *.o *.d
+clean_files=$(bin) *.o *.d core.*
 clean: 
 	rm $(clean_files) -rf 

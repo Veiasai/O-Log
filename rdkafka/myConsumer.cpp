@@ -86,12 +86,12 @@ MyConsumer::MyConsumer(std::string ConfPath){
     RdKafka::Conf *tconf = RdKafka::Conf::create(RdKafka::Conf::CONF_TOPIC);
 
     ExampleRebalanceCb ex_rebalance_cb;
-    conf->set("rebalance_cb", &ex_rebalance_cb, errstr);
+    //conf->set("rebalance_cb", NULL, errstr);
     conf->set("group.id", "test_group_id", errstr);
     conf->set("metadata.broker.list", "ist-slave5:9092", errstr);
 
     ExampleEventCb ex_event_cb;
-    conf->set("event_cb", &ex_event_cb, errstr);
+    //conf->set("event_cb", NULL, errstr);
 
     conf->set("default_topic_conf", tconf, errstr);
     delete tconf;
@@ -108,6 +108,7 @@ MyConsumer::MyConsumer(std::string ConfPath){
     delete conf;
 
     std::cout << "% Created consumer " << consumer->name() << std::endl;
+    std::cout<<"end init\n";
 }
 
 MyConsumer::~MyConsumer()
@@ -117,7 +118,8 @@ MyConsumer::~MyConsumer()
 
 void MyConsumer::subscribe()
 {
-	std::vector<std::string> topics;
+    std::cout<<"begin subscribe\n";
+    std::vector<std::string> topics;
     topics.push_back("fluent-newData");
     RdKafka::ErrorCode err = consumer->subscribe(topics);
     if (err) {
@@ -129,9 +131,13 @@ void MyConsumer::subscribe()
 
 void MyConsumer::consume()
 {
+    std::cout<<"begin consume\n";
     RdKafka::Message *msg = consumer->consume(1000);
+    std::cout<<"get message\n";
     msg_consume(msg, NULL);
+    std::cout<<"after handle message\n";
     delete msg;
+    std::cout<<"end consume\n";
 }
 
 
