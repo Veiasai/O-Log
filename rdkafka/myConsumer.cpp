@@ -23,23 +23,21 @@ class ExampleRebalanceCb : public RdKafka::RebalanceCb {
 
     public:
         void rebalance_cb (RdKafka::KafkaConsumer *consumer,
-                    RdKafka::ErrorCode err,
-                            std::vector<RdKafka::TopicPartition*> &partitions) {
-            std::cout << "start rebalance_cb\n";
-            std::cerr << "RebalanceCb: " << RdKafka::err2str(err) << ": ";
-
-            part_list_print(partitions);
-
-            if (err == RdKafka::ERR__ASSIGN_PARTITIONS) {
+                RdKafka::ErrorCode err,
+                    std::vector<RdKafka::TopicPartition*> &partitions) {
+        if (err == RdKafka::ERR__ASSIGN_PARTITIONS) {
+            // application may load offets from arbitrary external
+            // storage here and update \p partitions
             consumer->assign(partitions);
-            partition_cnt = (int)partitions.size();
-            } else {
+        } else if (err == RdKafka::ERR__REVOKE_PARTITIONS) {
+            // Application may commit offsets manually here
+            // if auto.commit.enable=false
             consumer->unassign();
-            partition_cnt = 0;
-            }
-            eof_cnt = 0;
-            std::cout << "end rebalance_cb\n";
+        } else {
+            std::cerr << "Rebalancing error:" <<
+                        RdKafka::err2str(err) << std::endl;
         }
+    }
 };
 
 class ExampleEventCb : public RdKafka::EventCb {
