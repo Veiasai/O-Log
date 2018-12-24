@@ -2,6 +2,7 @@
 
 MyProducer::MyProducer(std::string ConfPath)
 {
+    std::string errstr = "";
     RdKafka::Conf *conf = RdKafka::Conf::create(RdKafka::Conf::CONF_GLOBAL);
     conf->set("metadata.broker.list", "ist-slave5:9092", errstr);
     
@@ -14,7 +15,7 @@ MyProducer::MyProducer(std::string ConfPath)
     std::cout << "% Created producer " << producer->name() << std::endl;
 
     RdKafka::Conf *tconf = RdKafka::Conf::create(RdKafka::Conf::CONF_TOPIC);
-    topic = RdKafka::Topic::create(producer, topic_str, tconf, errstr);
+    topic = RdKafka::Topic::create(producer, "rdkafkaPtest", tconf, errstr);
     delete tconf;
     if (!topic) {
       std::cerr << "Failed to create topic: " << errstr << std::endl;
@@ -28,7 +29,7 @@ MyProducer::~MyProducer()
     delete producer;
 }
 
-void MyProducer::produce(string message)
+void MyProducer::produce(std::string message)
 {
     int32_t partition = RdKafka::Topic::PARTITION_UA;
     RdKafka::ErrorCode resp =producer->produce(topic, partition,
@@ -39,7 +40,7 @@ void MyProducer::produce(string message)
 	    std::cerr << "% Produce failed: " <<RdKafka::err2str(resp) << std::endl;
     }
     else{
-        std::cerr << "% Produced message (" << line.size() << " bytes)" <<std::endl;
+        std::cerr << "% Produced message (" << message.size() << " bytes)" <<std::endl;
     }
     poll(0);
 }

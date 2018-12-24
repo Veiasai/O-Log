@@ -149,12 +149,14 @@ void MyConsumer::msg_consume(RdKafka::Message* message, void* opaque) {
 
         case RdKafka::ERR_NO_ERROR:
             /* Real message */
-            std::string *sp = static_cast<std::string*>((message->payload());
+	    {
+            std::string *sp = static_cast<std::string*>(message->payload());
             std::string message = *sp;
             delete sp;
-            std::cout<<message<<endl;
-            producer.produce(message);
+            std::cout<<message<<std::endl;
+            producer->produce(message);
             break;
+	    }
 
         case RdKafka::ERR__PARTITION_EOF:
             /* Last message */
