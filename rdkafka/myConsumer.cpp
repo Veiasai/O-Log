@@ -150,12 +150,10 @@ void MyConsumer::msg_consume(RdKafka::Message* message, void* opaque) {
         case RdKafka::ERR_NO_ERROR:
             /* Real message */
             {
-                std::string *sp = static_cast<std::string*>(message->payload());
-                std::string message = *sp;
                 // printf("%.*s\n", static_cast<int>(message->len()), static_cast<const char *>(message->payload()));
                 // char buffer[static_cast<int>(message->len()) + 1];
                 // printf(buffer, "%.*s", static_cast<int>(message->len()), static_cast<const char *>(message->payload()));
-                // std::string message(buffer);
+                std::string message(static_cast<const char *>(message->payload()));
                 std::cout<<message<<std::endl;
                 producer->produce(message);
                 break;
