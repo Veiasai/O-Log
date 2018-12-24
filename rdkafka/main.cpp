@@ -3,13 +3,13 @@
 bool run = true;
 
 int main(){
-    std::cout<<"0"<<std::endl;
     MyConsumer myConsumer("consumer.xml");
-    std::cout<<"1"<<std::endl;
+    MyProducer myProducer("producer.xml");
+    MyConsumer.setProducer(&myProducer);
     myConsumer.subscribe();
-    std::cout<<"2"<<std::endl;
     while(run){
         myConsumer.consume();
+        myProducer.poll(0);
     }
 }
 

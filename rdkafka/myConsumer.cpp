@@ -5,8 +5,6 @@ static bool exit_eof = false;
 static int eof_cnt = 0;
 static int partition_cnt = 0;
 static int verbosity = 1;
-static long msg_cnt = 0;
-static int64_t msg_bytes = 0;
 static void sigterm (int sig) {
 	  run = false;
 }
@@ -92,8 +90,8 @@ MyConsumer::MyConsumer(std::string ConfPath){
     RdKafka::Conf *conf = RdKafka::Conf::create(RdKafka::Conf::CONF_GLOBAL);
     RdKafka::Conf *tconf = RdKafka::Conf::create(RdKafka::Conf::CONF_TOPIC);
 
-    ExampleRebalanceCb ex_rebalance_cb;
-    conf->set("rebalance_cb", &ex_rebalance_cb, errstr);
+    // ExampleRebalanceCb ex_rebalance_cb;
+    // conf->set("rebalance_cb", &ex_rebalance_cb, errstr);
     conf->set("group.id", "test_group_id", errstr);
     conf->set("metadata.broker.list", "ist-slave5:9092", errstr);
 
@@ -151,29 +149,11 @@ void MyConsumer::msg_consume(RdKafka::Message* message, void* opaque) {
 
         case RdKafka::ERR_NO_ERROR:
             /* Real message */
-            msg_cnt++;
-            msg_bytes += message->len();
-            if (verbosity >= 3)
-                std::cerr << "Read msg at offset " << message->offset() << std::endl;
-            RdKafka::MessageTimestamp ts;
-            ts = message->timestamp();
-            if (verbosity >= 2 &&
-            ts.type != RdKafka::MessageTimestamp::MSG_TIMESTAMP_NOT_AVAILABLE) {
-            std::string tsname = "?";
-            if (ts.type == RdKafka::MessageTimestamp::MSG_TIMESTAMP_CREATE_TIME)
-            tsname = "create time";
-                else if (ts.type == RdKafka::MessageTimestamp::MSG_TIMESTAMP_LOG_APPEND_TIME)
-                tsname = "log append time";
-                std::cout << "Timestamp: " << tsname << " " << ts.timestamp << std::endl;
-            }
-            if (verbosity >= 2 && message->key()) {
-                std::cout << "Key: " << *message->key() << std::endl;
-            }
-            if (verbosity >= 1) {
-                printf("%.*s\n",
-                    static_cast<int>(message->len()),
-                    static_cast<const char *>(message->payload()));
-            }
+            std::string *sp = static_cast<std::string*>((message->payload());
+            std::string message = *sp;
+            delete sp;
+            std::cout<<message<<endl;
+            producer.produce(message);
             break;
 
         case RdKafka::ERR__PARTITION_EOF:
@@ -196,4 +176,9 @@ void MyConsumer::msg_consume(RdKafka::Message* message, void* opaque) {
             std::cerr << "Consume failed: " << message->errstr() << std::endl;
             run = false;
     }
+}
+
+void MyConsumer::setProducer(MyProducer *myProducer)
+{
+    producer = myProducer;
 }
