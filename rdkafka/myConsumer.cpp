@@ -14,6 +14,7 @@ static void sigterm (int sig) {
 class ExampleRebalanceCb : public RdKafka::RebalanceCb {
     private:
         static void part_list_print (const std::vector<RdKafka::TopicPartition*>&partitions){
+            std::cout << "start part list print\n";
             for (unsigned int i = 0 ; i < partitions.size() ; i++)
             std::cerr << partitions[i]->topic() <<
             "[" << partitions[i]->partition() << "], ";
@@ -24,6 +25,7 @@ class ExampleRebalanceCb : public RdKafka::RebalanceCb {
         void rebalance_cb (RdKafka::KafkaConsumer *consumer,
                     RdKafka::ErrorCode err,
                             std::vector<RdKafka::TopicPartition*> &partitions) {
+            std::cout << "start rebalance_cb\n";
             std::cerr << "RebalanceCb: " << RdKafka::err2str(err) << ": ";
 
             part_list_print(partitions);
@@ -36,16 +38,19 @@ class ExampleRebalanceCb : public RdKafka::RebalanceCb {
             partition_cnt = 0;
             }
             eof_cnt = 0;
+            std::cout << "end rebalance_cb\n";
         }
 };
 
 class ExampleEventCb : public RdKafka::EventCb {
     public:
         void event_cb (RdKafka::Event &event) {
-
+            std::cout << "start event_cb\n";
             switch (event.type())
             {
             case RdKafka::Event::EVENT_ERROR:
+            
+                std::cout << "event_error\n";
                 std::cerr << "ERROR (" << RdKafka::err2str(event.err()) << "): " <<
                     event.str() << std::endl;
                 if (event.err() == RdKafka::ERR__ALL_BROKERS_DOWN)
@@ -53,20 +58,24 @@ class ExampleEventCb : public RdKafka::EventCb {
                 break;
 
             case RdKafka::Event::EVENT_STATS:
+                std::cout << "event_stats\n";
                 std::cerr << "\"STATS\": " << event.str() << std::endl;
                 break;
 
             case RdKafka::Event::EVENT_LOG:
+                std::cout << "event_log\n";
                 fprintf(stderr, "LOG-%i-%s: %s\n",
                         event.severity(), event.fac().c_str(), event.str().c_str());
                 break;
 
             case RdKafka::Event::EVENT_THROTTLE:
-            std::cerr << "THROTTLED: " << event.throttle_time() << "ms by " <<
-            event.broker_name() << " id " << (int)event.broker_id() << std::endl;
-            break;
+                std::cout << "event_throttle\n";
+                std::cerr << "THROTTLED: " << event.throttle_time() << "ms by " <<
+                event.broker_name() << " id " << (int)event.broker_id() << std::endl;
+                break;
 
             default:
+                std::cout << "event_unknow\n";
                 std::cerr << "EVENT " << event.type() <<
                     " (" << RdKafka::err2str(event.err()) << "): " <<
                     event.str() << std::endl;
@@ -86,12 +95,12 @@ MyConsumer::MyConsumer(std::string ConfPath){
     RdKafka::Conf *tconf = RdKafka::Conf::create(RdKafka::Conf::CONF_TOPIC);
 
     ExampleRebalanceCb ex_rebalance_cb;
-    //conf->set("rebalance_cb", NULL, errstr);
+    conf->set("rebalance_cb", &ex_rebalance_cb, errstr);
     conf->set("group.id", "test_group_id", errstr);
     conf->set("metadata.broker.list", "ist-slave5:9092", errstr);
 
     ExampleEventCb ex_event_cb;
-    //conf->set("event_cb", NULL, errstr);
+    conf->set("event_cb", &ex_event_cb, errstr);
 
     conf->set("default_topic_conf", tconf, errstr);
     delete tconf;
