@@ -57,4 +57,4 @@ services:
       - ADVERTISED_HOST=kafka
       - ADVERTISED_PORT=9092
 
-branches: [test]
+branches: [test, master]
