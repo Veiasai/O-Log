@@ -5,14 +5,13 @@
 
 #include "json/json.h"
 #include "processor.h"
-#include "utils.h"
 
 using namespace std;
 
 class feedcmp
 {
 public:
-  bool operator() (const StatisticsFeed* & lhs, const StatisticsFeed* &rhs) const
+  bool operator() (const StatisticsFeed*  lhs, const StatisticsFeed* rhs) const
   {
     return (lhs->TIMESTAMP < rhs->TIMESTAMP);
   }
@@ -21,10 +20,11 @@ public:
 using pq = priority_queue<StatisticsFeed*, std::vector<StatisticsFeed*>, feedcmp>;
 
 class Demo_processor : public Processor{
-    static Json::Reader reader;
-    static Json::Value value;
-    static int64_t localTime;
+    public:
+        static int64_t localTime;
     private:
+        Json::Reader reader;
+        Json::Value value;
         string tags;
         map<string, pq*> msg_q;
         map<string, int64_t> msg_t;

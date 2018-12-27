@@ -1,10 +1,13 @@
+#pragma once
 #include "myProducer.h"
+#include "processor.h"
 
 class MyConsumer
 {
     private:
         RdKafka::KafkaConsumer *consumer;
         MyProducer *producer;
+        Processor * processor;
         void msg_consume(RdKafka::Message* message, void* opaque);
         
     public:
@@ -14,4 +17,5 @@ class MyConsumer
         void subscribe();
         void consume();
         void setProducer(MyProducer *myProducer);
+        void setProcessor(Processor * processor);
 };

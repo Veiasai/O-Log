@@ -8,7 +8,7 @@ Target: $(bin)
 
 all: $(Target)
 
-monitor: main.o  myConsumer.o myProducer.o
+monitor: main.o  myConsumer.o myProducer.o demo_processor.o utils.o
 	$(CXX) -g $^ -o $@ $(CXXFLAGS)
 
 clean_files=$(bin) *.o *.d core.*

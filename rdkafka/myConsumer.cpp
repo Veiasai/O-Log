@@ -93,7 +93,7 @@ MyConsumer::MyConsumer(std::string ConfPath){
     // ExampleRebalanceCb ex_rebalance_cb;
     // conf->set("rebalance_cb", &ex_rebalance_cb, errstr);
     conf->set("group.id", "test_group_id", errstr);
-    conf->set("metadata.broker.list", "ist-slave5:9092", errstr);
+    conf->set("metadata.broker.list", "kafka:9092", errstr);
 
     ExampleEventCb ex_event_cb;
     conf->set("event_cb", &ex_event_cb, errstr);
@@ -155,7 +155,10 @@ void MyConsumer::msg_consume(RdKafka::Message* message, void* opaque) {
                 // printf(buffer, "%.*s", static_cast<int>(message->len()), static_cast<const char *>(message->payload()));
                 std::string messageStr(static_cast<const char *>(message->payload()));
                 std::cout<<messageStr<<std::endl;
-                producer->produce(messageStr);
+                processor->exec(messageStr);
+                Pro_res res = processor->getResult();
+                if (res.code != Status::OK)
+                    producer->produce(res.json);
                 break;
             }
 
@@ -184,4 +187,8 @@ void MyConsumer::msg_consume(RdKafka::Message* message, void* opaque) {
 void MyConsumer::setProducer(MyProducer *myProducer)
 {
     producer = myProducer;
+}
+
+void MyConsumer::setProcessor(Processor * p){
+    processor = p;
 }

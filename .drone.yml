@@ -1,0 +1,60 @@
+workspace:
+  base: /olog
+  path: src/github.com/veiasai/olog
+
+pipeline:
+  build:
+    image: veiasai/rdkafka:v4
+    commands:
+      - cp fluent-bit/*.conf /cache
+      - cd rdkafka
+      - make
+    volumes:
+      - /tmp/cache:/cache
+
+  script:
+    image: python:2.7
+    commands:
+      - python PythonScript/generateData.py
+      - ls /olog/src/github.com/veiasai/olog
+    detach: true
+
+  fluent:
+    image: fluent/fluent-bit:1.0
+    volumes:
+      - /tmp/cache/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+      - /tmp/cache/parsers.conf:/fluent-bit/etc/parsers.conf
+    detach: true
+
+  consumer:
+    image:  jsenon/kafka-consumer:latest
+    environment:
+      - MY_KAFKABOOTSTRAP=kafka:9092 
+      - MY_TOPIC=rdkafkaPtest  
+      - MY_GROUPID=console-consumer
+    detach: true
+
+  test:
+    group: test
+    image: veiasai/rdkafka:v4
+    commands:
+      - chmod 700 test.sh && ./test.sh
+
+  mpublish:
+    group: test
+    image: plugins/docker
+    repo: veiasai/kafka-monitor
+    tags: ["latest"]
+    secrets: [ docker_username, docker_password ]
+    dockerfile: MonitorDockerfile
+    when:
+      branch: master
+
+services: 
+  kafka:
+    image:  spotify/kafka:latest
+    environment:
+      - ADVERTISED_HOST=kafka
+      - ADVERTISED_PORT=9092
+
+branches: [test]

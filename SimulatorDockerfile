@@ -1,0 +1,6 @@
+  spublish:
+    image: plugins/docker
+    repo: veiasai/kafka-simulator
+    tags: ["latest"]
+    secrets: [ docker_username, docker_password ]
+    dockerfile: SimulatorDockerfile

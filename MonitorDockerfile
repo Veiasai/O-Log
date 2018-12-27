@@ -1,0 +1,7 @@
+FROM veiasai/rdkafka:v4
+
+WORKDIR /home
+
+COPY rdkafka/monitor .
+
+CMD ["/home/monitor"]
