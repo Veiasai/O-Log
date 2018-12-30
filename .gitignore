@@ -1,5 +1,9 @@
 .vscode/
 core.*
 *.o
+PythonScript/*.log
 
 target/
+
+
+.idea/

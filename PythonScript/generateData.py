@@ -8,6 +8,8 @@ import re
 import copy
 
 StreamIDUpBound = 1000
+dropTime = 0
+dropInterval = 0
 
 RandomLogSet = []
 
@@ -139,9 +141,15 @@ def writeData(LastLegalFeed, TimeLength):
     nowTime = int(round(time.time() * 1000))
     endTime = nowTime + TimeLength*1000
     LastSendTime = 0
+    dropTimestamp = nowTime / 500 * 5 + dropInterval * 10
+    nowDropTime = 0
     while(nowTime < endTime):
-        sendTime = nowTime/100
-        if(sendTime != LastSendTime and sendTime%5 == 0):
+        sendTime = nowTime / 100
+        if (nowDropTime < dropTime and sendTime == dropTimestamp):
+            LastSendTime = sendTime
+            dropTimestamp = dropTimestamp + dropInterval * 10
+            nowDropTime = nowDropTime + 1
+        elif (sendTime != LastSendTime and sendTime % 5 == 0):
             LastLegalFeed = generateLegalStatisticsFeed(LastLegalFeed)
             timestamp = int(round(time.time() * 1000))
             statisticsFeed = LastLegalFeed.statisticsFeed
@@ -199,13 +207,21 @@ def generateInitFeeds(num):
 
 def main():
     parse=argparse.ArgumentParser()
-    parse.add_argument("--fileAmount",type=int,default=5,help="file amount")
-    parse.add_argument("--timeLength",type=int,default=10,help="time length")
+    parse.add_argument("--fileAmount", type=int, default=5, help="file amount")
+    parse.add_argument("--timeLength", type=int, default=240, help="time length")
+    parse.add_argument("--dropTime", type=int, default=4, help="drop time")
+    parse.add_argument("--dropInterval", type=int, default=10, help="drop interval (s)")
     flags,unparsed=parse.parse_known_args(sys.argv[1:])
 
     generateRandomData()
 
     LastLegalFeeds = generateInitFeeds(flags.fileAmount)
+    
+    global dropTime
+    global dropInterval
+
+    dropTime = flags.dropTime
+    dropInterval = flags.dropInterval
 
     threads = []
     for i in range(flags.fileAmount):

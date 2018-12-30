@@ -1,2 +1,2 @@
-timeout 30 ./rdkafka/monitor
+timeout 240 ./rdkafka/monitor
 exit 0

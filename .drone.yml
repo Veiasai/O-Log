@@ -7,7 +7,9 @@ pipeline:
     image: maven:alpine
     commands:
       - cd kafka-stream
-      - mvn install
+      - mvn package assembly:assembly
+    volumes:
+      - /home/drone/maven-repo:/root/.m2
 
   build:
     image: veiasai/rdkafka:v4
@@ -39,13 +41,13 @@ pipeline:
       - MY_TOPIC=rdkafkaPtest  
       - MY_GROUPID=console-consumer
     detach: true
-
+    
   streamconsumer:
     image:  jsenon/kafka-consumer:latest
     environment:
       - MY_KAFKABOOTSTRAP=kafka:9092 
-      - MY_TOPIC=rdkafkaPtest  
-      - MY_GROUPID=console-consumer
+      - MY_TOPIC=demo-count-output  
+      - MY_GROUPID=stream-consumer
     detach: true
 
   test:
@@ -56,10 +58,11 @@ pipeline:
 
   streamtest:
     group: test
-    image: java:8-alpine
+    image: veiasai/java:8
     commands:
       - cd kafka-stream
-      - chmod 700 kafka-run-class.sh && timeout 60 ./kafka-run-class.sh com.a114511.DemoCount
+      - timeout 120 java -jar target/KafkaStreamsDemo-1.0-SNAPSHOT-jar-with-dependencies.jar
+      - exit 0
 
   mpublish:
     group: test
@@ -72,8 +75,15 @@ pipeline:
       branch: master
 
 services: 
+  zookeeper:
+    image: zookeeper:3.4
+
   kafka:
-    image:  spotify/kafka:latest
+    image:  digitalwonderland/kafka:latest
     environment:
-      - ADVERTISED_HOST=kafka
-      - ADVERTISED_PORT=9092
+      - KAFKA_BROKER_ID=0
+      - KAFKA_ADVERTISED_HOST_NAME=kafka
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+
+  
