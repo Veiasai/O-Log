@@ -3,36 +3,56 @@
 #include "json/json.h"
 
 using namespace std;
+#define INTERVAL 500000000;
 
 void  Demo_processor::exec(const string & target){
-    //cout << "exec start" << endl;
+    int64_t t, et;
+    int64_t * et_p;
     if (reader.parse(target, value)){
-        //cout << "parse ok" << endl;
         res.code = Status::OK;
         try{
         string msg_type = value["MessageType"].asString();
-        //cout << msg_type << endl;
             switch (msg_type[6]){
                 // price and statistic
                 case 'P': break;
                 case 'S': {
-                    //cout << "Statistic" << endl;
                     StatisticsFeed* sf = new StatisticsFeed();
                     sf->build(value["detail"].asString());
                     if (msg_q[sf->FEEDCODE] == nullptr) {
+                        cout << "new pq:" <<  sf->FEEDCODE << " test:" << sf->OPEN_INTEREST << " time:" << sf->EXCHANGE_TIMESTAMP << endl;
                         msg_q[sf->FEEDCODE] = new pq;
-                        msg_t[sf->FEEDCODE] = sf->TIMESTAMP;
+                        msg_t[sf->FEEDCODE] = sf->EXCHANGE_TIMESTAMP;
                     }
-                    //cout << "build done" << endl;
+
+                    // skip head
+                    et = msg_t[sf->FEEDCODE];
+                    et_p = & msg_t[sf->FEEDCODE];
+                    if (et == sf->EXCHANGE_TIMESTAMP){
+                        msg_t[sf->FEEDCODE] += INTERVAL;
+                        delete sf;
+                        break;
+                    }
+
+                    // insert
                     pq * sf_pq = msg_q[sf->FEEDCODE];
                     sf_pq->push(sf);
-                    int64_t ct = msg_t[sf->FEEDCODE];
-                    while (sf_pq->size() > 0 && checkTime(sf_pq->top()->TIMESTAMP, ct)){
-                        sf_pq->pop();
-                        ct += 500;
+                    while (sf_pq->size() > 0){
+                        t = sf_pq->top()->EXCHANGE_TIMESTAMP;
+                        if (t == et){
+                            delete sf_pq->top();
+                            sf_pq->pop();
+                            et += INTERVAL;
+                        }else if (t < et){
+                            delete sf_pq->top();
+                            sf_pq->pop();
+                        }else{
+                            break;
+                        }
                     }
-                    msg_t[sf->FEEDCODE] = ct;
-                    if (sf_pq->size() > 120){
+
+                    // avoid the case: sf has been deleted
+                    *et_p = et;
+                    if (sf_pq->size() > 60){
                         // miss
                         res.code = Status::WARN;
                         char r[200];
@@ -40,7 +60,7 @@ void  Demo_processor::exec(const string & target){
                         res.json = string(r);
 
                         // ignore and continue
-                        msg_t[sf->FEEDCODE] += 500;
+                        msg_t[sf->FEEDCODE] += INTERVAL;
                     }else{
                         // wating
                     }
@@ -70,7 +90,9 @@ string Demo_processor::tag(){
 }
 
 bool Demo_processor::checkTime(int64_t t, int64_t expect_t){
-    if (t - expect_t < 500){
+    if (t == expect_t){
         return true;
+    }else{
+        return false;
     }
 }
