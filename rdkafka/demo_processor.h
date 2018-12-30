@@ -13,7 +13,7 @@ class feedcmp
 public:
   bool operator() (const StatisticsFeed*  lhs, const StatisticsFeed* rhs) const
   {
-    return (lhs->TIMESTAMP < rhs->TIMESTAMP);
+    return (lhs->EXCHANGE_TIMESTAMP > rhs->EXCHANGE_TIMESTAMP);
   }
 };
 
