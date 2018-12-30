@@ -12,7 +12,7 @@ MyProducer::MyProducer(std::string ConfPath)
       std::cerr << "Failed to create producer: " << errstr << std::endl;
       exit(1);
     }
-    std::cout << "% Created producer " << producer->name() << std::endl;
+    // std::cout << "% Created producer " << producer->name() << std::endl;
 
     RdKafka::Conf *tconf = RdKafka::Conf::create(RdKafka::Conf::CONF_TOPIC);
     topic = RdKafka::Topic::create(producer, "rdkafkaPtest", tconf, errstr);
