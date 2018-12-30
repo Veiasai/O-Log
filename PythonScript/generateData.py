@@ -8,6 +8,8 @@ import re
 import copy
 
 StreamIDUpBound = 1000
+OpenInterestUpBound = 1000
+
 dropTime = 0
 dropInterval = 0
 
@@ -189,7 +191,7 @@ def generateInitFeeds(num):
         tempStatisticsFeed.HIGH_PRICE = 0
         tempStatisticsFeed.OPENING_PRICE = tempStatisticsFeed.SETTLEMENT_PRICE
         tempStatisticsFeed.CLOSING_PRICE = tempStatisticsFeed.SETTLEMENT_PRICE
-        tempStatisticsFeed.OPEN_INTEREST = random.randint(0, sys.maxsize)
+        tempStatisticsFeed.OPEN_INTEREST = random.randint(0, OpenInterestUpBound)
 
         tempPriceFeed = PriceFeed()
         tempPriceFeed.FEEDCODE = tempStatisticsFeed.FEEDCODE
