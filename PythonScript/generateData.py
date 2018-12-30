@@ -147,11 +147,7 @@ def writeData(LastLegalFeed, TimeLength):
     nowDropTime = 0
     while(nowTime < endTime):
         sendTime = nowTime / 100
-        if (nowDropTime < dropTime and sendTime == dropTimestamp):
-            LastSendTime = sendTime
-            dropTimestamp = dropTimestamp + dropInterval * 10
-            nowDropTime = nowDropTime + 1
-        elif (sendTime != LastSendTime and sendTime % 5 == 0):
+        if (sendTime != LastSendTime and sendTime % 5 == 0):
             LastLegalFeed = generateLegalStatisticsFeed(LastLegalFeed)
             timestamp = int(round(time.time() * 1000))
             statisticsFeed = LastLegalFeed.statisticsFeed
@@ -161,7 +157,10 @@ def writeData(LastLegalFeed, TimeLength):
                         ,statisticsFeed.LAST_VOLUME, statisticsFeed.TURNOVER_VALUE, statisticsFeed.TURNOVER_VOLUME, statisticsFeed.TURNOVER_TRADE_COUNT \
                         ,statisticsFeed.SETTLEMENT_PRICE, statisticsFeed.STREAM_ID, statisticsFeed.EVENT_TIME, statisticsFeed.UPPER_PRICE_LIMIT \
                         ,statisticsFeed.LOWER_PRICE_LIMIT, statisticsFeed.OPEN_INTEREST, statisticsFeed.EXCHANGE_TIMESTAMP)
-            file.write(resultStr)
+            if (nowDropTime < dropTime and sendTime == dropTimestamp):
+                print resultStr
+            else:
+                file.write(resultStr)
             LastLegalFeed = generateLegalPriceFeed(LastLegalFeed)
             timestamp = int(round(time.time() * 1000))
             priceFeed = LastLegalFeed.priceFeed
@@ -169,7 +168,13 @@ def writeData(LastLegalFeed, TimeLength):
                         (timestamp, priceFeed.FEEDCODE, priceFeed.INSTRUMENT_ID, priceFeed.SEQUENCE, priceFeed.BID_PRICE, \
                          priceFeed.BID_VOLUME, priceFeed.BID_COUNT, priceFeed.ASK_PRICE, priceFeed.ASK_VOLUME, priceFeed.ASK_COUNT, \
                          priceFeed.LAST_TRADE_TICK, priceFeed.STREAM_ID, priceFeed.EVENT_TIME, priceFeed.EXCHANGE_TIMESTAMP)
-            file.write(resultStr)
+            if (nowDropTime < dropTime and sendTime == dropTimestamp):
+                print resultStr
+            else:
+                file.write(resultStr)
+            if (nowDropTime < dropTime and sendTime == dropTimestamp):
+                dropTimestamp = dropTimestamp + dropInterval * 10
+                nowDropTime = nowDropTime + 1
             LastSendTime = sendTime
         else:
             resultStr = GetRandomData()
@@ -209,9 +214,9 @@ def generateInitFeeds(num):
 
 def main():
     parse=argparse.ArgumentParser()
-    parse.add_argument("--fileAmount", type=int, default=5, help="file amount")
-    parse.add_argument("--timeLength", type=int, default=240, help="time length")
-    parse.add_argument("--dropTime", type=int, default=4, help="drop time")
+    parse.add_argument("--fileAmount", type=int, default=1, help="file amount")
+    parse.add_argument("--timeLength", type=int, default=30, help="time length")
+    parse.add_argument("--dropTime", type=int, default=1, help="drop time")
     parse.add_argument("--dropInterval", type=int, default=10, help="drop interval (s)")
     flags,unparsed=parse.parse_known_args(sys.argv[1:])
 
