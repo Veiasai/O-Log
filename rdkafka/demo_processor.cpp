@@ -6,8 +6,8 @@ using namespace std;
 #define INTERVAL 500000000;
 
 void  Demo_processor::exec(const string & target){
+    // target time and expected time
     int64_t t, et;
-    int64_t * et_p;
     if (reader.parse(target, value)){
         res.code = Status::OK;
         try{
@@ -18,23 +18,26 @@ void  Demo_processor::exec(const string & target){
                 case 'S': {
                     StatisticsFeed* sf = new StatisticsFeed();
                     sf->build(value["detail"].asString());
-                    if (msg_q[sf->FEEDCODE] == nullptr) {
-                        cout << "new pq:" <<  sf->FEEDCODE << " test:" << sf->OPEN_INTEREST << " time:" << sf->EXCHANGE_TIMESTAMP << endl;
-                        msg_q[sf->FEEDCODE] = new pq;
-                        msg_t[sf->FEEDCODE] = sf->EXCHANGE_TIMESTAMP;
+
+                    // avoid the case: sf has been deleted
+                    string feedcode = sf->FEEDCODE;
+
+                    if (msg_q[feedcode] == nullptr) {
+                        cout << "new pq:" <<  feedcode << " test:" << sf->OPEN_INTEREST << " time:" << sf->EXCHANGE_TIMESTAMP << endl;
+                        msg_q[feedcode] = new pq;
+                        msg_t[feedcode] = sf->EXCHANGE_TIMESTAMP;
                     }
 
                     // skip head
-                    et = msg_t[sf->FEEDCODE];
-                    et_p = & msg_t[sf->FEEDCODE];
+                    et = msg_t[feedcode];
                     if (et == sf->EXCHANGE_TIMESTAMP){
-                        msg_t[sf->FEEDCODE] += INTERVAL;
+                        msg_t[feedcode] += INTERVAL;
                         delete sf;
                         break;
                     }
 
                     // insert
-                    pq * sf_pq = msg_q[sf->FEEDCODE];
+                    pq * sf_pq = msg_q[feedcode];
                     sf_pq->push(sf);
                     while (sf_pq->size() > 0){
                         t = sf_pq->top()->EXCHANGE_TIMESTAMP;
@@ -50,17 +53,16 @@ void  Demo_processor::exec(const string & target){
                         }
                     }
 
-                    // avoid the case: sf has been deleted
-                    *et_p = et;
-                    if (sf_pq->size() > 60){
+                    msg_t[feedcode] = et;
+                    if (sf_pq->size() > 120){
                         // miss
                         res.code = Status::WARN;
                         char r[200];
-                        sprintf(r, "{\"FEEDCODE\":\"%s\", \"TIMESTAMP\":%lld, \"LOG\":\"%s\"}", sf->FEEDCODE.c_str(), msg_t[sf->FEEDCODE], "miss");
+                        sprintf(r, "{\"FEEDCODE\":\"%s\", \"TIMESTAMP\":%lld, \"LOG\":\"%s\"}", feedcode.c_str(), msg_t[feedcode], "miss");
                         res.json = string(r);
 
                         // ignore and continue
-                        msg_t[sf->FEEDCODE] += INTERVAL;
+                        msg_t[feedcode] += INTERVAL;
                     }else{
                         // wating
                     }
