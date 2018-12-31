@@ -6,6 +6,7 @@ import string
 import random
 import re
 import copy
+import os
 
 StreamIDUpBound = 1000
 OpenInterestUpBound = 1000
@@ -236,7 +237,7 @@ def main():
     global EnableNoise
     ProgramTag = flags.messageType
     EnableNoise = flags.enableNoise
-
+    os.mkdir(DirPath)
     threads = []
     for i in range(flags.fileAmount):
         if i<flags.dropFileAmount:
