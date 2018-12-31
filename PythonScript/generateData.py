@@ -82,7 +82,7 @@ def generateLegalStatisticsFeed(LastLegalFeed):
     statisticsFeed.UPPER_PRICE_LIMIT = LastLegalStatisticsFeed.UPPER_PRICE_LIMIT
     statisticsFeed.LOWER_PRICE_LIMIT = LastLegalStatisticsFeed.LOWER_PRICE_LIMIT
     statisticsFeed.OPEN_INTEREST = LastLegalStatisticsFeed.OPEN_INTEREST
-    statisticsFeed.EXCHANGE_TIMESTAMP = timestamp / 100 * 100000000
+    statisticsFeed.EXCHANGE_TIMESTAMP = LastLegalStatisticsFeed.EXCHANGE_TIMESTAMP + 500000000
     LastLegalFeed.statisticsFeed = statisticsFeed
     return LastLegalFeed
 
@@ -101,7 +101,7 @@ def generateLegalPriceFeed(LastLegalFeed):
     priceFeed.ASK_VOLUME = random.randint(1,30)
     priceFeed.STREAM_ID = random.randint(0, StreamIDUpBound)
     priceFeed.EVENT_TIME = timestamp * 1000000 + random.randint(0, 999999)
-    priceFeed.EXCHANGE_TIMESTAMP = timestamp / 100 * 100000000
+    priceFeed.EXCHANGE_TIMESTAMP = CurrentLegalStatisticsFeed.EXCHANGE_TIMESTAMP
     LastLegalFeed.priceFeed = priceFeed
     return LastLegalFeed
 
@@ -145,12 +145,11 @@ def writeData(LastLegalFeed, TimeLength, dropTime, dropInterval):
     file = open(DirPath+LastLegalFeed.statisticsFeed.FEEDCODE+".log", "w")
     nowTime = int(round(time.time() * 1000))
     endTime = nowTime + TimeLength*1000
-    LastSendTime = 0
     dropTimestamp = nowTime / 500 * 5 + dropInterval * 10
     nowDropTime = 0
     while(nowTime < endTime):
         sendTime = nowTime / 100
-        if (sendTime != LastSendTime and sendTime % 5 == 0):
+        if (sendTime > LastLegalFeed.statisticsFeed.EXCHANGE_TIMESTAMP/100000000+5):
             LastLegalFeed = generateLegalStatisticsFeed(LastLegalFeed)
             timestamp = int(round(time.time() * 1000))
             statisticsFeed = LastLegalFeed.statisticsFeed
@@ -161,7 +160,7 @@ def writeData(LastLegalFeed, TimeLength, dropTime, dropInterval):
                         ,statisticsFeed.SETTLEMENT_PRICE, statisticsFeed.STREAM_ID, statisticsFeed.EVENT_TIME, statisticsFeed.UPPER_PRICE_LIMIT \
                         ,statisticsFeed.LOWER_PRICE_LIMIT, statisticsFeed.OPEN_INTEREST, statisticsFeed.EXCHANGE_TIMESTAMP)
             if ProgramTag & StatisticsTag:
-                if (nowDropTime < dropTime and sendTime == dropTimestamp):
+                if (nowDropTime < dropTime and statisticsFeed.EXCHANGE_TIMESTAMP/100000000 == dropTimestamp):
                     print resultStr
                 else:
                     file.write(resultStr)
@@ -173,18 +172,21 @@ def writeData(LastLegalFeed, TimeLength, dropTime, dropInterval):
                          priceFeed.BID_VOLUME, priceFeed.BID_COUNT, priceFeed.ASK_PRICE, priceFeed.ASK_VOLUME, priceFeed.ASK_COUNT, \
                          priceFeed.LAST_TRADE_TICK, priceFeed.STREAM_ID, priceFeed.EVENT_TIME, priceFeed.EXCHANGE_TIMESTAMP)
             if ProgramTag & PriceTag:
-                if (nowDropTime < dropTime and sendTime == dropTimestamp):
+                if (nowDropTime < dropTime and statisticsFeed.EXCHANGE_TIMESTAMP/100000000 == dropTimestamp):
                     print resultStr
                 else:
                     file.write(resultStr)
-            if (nowDropTime < dropTime and sendTime == dropTimestamp):
+            if (nowDropTime < dropTime and statisticsFeed.EXCHANGE_TIMESTAMP/100000000 == dropTimestamp):
                 dropTimestamp = dropTimestamp + dropInterval * 10
                 nowDropTime = nowDropTime + 1
-            LastSendTime = sendTime
         elif EnableNoise:
             resultStr = GetRandomData()
             file.write(resultStr)
-        time.sleep(0.005)
+        if EnableNoise:
+            time.sleep(0.005)
+        else:
+            time.sleep(0.1)
+        
         nowTime = int(round(time.time() * 1000))
     file.close()
     print LastLegalFeed.statisticsFeed.FEEDCODE+" done"
@@ -203,6 +205,8 @@ def generateInitFeeds(num, feedCodeStartId):
         tempStatisticsFeed.OPENING_PRICE = tempStatisticsFeed.SETTLEMENT_PRICE
         tempStatisticsFeed.CLOSING_PRICE = tempStatisticsFeed.SETTLEMENT_PRICE
         tempStatisticsFeed.OPEN_INTEREST = random.randint(0, OpenInterestUpBound)
+        timestamp = int(round(time.time() * 1000))
+        tempStatisticsFeed.EXCHANGE_TIMESTAMP = timestamp/500*500000000
 
         tempPriceFeed = PriceFeed()
         tempPriceFeed.FEEDCODE = tempStatisticsFeed.FEEDCODE
@@ -226,7 +230,7 @@ def main():
     parse.add_argument("--dropInterval", type=int, default=10, help="drop interval (s)")
     parse.add_argument("--dropFileAmount", type=int, default=1, help="drop file amount")
     parse.add_argument("--messageType", type=int, default=3, help="messageType Price=0x1 Statistics=0x10")
-    parse.add_argument("--enableNoise", type=int, default=1, help="whether enable noise")
+    parse.add_argument("--enableNoise", type=int, default=0, help="whether enable noise")
     parse.add_argument("--feedCodeStartId", type=int, default=1000, help="whether enable noise")
 
     flags,unparsed=parse.parse_known_args(sys.argv[1:])

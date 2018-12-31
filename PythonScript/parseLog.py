@@ -15,11 +15,12 @@ file.close()
 lines = data.split("\n")
 newLines = []
 for line in lines:
-    templist = line.split("\t")
-    newLine = templist[0]
-    templist = templist[1].split(",")
-    newLine = newLine + " " + templist[3][11:17] + " " + templist[len(templist)-1][0:19]+"\n"
-    newLines.append(newLine)
+    if line != "":
+        templist = line.split("\t")
+        newLine = templist[0]
+        templist = templist[1].split(",")
+        newLine = newLine + " " + templist[3][11:17] + " " + templist[len(templist)-1][0:19]+"\n"
+        newLines.append(newLine)
 outputFile = open(LogDir + "temp.log", "w")
 for line in newLines:
     outputFile.write(line)
