@@ -67,10 +67,10 @@ void  Demo_processor::exec(const string & target){
                             sf_pq->pop();
                             if(sf_pq->size() > 0)
                             {
-                                timestamps +=",";
+                                timestamps +="\n";
                             }
                         }
-                        cout<<timestamps;
+                        cout<<timestamps<<endl;
                         while(temp_pq->size() > 0)
                         {
                             sf_pq->push(temp_pq->top());

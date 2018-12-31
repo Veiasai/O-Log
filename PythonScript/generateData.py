@@ -13,6 +13,7 @@ OpenInterestUpBound = 1000
 PriceTag = 0x1
 StatisticsTag = 0x2
 ProgramTag = 0x3
+EnableNoise = 1
 
 RandomLogSet = []
 
@@ -179,7 +180,7 @@ def writeData(LastLegalFeed, TimeLength, dropTime, dropInterval):
                 dropTimestamp = dropTimestamp + dropInterval * 10
                 nowDropTime = nowDropTime + 1
             LastSendTime = sendTime
-        else:
+        elif EnableNoise:
             resultStr = GetRandomData()
             file.write(resultStr)
         time.sleep(0.005)
@@ -223,6 +224,7 @@ def main():
     parse.add_argument("--dropInterval", type=int, default=10, help="drop interval (s)")
     parse.add_argument("--dropFileAmount", type=int, default=1, help="drop file amount")
     parse.add_argument("--messageType", type=int, default=3, help="messageType Price=0x1 Statistics=0x10")
+    parse.add_argument("--enableNoise", type=int, default=1, help="whether enable noise")
 
     flags,unparsed=parse.parse_known_args(sys.argv[1:])
 
@@ -231,7 +233,9 @@ def main():
     LastLegalFeeds = generateInitFeeds(flags.fileAmount)
 
     global ProgramTag
+    global EnableNoise
     ProgramTag = flags.messageType
+    EnableNoise = flags.enableNoise
 
     threads = []
     for i in range(flags.fileAmount):
