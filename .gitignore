@@ -2,6 +2,7 @@
 core.*
 *.o
 PythonScript/DataDir/*.log
+PythonScript/DebugLog/
 
 target/
 

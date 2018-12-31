@@ -188,11 +188,11 @@ def writeData(LastLegalFeed, TimeLength, dropTime, dropInterval):
         nowTime = int(round(time.time() * 1000))
     file.close()
 
-def generateInitFeeds(num):
+def generateInitFeeds(num, feedCodeStartId):
     LastLegalFeeds = {}
     for i in range(num):
         tempStatisticsFeed = StatisticsFeed()
-        tempStatisticsFeed.FEEDCODE = tempStatisticsFeed.FEEDCODE[0:len(tempStatisticsFeed.FEEDCODE)-len(str(i))]+str(i)
+        tempStatisticsFeed.FEEDCODE = tempStatisticsFeed.FEEDCODE[0:2]+str(i+feedCodeStartId)
         tempStatisticsFeed.INSTRUMENT_ID += i
         tempStatisticsFeed.SETTLEMENT_PRICE = random.uniform(1000, 9000)
         tempStatisticsFeed.LOWER_PRICE_LIMIT = tempStatisticsFeed.SETTLEMENT_PRICE * 0.9
@@ -226,12 +226,13 @@ def main():
     parse.add_argument("--dropFileAmount", type=int, default=1, help="drop file amount")
     parse.add_argument("--messageType", type=int, default=3, help="messageType Price=0x1 Statistics=0x10")
     parse.add_argument("--enableNoise", type=int, default=1, help="whether enable noise")
+    parse.add_argument("--feedCodeStartId", type=int, default=1000, help="whether enable noise")
 
     flags,unparsed=parse.parse_known_args(sys.argv[1:])
 
     generateRandomData()
 
-    LastLegalFeeds = generateInitFeeds(flags.fileAmount)
+    LastLegalFeeds = generateInitFeeds(flags.fileAmount, flags.feedCodeStartId)
 
     global ProgramTag
     global EnableNoise
@@ -253,7 +254,7 @@ def main():
 main()
 
 def testGenerateLegalStatisticsFeed():
-    LastLegalFeeds = generateInitFeeds(1)
+    LastLegalFeeds = generateInitFeeds(1,1000)
     LastLegalFeed = LastLegalFeeds[0]
     totalTime = 0
     for i in range(100):
