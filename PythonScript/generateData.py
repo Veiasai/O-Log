@@ -10,8 +10,9 @@ import copy
 StreamIDUpBound = 1000
 OpenInterestUpBound = 1000
 
-dropTime = 0
-dropInterval = 0
+PriceTag = 0x1
+StatisticsTag = 0x2
+ProgramTag = 0x3
 
 RandomLogSet = []
 
@@ -138,7 +139,7 @@ def GetRandomData():
     resultStr = '%i%s' % (timestamp, RandomLogSet[dataIndex])
     return resultStr
     
-def writeData(LastLegalFeed, TimeLength):
+def writeData(LastLegalFeed, TimeLength, dropTime, dropInterval):
     file = open(LastLegalFeed.statisticsFeed.FEEDCODE+".log", "w")
     nowTime = int(round(time.time() * 1000))
     endTime = nowTime + TimeLength*1000
@@ -157,10 +158,11 @@ def writeData(LastLegalFeed, TimeLength):
                         ,statisticsFeed.LAST_VOLUME, statisticsFeed.TURNOVER_VALUE, statisticsFeed.TURNOVER_VOLUME, statisticsFeed.TURNOVER_TRADE_COUNT \
                         ,statisticsFeed.SETTLEMENT_PRICE, statisticsFeed.STREAM_ID, statisticsFeed.EVENT_TIME, statisticsFeed.UPPER_PRICE_LIMIT \
                         ,statisticsFeed.LOWER_PRICE_LIMIT, statisticsFeed.OPEN_INTEREST, statisticsFeed.EXCHANGE_TIMESTAMP)
-            if (nowDropTime < dropTime and sendTime == dropTimestamp):
-                print resultStr
-            else:
-                file.write(resultStr)
+            if ProgramTag & StatisticsTag:
+                if (nowDropTime < dropTime and sendTime == dropTimestamp):
+                    print resultStr
+                else:
+                    file.write(resultStr)
             LastLegalFeed = generateLegalPriceFeed(LastLegalFeed)
             timestamp = int(round(time.time() * 1000))
             priceFeed = LastLegalFeed.priceFeed
@@ -168,10 +170,11 @@ def writeData(LastLegalFeed, TimeLength):
                         (timestamp, priceFeed.FEEDCODE, priceFeed.INSTRUMENT_ID, priceFeed.SEQUENCE, priceFeed.BID_PRICE, \
                          priceFeed.BID_VOLUME, priceFeed.BID_COUNT, priceFeed.ASK_PRICE, priceFeed.ASK_VOLUME, priceFeed.ASK_COUNT, \
                          priceFeed.LAST_TRADE_TICK, priceFeed.STREAM_ID, priceFeed.EVENT_TIME, priceFeed.EXCHANGE_TIMESTAMP)
-            if (nowDropTime < dropTime and sendTime == dropTimestamp):
-                print resultStr
-            else:
-                file.write(resultStr)
+            if ProgramTag & PriceTag:
+                if (nowDropTime < dropTime and sendTime == dropTimestamp):
+                    print resultStr
+                else:
+                    file.write(resultStr)
             if (nowDropTime < dropTime and sendTime == dropTimestamp):
                 dropTimestamp = dropTimestamp + dropInterval * 10
                 nowDropTime = nowDropTime + 1
@@ -218,21 +221,24 @@ def main():
     parse.add_argument("--timeLength", type=int, default=30, help="time length")
     parse.add_argument("--dropTime", type=int, default=1, help="drop time")
     parse.add_argument("--dropInterval", type=int, default=10, help="drop interval (s)")
+    parse.add_argument("--dropFileAmount", type=int, default=1, help="drop file amount")
+    parse.add_argument("--messageType", type=int, default=3, help="messageType Price=0x1 Statistics=0x10")
+
     flags,unparsed=parse.parse_known_args(sys.argv[1:])
 
     generateRandomData()
 
     LastLegalFeeds = generateInitFeeds(flags.fileAmount)
-    
-    global dropTime
-    global dropInterval
 
-    dropTime = flags.dropTime
-    dropInterval = flags.dropInterval
+    global ProgramTag
+    ProgramTag = flags.messageType
 
     threads = []
     for i in range(flags.fileAmount):
-        threads.append(threading.Thread(target=writeData,args=(LastLegalFeeds[i], flags.timeLength,)))
+        if i<flags.dropFileAmount:
+            threads.append(threading.Thread(target=writeData,args=(LastLegalFeeds[i], flags.timeLength, flags.dropTime, flags.dropInterval,)))
+        else:
+            threads.append(threading.Thread(target=writeData,args=(LastLegalFeeds[i], flags.timeLength, 0, 0,)))
 
     for t in threads:
         t.start()
