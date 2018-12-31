@@ -1,7 +1,7 @@
 .vscode/
 core.*
 *.o
-PythonScript/DataDir/
+PythonScript/DataDir/*
 
 target/
 
