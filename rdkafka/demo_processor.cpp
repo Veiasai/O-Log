@@ -58,20 +58,20 @@ void  Demo_processor::exec(const string & target){
                         // miss
                         res.code = Status::WARN;
                         char r[200];
-                        pq *temp_pq = new pq;
-                        while(sf_pq->size() > 0)
-                        {
-                            cout<<to_string(sf_pq->top()->EXCHANGE_TIMESTAMP)<<endl;
-                            temp_pq->push(sf_pq->top());
-                            sf_pq->pop();
-                        }
-                        cout<<endl;
-                        while(temp_pq->size() > 0)
-                        {
-                            sf_pq->push(temp_pq->top());
-                            temp_pq->pop();
-                        }
-                        delete temp_pq;
+                        // pq *temp_pq = new pq;
+                        // while(sf_pq->size() > 0)
+                        // {
+                        //     cout<<to_string(sf_pq->top()->EXCHANGE_TIMESTAMP)<<endl;
+                        //     temp_pq->push(sf_pq->top());
+                        //     sf_pq->pop();
+                        // }
+                        // cout<<endl;
+                        // while(temp_pq->size() > 0)
+                        // {
+                        //     sf_pq->push(temp_pq->top());
+                        //     temp_pq->pop();
+                        // }
+                        // delete temp_pq;
                         sprintf(r, "{\"FEEDCODE\":\"%s\", \"TIMESTAMP\":%lld, \"LOG\":\"%s\"}", feedcode.c_str(), msg_t[feedcode], "miss");
                         res.json = string(r);
 
