@@ -59,14 +59,13 @@ void  Demo_processor::exec(const string & target){
                         res.code = Status::WARN;
                         char r[200];
                         pq *temp_pq = new pq;
-                        string timestamps = "";
                         while(sf_pq->size() > 0)
                         {
-                            timestamps+=to_string(sf_pq->top()->EXCHANGE_TIMESTAMP);
+                            cout<<to_string(sf_pq->top()->EXCHANGE_TIMESTAMP)<<endl;
                             temp_pq->push(sf_pq->top());
                             sf_pq->pop();
                         }
-                        cout<<timestamps<<endl;
+                        cout<<endl;
                         while(temp_pq->size() > 0)
                         {
                             sf_pq->push(temp_pq->top());
