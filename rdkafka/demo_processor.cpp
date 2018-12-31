@@ -63,8 +63,8 @@ void  Demo_processor::exec(const string & target){
                         while(sf_pq->size() > 0)
                         {
                             timestamps+=to_string(sf_pq->top()->EXCHANGE_TIMESTAMP);
-                            temp_pq.push(sf_pq->top());
-                            sf_pq.pop();
+                            temp_pq->push(sf_pq->top());
+                            sf_pq->pop();
                             if(sf_pq->size > 0)
                             {
                                 timestamps +=",";
@@ -73,8 +73,8 @@ void  Demo_processor::exec(const string & target){
                         cout<<timestamps;
                         while(temp_pq->size() > 0)
                         {
-                            sf_pq.push(temp_pq.top());
-                            temp_pq.pop();
+                            sf_pq->push(temp_pq->top());
+                            temp_pq->pop();
                         }
                         delete temp_pq;
                         sprintf(r, "{\"FEEDCODE\":\"%s\", \"TIMESTAMP\":%lld, \"LOG\":\"%s\"}", feedcode.c_str(), msg_t[feedcode], "miss");
