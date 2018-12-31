@@ -237,7 +237,8 @@ def main():
     global EnableNoise
     ProgramTag = flags.messageType
     EnableNoise = flags.enableNoise
-    os.mkdir(DirPath)
+    if not os.path.exists(DirPath):
+        os.mkdir(DirPath)
     threads = []
     for i in range(flags.fileAmount):
         if i<flags.dropFileAmount:
