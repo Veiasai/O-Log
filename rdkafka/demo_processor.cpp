@@ -65,10 +65,6 @@ void  Demo_processor::exec(const string & target){
                             timestamps+=to_string(sf_pq->top()->EXCHANGE_TIMESTAMP);
                             temp_pq->push(sf_pq->top());
                             sf_pq->pop();
-                            if(sf_pq->size() > 0)
-                            {
-                                timestamps +="\n";
-                            }
                         }
                         cout<<timestamps<<endl;
                         while(temp_pq->size() > 0)

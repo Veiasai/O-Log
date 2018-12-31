@@ -14,7 +14,7 @@ PriceTag = 0x1
 StatisticsTag = 0x2
 ProgramTag = 0x3
 EnableNoise = 1
-
+DirPath = "DataDir/"
 RandomLogSet = []
 
 class PriceFeed:
@@ -141,7 +141,7 @@ def GetRandomData():
     return resultStr
     
 def writeData(LastLegalFeed, TimeLength, dropTime, dropInterval):
-    file = open(LastLegalFeed.statisticsFeed.FEEDCODE+".log", "w")
+    file = open(DirPath+LastLegalFeed.statisticsFeed.FEEDCODE+".log", "w")
     nowTime = int(round(time.time() * 1000))
     endTime = nowTime + TimeLength*1000
     LastSendTime = 0
