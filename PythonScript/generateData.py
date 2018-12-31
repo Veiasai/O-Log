@@ -187,6 +187,7 @@ def writeData(LastLegalFeed, TimeLength, dropTime, dropInterval):
         time.sleep(0.005)
         nowTime = int(round(time.time() * 1000))
     file.close()
+    print LastLegalFeed.statisticsFeed.FEEDCODE+" done"
 
 def generateInitFeeds(num, feedCodeStartId):
     LastLegalFeeds = {}
