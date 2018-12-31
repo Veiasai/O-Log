@@ -12,7 +12,7 @@ MyProducer::MyProducer(std::string ConfPath)
       std::cerr << "Failed to create producer: " << errstr << std::endl;
       exit(1);
     }
-    // std::cout << "% Created producer " << producer->name() << std::endl;
+    std::cout << "% Created producer " << producer->name() << std::endl;
 
     RdKafka::Conf *tconf = RdKafka::Conf::create(RdKafka::Conf::CONF_TOPIC);
     topic = RdKafka::Topic::create(producer, "rdkafkaPtest", tconf, errstr);
@@ -37,10 +37,10 @@ void MyProducer::produce(std::string message)
 			  const_cast<char *>(message.c_str()), message.size(),
 			  NULL, NULL);
     if (resp != RdKafka::ERR_NO_ERROR){
-	    std::cerr << "% Produce failed: " <<RdKafka::err2str(resp) << std::endl;
+	    // std::cerr << "% Produce failed: " <<RdKafka::err2str(resp) << std::endl;
     }
     else{
-        std::cerr << "% Produced message (" << message.size() << " bytes)" <<std::endl;
+        // std::cerr << "% Produced message (" << message.size() << " bytes)" <<std::endl;
     }
     poll(0);
 }
