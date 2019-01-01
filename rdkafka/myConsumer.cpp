@@ -159,10 +159,11 @@ void MyConsumer::msg_consume(RdKafka::Message* message, void* opaque) {
                 std::cout<<"input: "<<inputTime.count()<<std::endl;
                 processor->exec(messageStr);
                 Pro_res res = processor->getResult();
-                if (res.code != Status::OK)
+                if (res.code != Status::OK){
                     auto outputTime = std::chrono::duration_cast<chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
                     std::cout<<"output: "<<outputTime.count()<< std::endl;
                     producer->produce(res.json);
+                }
                 break;
             }
 
