@@ -29,7 +29,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
     private boolean writable;
     private boolean isFirst = true;
 
-    private String[] products = {"rb1000", "rb1001", "rb1002", "rb1003", "rb1004"};
+    private String[] products = {"rb1000", "rb1001"};
     private Map<String, String> records = new HashMap<String, String>();
 
     private Vector<KeyValue<String, String>> retVec = new Vector<KeyValue<String, String>>();
@@ -124,7 +124,11 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             }
         } else {
             System.out.println("case2");
-            retVec.add(KeyValue.pair(String.valueOf(latest), String.valueOf(latest)));
+            JSONObject message = new JSONObject();
+            message.put("FEEDCODE", "ALL");
+            message.put("TIMESTAMP", latest);
+            message.put("LOG", "miss");
+            retVec.add(KeyValue.pair(String.valueOf(latest), message.toString()));
         }
     }
 
