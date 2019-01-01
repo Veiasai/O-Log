@@ -61,7 +61,7 @@ pipeline:
     image: veiasai/java:8
     commands:
       - cd kafka-stream
-      - timeout 60 java -jar target/KafkaStreamsDemo-1.0-SNAPSHOT-jar-with-dependencies.jar
+      - timeout 240 java -jar target/KafkaStreamsDemo-1.0-SNAPSHOT-jar-with-dependencies.jar
       - exit 0
 
   mpublish:
