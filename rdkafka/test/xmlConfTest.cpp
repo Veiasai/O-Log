@@ -4,7 +4,7 @@
 using namespace std;
 
 int main(){
-    TiXmlDocument doc("../cppStream.xml");
+    TiXmlDocument doc("../conf/cppStream.xml");
     if(!doc.LoadFile())
     {
         cerr<<"Failed to Load file." << endl;

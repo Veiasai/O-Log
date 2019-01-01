@@ -83,7 +83,7 @@ class ExampleEventCb : public RdKafka::EventCb {
 MyConsumer::MyConsumer(){
 }
 
-MyConsumer::MyConsumer(std::string ConfPath){
+MyConsumer::MyConsumer(HandlerConf handlerConf){
     
     std::string errstr;
     

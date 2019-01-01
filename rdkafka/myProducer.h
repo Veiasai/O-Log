@@ -23,15 +23,17 @@
 
 #include <librdkafka/rdkafkacpp.h>
 #include "lib/tinyxml.h"
+#include "confLoader.h"
 
 class MyProducer
 {
     private:
         RdKafka::Producer *producer = NULL;
         RdKafka::Topic *topic = NULL;
+        std::string topicName;
 
       public:
-        MyProducer(std::string ConfPath);
+        MyProducer(HandlerConf handlerConf);
         ~MyProducer();
         void produce(std::string message);
         void poll(int timeout_ms);

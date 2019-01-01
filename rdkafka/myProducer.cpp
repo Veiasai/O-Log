@@ -1,6 +1,6 @@
 #include "myProducer.h"
 
-MyProducer::MyProducer(std::string ConfPath)
+MyProducer::MyProducer(HandlerConf handlerConf)
 {
     std::string errstr = "";
     RdKafka::Conf *conf = RdKafka::Conf::create(RdKafka::Conf::CONF_GLOBAL);

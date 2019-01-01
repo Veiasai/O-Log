@@ -13,33 +13,38 @@
     </xs:complexType>
 </xs:element>
 
-<xs:element name="topicConfEntry">
-    <xs:complexType>
-        <xs:element name="entryKey" type="xs:string" \>
-        <xs:element name="entryValue" type="xs:string" \>
-    </xs:complexType>
-</xs:element>
-
 <xs:element name="consumer">
     <xs:complexType>
         <xs:element name="topic" type="xs:string" maxOccurs="unbounded" minOccurs="1"\>
-        <confEntry maxOccurs="unbounded" \>
-        <topicConfEntry maxOccurs="unbounded" \>
+        <xs:element name="global_conf">
+            <confEntry maxOccurs="unbounded" \>
+        </xs:element>
+        <xs:element name="topic_conf">
+            <confEntry maxOccurs="unbounded" \>
+        </xs:element>
     </xs:complexType>
 </xs:element>
 
 <xs:element name="producer">
     <xs:complexType>
         <xs:element name="topic" type="xs:string" maxOccurs="1" minOccurs="1"\>
-        <confEntry maxOccurs="unbounded" \>
-        <topicConfEntry maxOccurs="unbounded" \>
+        <xs:element name="global_conf">
+            <confEntry maxOccurs="unbounded" \>
+        </xs:element>
+        <xs:element name="topic_conf">
+            <confEntry maxOccurs="unbounded" \>
+        </xs:element>
     </xs:complexType>
 </xs:element>
 
 <xs:element name="cppStream">
     <xs:complexType>
-        <consumer maxOccurs="unbounded" minOccurs="1">
-        <producer maxOccurs="unbounded" minOccurs="1">
+        <xs:element name = "consumers">
+            <consumer maxOccurs="unbounded" minOccurs="1">
+        </xs:element>
+        <xs:element name = "producers">
+            <producer maxOccurs="unbounded" minOccurs="1">
+        <xs:element name = "producers">
     </xs:complexType>
 </xs:element>
 
