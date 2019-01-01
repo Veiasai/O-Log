@@ -43,7 +43,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             @Override
             public void run() {
                 try {
-                    Thread.sleep(TimeUnit.SECONDS.toMillis(30));
+                    Thread.sleep(TimeUnit.SECONDS.toMillis(10));
                     writable = true;
                     new Thread(new Runnable() {
                         @Override
