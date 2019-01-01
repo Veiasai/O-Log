@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://www.optiver.com.au/cppStream"
+    xmlns="http://www.optiver.com.au/cppStream"
+    elementFormDefault="qualified">
+
+<xs:element name="confEntry">
+    <xs:complexType>
+        <xs:element name="entryKey" type="xs:string" \>
+        <xs:element name="entryValue" type="xs:string" \>
+    </xs:complexType>
+</xs:element>
+
+<xs:element name="topicConfEntry">
+    <xs:complexType>
+        <xs:element name="entryKey" type="xs:string" \>
+        <xs:element name="entryValue" type="xs:string" \>
+    </xs:complexType>
+</xs:element>
+
+<xs:element name="consumer">
+    <xs:complexType>
+        <xs:element name="topic" type="xs:string" maxOccurs="unbounded" minOccurs="1"\>
+        <confEntry maxOccurs="unbounded" \>
+        <topicConfEntry maxOccurs="unbounded" \>
+    </xs:complexType>
+</xs:element>
+
+<xs:element name="producer">
+    <xs:complexType>
+        <xs:element name="topic" type="xs:string" maxOccurs="1" minOccurs="1"\>
+        <confEntry maxOccurs="unbounded" \>
+        <topicConfEntry maxOccurs="unbounded" \>
+    </xs:complexType>
+</xs:element>
+
+<xs:element name="cppStream">
+    <xs:complexType>
+        <consumer maxOccurs="unbounded" minOccurs="1">
+        <producer maxOccurs="unbounded" minOccurs="1">
+    </xs:complexType>
+</xs:element>
+
+</xs:schema>
