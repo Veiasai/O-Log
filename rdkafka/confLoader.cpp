@@ -3,9 +3,11 @@
 HandlerConfs ConfLoader::load(std::string filename)
 {
     HandlerConfs handlerConfs;
+    std::cerr << filename.c_str() << std::endl;
     TiXmlDocument doc(filename.c_str());
     if(!doc.LoadFile())
     {
+        std::cerr << "can't loadFile" << std::endl;
         return handlerConfs;
     }
     TiXmlElement* root = doc.FirstChildElement();
