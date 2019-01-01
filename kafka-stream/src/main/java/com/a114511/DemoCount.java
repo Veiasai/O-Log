@@ -42,13 +42,6 @@ public class DemoCount {
        raw.foreach((key, value) -> System.out.println("key: " + key + " value: " + value));
 
         KStream<String, String> processed1 = raw.transform(new MyTransformerSupplyer());
-//                .groupByKey()
-//
-//                .windowedBy(TimeWindows.of(TimeUnit.MINUTES.toMillis(2)).advanceBy(TimeUnit.MILLISECONDS.toMillis(500)))
-//                .count(Materialized.<String, Long, WindowStore<Bytes, byte[]>>as("aggregated-stream-store" )
-//                        .withKeySerde(Serdes.String())
-//                        .withValueSerde(Serdes.Long()))
-//                .toStream((key, value) -> key.toString());
 
         processed1.foreach((key, value) -> System.out.println("key: " + key + " value: " + value));
         processed1.to("demo-count-output");
