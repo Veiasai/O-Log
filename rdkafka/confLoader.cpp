@@ -1,12 +1,11 @@
 #include "confLoader.h"
 
-static HandlerConfs ConfLoader::load(std::string filename)
+HandlerConfs ConfLoader::load(std::string filename)
 {
     HandlerConfs handlerConfs;
-    TiXmlDocument doc(filename);
+    TiXmlDocument doc(filename.c_str());
     if(!doc.LoadFile())
     {
-        cerr<<"Failed to Load file." << endl;
         return handlerConfs;
     }
     TiXmlElement* root = doc.FirstChildElement();
@@ -18,7 +17,7 @@ static HandlerConfs ConfLoader::load(std::string filename)
     {
         for (TiXmlElement *consumer = consumers->FirstChildElement(); consumer != NULL; consumer = consumer->NextSiblingElement())
         {
-            handlerconfs.first.push_back(loadHandlerConf(consumer));
+            handlerConfs.first.push_back(loadHandlerConf(consumer));
         }
     }
 
@@ -26,13 +25,13 @@ static HandlerConfs ConfLoader::load(std::string filename)
     {
         for (TiXmlElement *producer = producers->FirstChildElement(); producer != NULL; producer = producer->NextSiblingElement())
         {
-            handlerconfs.second.push_back(loadHandlerConf(producer));
+            handlerConfs.second.push_back(loadHandlerConf(producer));
         }
     }
     return handlerConfs;
 }
 
-static HandlerConf ConfLoader::loadHandlerConf(TiXmlElement *handler)
+HandlerConf ConfLoader::loadHandlerConf(TiXmlElement *handler)
 {
     HandlerConf handlerConf;
     TiXmlElement *topic = handler->FirstChildElement();
@@ -48,7 +47,7 @@ static HandlerConf ConfLoader::loadHandlerConf(TiXmlElement *handler)
     return handlerConf;
 }
 
-static RdKafka::Conf* ConfLoader::loadGlobalConf(TiXmlElement *confList)
+RdKafka::Conf* ConfLoader::loadGlobalConf(TiXmlElement *confList)
 {
     RdKafka::Conf *globalConf = RdKafka::Conf::create(RdKafka::Conf::CONF_GLOBAL);
     std::string errstr;
@@ -61,7 +60,7 @@ static RdKafka::Conf* ConfLoader::loadGlobalConf(TiXmlElement *confList)
     return globalConf;
 }
 
-static RdKafka::Conf* ConfLoader::loadTopicConf(TiXmlElement *confList)
+RdKafka::Conf* ConfLoader::loadTopicConf(TiXmlElement *confList)
 {
     RdKafka::Conf *topicConf = RdKafka::Conf::create(RdKafka::Conf::CONF_TOPIC);
     std::string errstr;
