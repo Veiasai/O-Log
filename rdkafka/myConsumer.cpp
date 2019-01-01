@@ -142,14 +142,6 @@ void MyConsumer::consume()
     delete msg;
 }
 
-
-int64_t getCurrentTime()      //直接调用这个函数就行了，返回值最好是int64_t，long long应该也可以
-{    
-    struct timeval tv;    
-    gettimeofday(&tv,NULL);    //该函数在sys/time.h头文件中
-    return tv.tv_sec * 1000 + tv.tv_usec / 1000;    
-}
-
 void MyConsumer::msg_consume(RdKafka::Message* message, void* opaque) {
     switch (message->err()) {
         case RdKafka::ERR__TIMED_OUT:
@@ -163,11 +155,13 @@ void MyConsumer::msg_consume(RdKafka::Message* message, void* opaque) {
                 // printf(buffer, "%.*s", static_cast<int>(message->len()), static_cast<const char *>(message->payload()));
                 // std::cout<<"input: "<<getCurrentTime()<< std::endl;
                 std::string messageStr(static_cast<const char *>(message->payload()));
-                // std::cout<<messageStr<<std::endl;
+                auto inputTime = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch());
+                std::cout<<"input: "<<inputTime.count()<<std::endl;
                 processor->exec(messageStr);
                 Pro_res res = processor->getResult();
                 if (res.code != Status::OK)
-                    // std::cout<<"output: "<<getCurrentTime()<< std::endl;
+                    auto outputTime = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch());
+                    std::cout<<"output: "<<outputTime.count()<< std::endl;
                     producer->produce(res.json);
                 break;
             }
