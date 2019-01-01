@@ -21,10 +21,10 @@
 #include <unistd.h>
 #endif
 
+#include <utility>
 #include <librdkafka/rdkafkacpp.h>
 #include "lib/tinyxml.h"
 #include "confLoader.h"
-#include <utility>
 
 class MyProducer
 {
