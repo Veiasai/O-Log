@@ -12,23 +12,24 @@ HandlerConfs ConfLoader::load(std::string filename)
 
     TiXmlElement *consumers = root ? root->FirstChildElement() : NULL;
     TiXmlElement *producers = consumers ? consumers->NextSiblingElement() : NULL;
-
+    std::vector<HandlerConf> consumerConfs;
     if (consumers != NULL)
     {
         for (TiXmlElement *consumer = consumers->FirstChildElement(); consumer != NULL; consumer = consumer->NextSiblingElement())
         {
-            handlerConfs.first.push_back(loadHandlerConf(consumer));
+            consumerConfs.push_back(loadHandlerConf(consumer));
         }
     }
 
+    std::vector<HandlerConf> producerConfs;
     if (producers != NULL)
     {
         for (TiXmlElement *producer = producers->FirstChildElement(); producer != NULL; producer = producer->NextSiblingElement())
         {
-            handlerConfs.second.push_back(loadHandlerConf(producer));
+            producerConfs.push_back(loadHandlerConf(producer));
         }
     }
-    return handlerConfs;
+    return std::make_pair(consumerConfs, producerConfs);
 }
 
 HandlerConf ConfLoader::loadHandlerConf(TiXmlElement *handler)
