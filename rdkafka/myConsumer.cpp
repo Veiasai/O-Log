@@ -153,11 +153,13 @@ void MyConsumer::msg_consume(RdKafka::Message* message, void* opaque) {
                 // printf("%.*s\n", static_cast<int>(message->len()), static_cast<const char *>(message->payload()));
                 // char buffer[static_cast<int>(message->len()) + 1];
                 // printf(buffer, "%.*s", static_cast<int>(message->len()), static_cast<const char *>(message->payload()));
+                std::cout<<"input: "<<getCurrentTime()<< std::endl;
                 std::string messageStr(static_cast<const char *>(message->payload()));
                 // std::cout<<messageStr<<std::endl;
                 processor->exec(messageStr);
                 Pro_res res = processor->getResult();
                 if (res.code != Status::OK)
+                    std::cout<<"output: "<<getCurrentTime()<< std::endl;
                     producer->produce(res.json);
                 break;
             }
