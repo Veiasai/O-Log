@@ -1,6 +1,9 @@
 #pragma once
 #include "lib/tinyxml.h"
-#include "myProducer.h"
+#include <utility>
+#include <iostream>
+#include <string>
+#include <librdkafka/rdkafkacpp.h>
 #include <vector>
 
 typedef std::pair<RdKafka::Conf*, std::string> HandlerConf;

@@ -1,6 +1,4 @@
 #pragma once
-#include <iostream>
-#include <string>
 #include <cstdlib>
 #include <cstdio>
 #include <csignal>
@@ -21,8 +19,6 @@
 #include <unistd.h>
 #endif
 
-#include <utility>
-#include <librdkafka/rdkafkacpp.h>
 #include "lib/tinyxml.h"
 #include "confLoader.h"
 

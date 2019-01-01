@@ -3,7 +3,7 @@
 static HandlerConfs ConfLoader::load(std::string filename)
 {
     HandlerConfs handlerConfs;
-    TiXmlDocument doc(fileName);
+    TiXmlDocument doc(filename);
     if(!doc.LoadFile())
     {
         cerr<<"Failed to Load file." << endl;
