@@ -3,8 +3,8 @@
 #include "myProducer.h"
 #include <vector>
 
-typedef pair<RdKafka::Conf*, std::string> HandlerConf;
-typedef pair<std::vector<HandlerConf>, std::vector<HandlerConf>> HandlerConfs;
+typedef std::pair<RdKafka::Conf*, std::string> HandlerConf;
+typedef std::pair<std::vector<HandlerConf>, std::vector<HandlerConf>> HandlerConfs;
 
 class ConfLoader
 {
