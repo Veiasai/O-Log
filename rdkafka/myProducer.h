@@ -24,6 +24,7 @@
 #include <librdkafka/rdkafkacpp.h>
 #include "lib/tinyxml.h"
 #include "confLoader.h"
+#include <utility>
 
 class MyProducer
 {
