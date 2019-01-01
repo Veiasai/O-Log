@@ -93,7 +93,8 @@ MyConsumer::MyConsumer(std::string ConfPath){
     // ExampleRebalanceCb ex_rebalance_cb;
     // conf->set("rebalance_cb", &ex_rebalance_cb, errstr);
     conf->set("group.id", "test_group_id", errstr);
-    conf->set("metadata.broker.list", "ist-slave5:9092, ist-slave6:9092, s07:9092", errstr);
+    // conf->set("metadata.broker.list", "ist-slave5:9092, ist-slave6:9092, s07:9092", errstr);
+    conf->set("metadata.broker.list", "kafka:9092", errstr);
 
     ExampleEventCb ex_event_cb;
     conf->set("event_cb", &ex_event_cb, errstr);
