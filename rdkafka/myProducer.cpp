@@ -4,7 +4,7 @@ MyProducer::MyProducer(std::string ConfPath)
 {
     std::string errstr = "";
     RdKafka::Conf *conf = RdKafka::Conf::create(RdKafka::Conf::CONF_GLOBAL);
-    conf->set("metadata.broker.list", "kafka:9092", errstr);
+    conf->set("metadata.broker.list", "ist-slave5:9092, ist-slave6:9092, s07:9092", errstr);
     
     producer = RdKafka::Producer::create(conf, errstr);
     delete conf;
