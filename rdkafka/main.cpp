@@ -8,7 +8,10 @@ int main(){
     HandlerConfs handlerConfs= ConfLoader::load("conf/cppStream.xml");
     if (handlerConfs.first.size()==0 || handlerConfs.second.size()==0)
     {
+        std::cerr << handlerConfs.first.size() << std::endl
+                  << handlerConfs.second.size() << std::endl;
         std::cerr << "Load Conf Error." << std::endl;
+        return 1;
     }
 
     MyConsumer myConsumer(handlerConfs.first[0]);

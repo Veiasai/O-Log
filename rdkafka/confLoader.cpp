@@ -17,6 +17,7 @@ HandlerConfs ConfLoader::load(std::string filename)
     {
         for (TiXmlElement *consumer = consumers->FirstChildElement(); consumer != NULL; consumer = consumer->NextSiblingElement())
         {
+            std::cerr << "load consumer" << std::endl;
             consumerConfs.push_back(loadHandlerConf(consumer));
         }
     }
@@ -26,6 +27,7 @@ HandlerConfs ConfLoader::load(std::string filename)
     {
         for (TiXmlElement *producer = producers->FirstChildElement(); producer != NULL; producer = producer->NextSiblingElement())
         {
+            std::cerr << "load producer" << std::endl;
             producerConfs.push_back(loadHandlerConf(producer));
         }
     }
