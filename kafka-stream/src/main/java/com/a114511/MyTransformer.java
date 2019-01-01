@@ -13,8 +13,6 @@ import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 
-
-
 public class MyTransformer implements Transformer<String, String, KeyValue<String, String>> {
 
 //    private class DataRecord {
@@ -29,11 +27,12 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
 
     private Long latest = 0L;
     private boolean writable;
-    private boolean isFirst= true;
+    private boolean isFirst = true;
 
+    private String[] products = {"rb1000", "rb1001"};
     private Map<String, String> records = new HashMap<String, String>();
 
-    private Vector<KeyValue<String, String>> retVec= new Vector<KeyValue<String, String>>();
+    private Vector<KeyValue<String, String>> retVec = new Vector<KeyValue<String, String>>();
 
     @Override
     @SuppressWarnings("unchecked")
@@ -44,12 +43,12 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             @Override
             public void run() {
                 try {
-                    Thread.sleep(TimeUnit.SECONDS.toMillis(30));
+                    Thread.sleep(TimeUnit.SECONDS.toMillis(10));
                     writable = true;
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            while (true){
+                            while (true) {
                                 if (writable) {
                                     checkRecords();
                                 }
@@ -72,7 +71,6 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
     @Override
     public KeyValue<String, String> transform(final String recordKey, final String recordValue) {
 
-
         if (isFirst) {
             isFirst = false;
             latest = Long.valueOf(recordKey);
@@ -81,63 +79,57 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             String value = strArry[0];
             records.put(recordKey, value);
             return null;
-        }
-        else{
+        } else {
             JSONObject message = JSONObject.fromObject(recordValue);
             String[] strArry = message.getString("detail").split(",");
             String value = strArry[0];
             records.merge(recordKey, value, (a, b) -> a + "," + b);
-            if (retVec.size() != 0){
+            if (retVec.size() != 0) {
+                System.out.println("hhhh");
                 KeyValue temp = retVec.get(0);
                 retVec.remove(0);
                 return temp;
-            }
-            else{
+            } else {
                 return null;
             }
         }
-//        } else {
-//            if (Long.valueOf(newKey) <= latest) {
-//
-//                if (Long.valueOf(newKey) - time != 500000000) {
-//                    KeyValue<String, String> temp = KeyValue.pair(String.valueOf(time + 500000000), String.valueOf(time + 500000000));
-//                    latest = Long.valueOf(newKey);
-//                    return temp;
-//                } else if (recordValue != 10) {
-//                    latest = Long.valueOf(newKey);
-//                    return KeyValue.pair(String.valueOf(newKey), String.valueOf(newKey));
-//                } else {
-//                    time = Long.valueOf(newKey);
-//                    return null;
-//                }
-//            } else {
-//                latest = Long.valueOf(newKey);
-//                return null;
-//            }
-//        }
     }
 
-    private void checkRecords(){
+    private void checkRecords() {
         boolean isFound = false;
-        String value= "";
+        String value = "";
         for (Map.Entry<String, String> entry : records.entrySet()) {
-            if (entry.getKey().contains(String.valueOf(latest))){
+            if (entry.getKey().contains(String.valueOf(latest))) {
                 isFound = true;
                 value = entry.getValue();
                 records.remove(entry.getKey());
                 break;
             }
         }
-        if (isFound){
-            System.out.println("case1");
-            if (!(value.contains("rb1000")&&value.contains("rb1001")&&
-                    value.contains("rb1002")&&value.contains("rb1003")&&value.contains("rb1004"))){
-                retVec.add(KeyValue.pair(String.valueOf(latest), String.valueOf(latest)));
+
+        if (isFound) {
+//            if (!(value.contains("rb1000")&&value.contains("rb1001")&&
+//                    value.contains("rb1002")&&value.contains("rb1003")&&value.contains("rb1004"))){
+//                retVec.add(KeyValue.pair(String.valueOf(latest), String.valueOf(latest)));
+//            }
+            for (int i = 0; i < products.length; i++){
+                if (!value.contains(products[i])){
+                    System.out.println("case1");
+                    System.out.println(products[i]);
+                    JSONObject message = new JSONObject();
+                    message.put("FEEDCODE", products[i]);
+                    message.put("TIMESTAMP", latest);
+                    message.put("LOG", "miss");
+                    retVec.add(KeyValue.pair(String.valueOf(latest), message.toString()));
+                }
             }
-        }
-        else{
+        } else {
             System.out.println("case2");
-            retVec.add(KeyValue.pair(String.valueOf(latest), String.valueOf(latest)));
+            JSONObject message = new JSONObject();
+            message.put("FEEDCODE", "ALL");
+            message.put("TIMESTAMP", latest);
+            message.put("LOG", "miss");
+            retVec.add(KeyValue.pair(String.valueOf(latest), message.toString()));
         }
     }
 
