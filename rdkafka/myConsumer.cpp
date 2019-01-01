@@ -155,13 +155,13 @@ void MyConsumer::msg_consume(RdKafka::Message* message, void* opaque) {
                 // printf(buffer, "%.*s", static_cast<int>(message->len()), static_cast<const char *>(message->payload()));
                 // std::cout<<"input: "<<getCurrentTime()<< std::endl;
                 std::string messageStr(static_cast<const char *>(message->payload()));
-                auto inputTime = std::chrono::duration_cast<chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
-                std::cout<<"input: "<<inputTime.count()<<std::endl;
+                // auto inputTime = std::chrono::duration_cast<chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+                // std::cout<<"input: "<<inputTime.count()<<std::endl;
                 processor->exec(messageStr);
                 Pro_res res = processor->getResult();
                 if (res.code != Status::OK){
-                    auto outputTime = std::chrono::duration_cast<chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
-                    std::cout<<"output: "<<outputTime.count()<< std::endl;
+                    // auto outputTime = std::chrono::duration_cast<chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+                    // std::cout<<"output: "<<outputTime.count()<< std::endl;
                     producer->produce(res.json);
                 }
                 break;
