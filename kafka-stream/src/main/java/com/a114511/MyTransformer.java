@@ -43,7 +43,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             @Override
             public void run() {
                 try {
-                    Thread.sleep(TimeUnit.MINUTES.toMillis(2));
+                    Thread.sleep(TimeUnit.SECONDS.toMillis(30));
                     writable = true;
                     new Thread(new Runnable() {
                         @Override
@@ -106,15 +106,16 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
                 break;
             }
         }
-        System.out.println("Product value:"+ value);
+
         if (isFound) {
-            System.out.println("case1");
 //            if (!(value.contains("rb1000")&&value.contains("rb1001")&&
 //                    value.contains("rb1002")&&value.contains("rb1003")&&value.contains("rb1004"))){
 //                retVec.add(KeyValue.pair(String.valueOf(latest), String.valueOf(latest)));
 //            }
             for (int i = 0; i < products.length; i++){
                 if (!value.contains(products[i])){
+                    System.out.println("case1");
+                    System.out.println(products[i]);
                     JSONObject message = new JSONObject();
                     message.put("FEEDCODE", products[i]);
                     message.put("TIMESTAMP", latest);
