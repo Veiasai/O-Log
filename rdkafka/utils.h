@@ -31,7 +31,7 @@ class StatisticsFeed{
         int64_t EVENT_TIME;
         double UPPER_PRICE_LIMIT;
         double LOWER_PRICE_LIMIT;
-        int32_t OPEN_INTEREST;
+        int64_t OPEN_INTEREST;
         int64_t EXCHANGE_TIMESTAMP;
 };
     

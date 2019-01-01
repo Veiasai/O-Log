@@ -1,9 +1,9 @@
 .vscode/
 core.*
 *.o
-PythonScript/*.log
+PythonScript/DataDir/*.log
+PythonScript/DebugLog/
 
 target/
-
 
 .idea/

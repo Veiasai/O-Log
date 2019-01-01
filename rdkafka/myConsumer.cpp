@@ -93,6 +93,7 @@ MyConsumer::MyConsumer(std::string ConfPath){
     // ExampleRebalanceCb ex_rebalance_cb;
     // conf->set("rebalance_cb", &ex_rebalance_cb, errstr);
     conf->set("group.id", "test_group_id", errstr);
+    // conf->set("metadata.broker.list", "ist-slave5:9092, ist-slave6:9092, s07:9092", errstr);
     conf->set("metadata.broker.list", "kafka:9092", errstr);
 
     ExampleEventCb ex_event_cb;
@@ -141,7 +142,6 @@ void MyConsumer::consume()
     delete msg;
 }
 
-
 void MyConsumer::msg_consume(RdKafka::Message* message, void* opaque) {
     switch (message->err()) {
         case RdKafka::ERR__TIMED_OUT:
@@ -153,12 +153,17 @@ void MyConsumer::msg_consume(RdKafka::Message* message, void* opaque) {
                 // printf("%.*s\n", static_cast<int>(message->len()), static_cast<const char *>(message->payload()));
                 // char buffer[static_cast<int>(message->len()) + 1];
                 // printf(buffer, "%.*s", static_cast<int>(message->len()), static_cast<const char *>(message->payload()));
+                // std::cout<<"input: "<<getCurrentTime()<< std::endl;
                 std::string messageStr(static_cast<const char *>(message->payload()));
-                std::cout<<messageStr<<std::endl;
+                // auto inputTime = std::chrono::duration_cast<chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+                // std::cout<<"input: "<<inputTime.count()<<std::endl;
                 processor->exec(messageStr);
                 Pro_res res = processor->getResult();
-                if (res.code != Status::OK)
+                if (res.code != Status::OK){
+                    // auto outputTime = std::chrono::duration_cast<chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+                    // std::cout<<"output: "<<outputTime.count()<< std::endl;
                     producer->produce(res.json);
+                }
                 break;
             }
 

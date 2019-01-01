@@ -6,11 +6,16 @@ import string
 import random
 import re
 import copy
+import os
 
 StreamIDUpBound = 1000
-dropTime = 0
-dropInterval = 0
+OpenInterestUpBound = 1000
 
+PriceTag = 0x1
+StatisticsTag = 0x2
+ProgramTag = 0x3
+EnableNoise = 1
+DirPath = "DataDir/"
 RandomLogSet = []
 
 class PriceFeed:
@@ -77,7 +82,7 @@ def generateLegalStatisticsFeed(LastLegalFeed):
     statisticsFeed.UPPER_PRICE_LIMIT = LastLegalStatisticsFeed.UPPER_PRICE_LIMIT
     statisticsFeed.LOWER_PRICE_LIMIT = LastLegalStatisticsFeed.LOWER_PRICE_LIMIT
     statisticsFeed.OPEN_INTEREST = LastLegalStatisticsFeed.OPEN_INTEREST
-    statisticsFeed.EXCHANGE_TIMESTAMP = timestamp / 100 * 100000000
+    statisticsFeed.EXCHANGE_TIMESTAMP = LastLegalStatisticsFeed.EXCHANGE_TIMESTAMP + 500000000
     LastLegalFeed.statisticsFeed = statisticsFeed
     return LastLegalFeed
 
@@ -96,7 +101,7 @@ def generateLegalPriceFeed(LastLegalFeed):
     priceFeed.ASK_VOLUME = random.randint(1,30)
     priceFeed.STREAM_ID = random.randint(0, StreamIDUpBound)
     priceFeed.EVENT_TIME = timestamp * 1000000 + random.randint(0, 999999)
-    priceFeed.EXCHANGE_TIMESTAMP = timestamp / 100 * 100000000
+    priceFeed.EXCHANGE_TIMESTAMP = CurrentLegalStatisticsFeed.EXCHANGE_TIMESTAMP
     LastLegalFeed.priceFeed = priceFeed
     return LastLegalFeed
 
@@ -136,20 +141,15 @@ def GetRandomData():
     resultStr = '%i%s' % (timestamp, RandomLogSet[dataIndex])
     return resultStr
     
-def writeData(LastLegalFeed, TimeLength):
-    file = open(LastLegalFeed.statisticsFeed.FEEDCODE+".log", "w")
+def writeData(LastLegalFeed, TimeLength, dropTime, dropInterval):
+    file = open(DirPath+LastLegalFeed.statisticsFeed.FEEDCODE+".log", "w")
     nowTime = int(round(time.time() * 1000))
     endTime = nowTime + TimeLength*1000
-    LastSendTime = 0
     dropTimestamp = nowTime / 500 * 5 + dropInterval * 10
     nowDropTime = 0
     while(nowTime < endTime):
         sendTime = nowTime / 100
-        if (nowDropTime < dropTime and sendTime == dropTimestamp):
-            LastSendTime = sendTime
-            dropTimestamp = dropTimestamp + dropInterval * 10
-            nowDropTime = nowDropTime + 1
-        elif (sendTime != LastSendTime and sendTime % 5 == 0):
+        if (sendTime > LastLegalFeed.statisticsFeed.EXCHANGE_TIMESTAMP/100000000+5):
             LastLegalFeed = generateLegalStatisticsFeed(LastLegalFeed)
             timestamp = int(round(time.time() * 1000))
             statisticsFeed = LastLegalFeed.statisticsFeed
@@ -159,7 +159,11 @@ def writeData(LastLegalFeed, TimeLength):
                         ,statisticsFeed.LAST_VOLUME, statisticsFeed.TURNOVER_VALUE, statisticsFeed.TURNOVER_VOLUME, statisticsFeed.TURNOVER_TRADE_COUNT \
                         ,statisticsFeed.SETTLEMENT_PRICE, statisticsFeed.STREAM_ID, statisticsFeed.EVENT_TIME, statisticsFeed.UPPER_PRICE_LIMIT \
                         ,statisticsFeed.LOWER_PRICE_LIMIT, statisticsFeed.OPEN_INTEREST, statisticsFeed.EXCHANGE_TIMESTAMP)
-            file.write(resultStr)
+            if ProgramTag & StatisticsTag:
+                if (nowDropTime < dropTime and statisticsFeed.EXCHANGE_TIMESTAMP/100000000 == dropTimestamp):
+                    print resultStr
+                else:
+                    file.write(resultStr)
             LastLegalFeed = generateLegalPriceFeed(LastLegalFeed)
             timestamp = int(round(time.time() * 1000))
             priceFeed = LastLegalFeed.priceFeed
@@ -167,20 +171,31 @@ def writeData(LastLegalFeed, TimeLength):
                         (timestamp, priceFeed.FEEDCODE, priceFeed.INSTRUMENT_ID, priceFeed.SEQUENCE, priceFeed.BID_PRICE, \
                          priceFeed.BID_VOLUME, priceFeed.BID_COUNT, priceFeed.ASK_PRICE, priceFeed.ASK_VOLUME, priceFeed.ASK_COUNT, \
                          priceFeed.LAST_TRADE_TICK, priceFeed.STREAM_ID, priceFeed.EVENT_TIME, priceFeed.EXCHANGE_TIMESTAMP)
-            file.write(resultStr)
-            LastSendTime = sendTime
-        else:
+            if ProgramTag & PriceTag:
+                if (nowDropTime < dropTime and statisticsFeed.EXCHANGE_TIMESTAMP/100000000 == dropTimestamp):
+                    print resultStr
+                else:
+                    file.write(resultStr)
+            if (nowDropTime < dropTime and statisticsFeed.EXCHANGE_TIMESTAMP/100000000 == dropTimestamp):
+                dropTimestamp = dropTimestamp + dropInterval * 10
+                nowDropTime = nowDropTime + 1
+        elif EnableNoise:
             resultStr = GetRandomData()
             file.write(resultStr)
-        time.sleep(0.005)
+        if EnableNoise:
+            time.sleep(0.005)
+        else:
+            time.sleep(0.1)
+        
         nowTime = int(round(time.time() * 1000))
     file.close()
+    print LastLegalFeed.statisticsFeed.FEEDCODE+" done"
 
-def generateInitFeeds(num):
+def generateInitFeeds(num, feedCodeStartId):
     LastLegalFeeds = {}
     for i in range(num):
         tempStatisticsFeed = StatisticsFeed()
-        tempStatisticsFeed.FEEDCODE = tempStatisticsFeed.FEEDCODE[0:len(tempStatisticsFeed.FEEDCODE)-len(str(i))]+str(i)
+        tempStatisticsFeed.FEEDCODE = tempStatisticsFeed.FEEDCODE[0:2]+str(i+feedCodeStartId)
         tempStatisticsFeed.INSTRUMENT_ID += i
         tempStatisticsFeed.SETTLEMENT_PRICE = random.uniform(1000, 9000)
         tempStatisticsFeed.LOWER_PRICE_LIMIT = tempStatisticsFeed.SETTLEMENT_PRICE * 0.9
@@ -189,7 +204,9 @@ def generateInitFeeds(num):
         tempStatisticsFeed.HIGH_PRICE = 0
         tempStatisticsFeed.OPENING_PRICE = tempStatisticsFeed.SETTLEMENT_PRICE
         tempStatisticsFeed.CLOSING_PRICE = tempStatisticsFeed.SETTLEMENT_PRICE
-        tempStatisticsFeed.OPEN_INTEREST = random.randint(0, sys.maxsize)
+        tempStatisticsFeed.OPEN_INTEREST = random.randint(0, OpenInterestUpBound)
+        timestamp = int(round(time.time() * 1000))
+        tempStatisticsFeed.EXCHANGE_TIMESTAMP = timestamp/500*500000000
 
         tempPriceFeed = PriceFeed()
         tempPriceFeed.FEEDCODE = tempStatisticsFeed.FEEDCODE
@@ -207,25 +224,33 @@ def generateInitFeeds(num):
 
 def main():
     parse=argparse.ArgumentParser()
-    parse.add_argument("--fileAmount", type=int, default=5, help="file amount")
-    parse.add_argument("--timeLength", type=int, default=240, help="time length")
-    parse.add_argument("--dropTime", type=int, default=4, help="drop time")
+    parse.add_argument("--fileAmount", type=int, default=1, help="file amount")
+    parse.add_argument("--timeLength", type=int, default=30, help="time length")
+    parse.add_argument("--dropTime", type=int, default=1, help="drop time")
     parse.add_argument("--dropInterval", type=int, default=10, help="drop interval (s)")
+    parse.add_argument("--dropFileAmount", type=int, default=1, help="drop file amount")
+    parse.add_argument("--messageType", type=int, default=3, help="messageType Price=0x1 Statistics=0x10")
+    parse.add_argument("--enableNoise", type=int, default=0, help="whether enable noise")
+    parse.add_argument("--feedCodeStartId", type=int, default=1000, help="whether enable noise")
+
     flags,unparsed=parse.parse_known_args(sys.argv[1:])
 
     generateRandomData()
 
-    LastLegalFeeds = generateInitFeeds(flags.fileAmount)
-    
-    global dropTime
-    global dropInterval
+    LastLegalFeeds = generateInitFeeds(flags.fileAmount, flags.feedCodeStartId)
 
-    dropTime = flags.dropTime
-    dropInterval = flags.dropInterval
-
+    global ProgramTag
+    global EnableNoise
+    ProgramTag = flags.messageType
+    EnableNoise = flags.enableNoise
+    if not os.path.exists(DirPath):
+        os.mkdir(DirPath)
     threads = []
     for i in range(flags.fileAmount):
-        threads.append(threading.Thread(target=writeData,args=(LastLegalFeeds[i], flags.timeLength,)))
+        if i<flags.dropFileAmount:
+            threads.append(threading.Thread(target=writeData,args=(LastLegalFeeds[i], flags.timeLength, flags.dropTime, flags.dropInterval,)))
+        else:
+            threads.append(threading.Thread(target=writeData,args=(LastLegalFeeds[i], flags.timeLength, 0, 0,)))
 
     for t in threads:
         t.start()
@@ -234,7 +259,7 @@ def main():
 main()
 
 def testGenerateLegalStatisticsFeed():
-    LastLegalFeeds = generateInitFeeds(1)
+    LastLegalFeeds = generateInitFeeds(1,1000)
     LastLegalFeed = LastLegalFeeds[0]
     totalTime = 0
     for i in range(100):

@@ -5,6 +5,7 @@ MyProducer::MyProducer(std::string ConfPath)
     std::string errstr = "";
     RdKafka::Conf *conf = RdKafka::Conf::create(RdKafka::Conf::CONF_GLOBAL);
     conf->set("metadata.broker.list", "kafka:9092", errstr);
+    //conf->set("metadata.broker.list", "ist-slave5:9092, ist-slave6:9092, s07:9092", errstr);
     
     producer = RdKafka::Producer::create(conf, errstr);
     delete conf;
@@ -37,10 +38,10 @@ void MyProducer::produce(std::string message)
 			  const_cast<char *>(message.c_str()), message.size(),
 			  NULL, NULL);
     if (resp != RdKafka::ERR_NO_ERROR){
-	    std::cerr << "% Produce failed: " <<RdKafka::err2str(resp) << std::endl;
+	    // std::cerr << "% Produce failed: " <<RdKafka::err2str(resp) << std::endl;
     }
     else{
-        std::cerr << "% Produced message (" << message.size() << " bytes)" <<std::endl;
+        // std::cerr << "% Produced message (" << message.size() << " bytes)" <<std::endl;
     }
     poll(0);
 }
