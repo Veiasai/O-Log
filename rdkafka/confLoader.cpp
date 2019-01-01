@@ -52,7 +52,7 @@ RdKafka::Conf* ConfLoader::loadGlobalConf(TiXmlElement *confList)
     RdKafka::Conf *globalConf = RdKafka::Conf::create(RdKafka::Conf::CONF_GLOBAL);
     if (confList == NULL)
     {
-        retrun globalConf;
+        return globalConf;
     }
     std::string errstr;
     for (TiXmlElement *entry = confList->FirstChildElement(); entry != NULL; entry = entry->NextSiblingElement())
@@ -69,7 +69,7 @@ RdKafka::Conf* ConfLoader::loadTopicConf(TiXmlElement *confList)
     RdKafka::Conf *topicConf = RdKafka::Conf::create(RdKafka::Conf::CONF_TOPIC);
     if (confList == NULL)
     {
-        retrun topicConf;
+        return topicConf;
     }
     std::string errstr;
     for (TiXmlElement *entry = confList->FirstChildElement(); entry != NULL; entry = entry->NextSiblingElement())
