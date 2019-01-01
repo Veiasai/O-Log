@@ -22,7 +22,7 @@
 #endif
 
 #include <librdkafka/rdkafkacpp.h>
-#include "lib/tinyxml2.h"
+#include "lib/tinyxml.h"
 
 class MyProducer
 {
