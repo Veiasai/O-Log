@@ -43,7 +43,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             @Override
             public void run() {
                 try {
-                    Thread.sleep(TimeUnit.MINUTES.toMillis(2));
+                    Thread.sleep(TimeUnit.SECONDS.toMillis(30));
                     writable = true;
                     new Thread(new Runnable() {
                         @Override
@@ -93,25 +93,6 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
                 return null;
             }
         }
-//        } else {
-//            if (Long.valueOf(newKey) <= latest) {
-//
-//                if (Long.valueOf(newKey) - time != 500000000) {
-//                    KeyValue<String, String> temp = KeyValue.pair(String.valueOf(time + 500000000), String.valueOf(time + 500000000));
-//                    latest = Long.valueOf(newKey);
-//                    return temp;
-//                } else if (recordValue != 10) {
-//                    latest = Long.valueOf(newKey);
-//                    return KeyValue.pair(String.valueOf(newKey), String.valueOf(newKey));
-//                } else {
-//                    time = Long.valueOf(newKey);
-//                    return null;
-//                }
-//            } else {
-//                latest = Long.valueOf(newKey);
-//                return null;
-//            }
-//        }
     }
 
     private void checkRecords() {
@@ -125,6 +106,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
                 break;
             }
         }
+        System.out.println(value);
         if (isFound) {
             System.out.println("case1");
 //            if (!(value.contains("rb1000")&&value.contains("rb1001")&&
