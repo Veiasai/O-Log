@@ -5,13 +5,13 @@
 bool run = true;
 
 int main(){
-    HandlerConfs handlerConfs= ConfLoader.load("conf/cppStream.xml");
+    HandlerConfs handlerConfs= ConfLoader::load("conf/cppStream.xml");
     if (handlerConfs.first.size()==0 || handlerConfs.second.size()==0)
     {
         std::cerr << "Load Conf Error." << std::endl;
     }
 
-    MyConsumer myConsumer(handlerConfs.fisrt[0]);
+    MyConsumer myConsumer(handlerConfs.first[0]);
     MyProducer myProducer(handlerConfs.second[0]);
 
     Processor* dp = new Demo_processor();
