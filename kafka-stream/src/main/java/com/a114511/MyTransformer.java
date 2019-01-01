@@ -71,7 +71,6 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
     @Override
     public KeyValue<String, String> transform(final String recordKey, final String recordValue) {
 
-
         if (isFirst) {
             isFirst = false;
             latest = Long.valueOf(recordKey);
@@ -86,6 +85,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             String value = strArry[0];
             records.merge(recordKey, value, (a, b) -> a + "," + b);
             if (retVec.size() != 0) {
+                System.out.println("hhhh");
                 KeyValue temp = retVec.get(0);
                 retVec.remove(0);
                 return temp;
@@ -106,7 +106,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
                 break;
             }
         }
-        System.out.println(value);
+        System.out.println("Product value:"+ value);
         if (isFound) {
             System.out.println("case1");
 //            if (!(value.contains("rb1000")&&value.contains("rb1001")&&
