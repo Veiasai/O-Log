@@ -85,7 +85,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             String value = strArry[0];
             records.merge(recordKey, value, (a, b) -> a + "," + b);
             if (retVec.size() != 0) {
-                System.out.println("hhhh");
+                // System.out.println("hhhh");
                 KeyValue temp = retVec.get(0);
                 retVec.remove(0);
                 return temp;
@@ -114,8 +114,8 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
 //            }
             for (int i = 0; i < products.length; i++){
                 if (!value.contains(products[i])){
-                    System.out.println("case1");
-                    System.out.println(products[i]);
+                    // System.out.println("case1");
+                    // System.out.println(products[i]);
                     JSONObject message = new JSONObject();
                     message.put("FEEDCODE", products[i]);
                     message.put("TIMESTAMP", latest);
@@ -124,7 +124,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
                 }
             }
         } else {
-            System.out.println("case2");
+            // System.out.println("case2");
             JSONObject message = new JSONObject();
             message.put("FEEDCODE", "ALL");
             message.put("TIMESTAMP", latest);

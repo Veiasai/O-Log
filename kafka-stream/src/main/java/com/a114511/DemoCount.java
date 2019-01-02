@@ -39,11 +39,11 @@ public class DemoCount {
                     return KeyValue.pair(generatedKey, value);
                 });
 
-       raw.foreach((key, value) -> System.out.println("key: " + key + " value: " + value));
+        // raw.foreach((key, value) -> System.out.println("key: " + key + " value: " + value));
 
         KStream<String, String> processed1 = raw.transform(new MyTransformerSupplyer());
 
-        processed1.foreach((key, value) -> System.out.println("key: " + key + " value: " + value));
+        // processed1.foreach((key, value) -> System.out.println("key: " + key + " value: " + value));
         processed1.to("demo-count-output");
 
         final Topology topology = builder.build();
