@@ -8,18 +8,11 @@ import net.sf.json.JSONObject;
 import org.apache.kafka.common.security.JaasUtils;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.*;
 import org.apache.kafka.streams.kstream.*;
-import org.apache.kafka.streams.state.KeyValueStore;
-import org.apache.kafka.streams.state.WindowStore;
-
-import java.security.acl.Group;
-import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
+
 
 public class DemoCount {
 
@@ -38,31 +31,24 @@ public class DemoCount {
         // build stream
         final StreamsBuilder builder = new StreamsBuilder();
 
-        KStream<String, String> temp = builder.<String, String>stream("fluent-newData")
+        KStream<String, String> raw = builder.<String, String>stream("fluent-newData")
                 .map((key, value) -> {
                     JSONObject message = JSONObject.fromObject(value);
-                    String generatedKey = message.getString("detail").split(",")[0];
+                    String[] strArry = message.getString("detail").split(",");
+                    String generatedKey = strArry[strArry.length - 1];
                     return KeyValue.pair(generatedKey, value);
-                })
-                .groupByKey()
-                .windowedBy(TimeWindows.of(TimeUnit.MINUTES.toMillis(2)).advanceBy(500))
-                .count()
-                .toStream((key, value) -> key.toString())
-                .flatMap((key, value) -> {
-                    List<KeyValue<String, String>> result = new LinkedList<>();
-                    if (value == 0) {
-                        result.add(KeyValue.pair(key, key));
-                    }
-                    return result;
                 });
 
-        temp.foreach((key, value) -> System.out.println("Key" + key));
-        temp.to("demo-count-output");
+       raw.foreach((key, value) -> System.out.println("key: " + key + " value: " + value));
 
-//        temp.foreach((key, value) -> System.out.println("Key:" + key + ", Value:" + value));
+        KStream<String, String> processed1 = raw.transform(new MyTransformerSupplyer());
+
+        processed1.foreach((key, value) -> System.out.println("key: " + key + " value: " + value));
+        processed1.to("demo-count-output");
 
         final Topology topology = builder.build();
         final KafkaStreams streams = new KafkaStreams(topology, props);
+
         final CountDownLatch latch = new CountDownLatch(1);
 
         // attach shutdown handler to catch control-c
@@ -83,5 +69,6 @@ public class DemoCount {
         System.exit(0);
 
     }
-
 }
+
+

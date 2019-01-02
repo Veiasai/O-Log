@@ -89,7 +89,7 @@
                     <manifest>
                         <addClasspath>true</addClasspath>
                         <classpathPrefix>lib/</classpathPrefix>
-                        <mainClass>com.a114511.LineSplit</mainClass>
+                        <mainClass>com.a114511.DemoCount</mainClass>
                     </manifest>
                     <manifestEntries>
                         <Class-Path>conf/</Class-Path>
@@ -115,7 +115,7 @@
             <configuration>
                 <archive>
                     <manifest>
-                        <mainClass>com.a114511.LineSplit</mainClass>
+                        <mainClass>com.a114511.DemoCount</mainClass>
                     </manifest>
                 </archive>
                 <descriptorRefs>
