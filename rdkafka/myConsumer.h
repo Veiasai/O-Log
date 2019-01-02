@@ -11,7 +11,7 @@ class MyConsumer
         RdKafka::KafkaConsumer *consumer;
         MyProducer *producer;
         Processor * processor;
-        std::string topicName;
+        std::vector<std::string> topics;
         void msg_consume(RdKafka::Message* message, void* opaque);
         
     public:

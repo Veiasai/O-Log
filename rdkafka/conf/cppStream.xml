@@ -4,7 +4,9 @@
     xsi:noNamespaceSchemaLocation="cppStream.xsd">
     <comsumers>
         <comsumer>
-            <topic>fluent-newData</topic>
+            <topic_list>
+                <topic>fluent-newData</topic>
+            </topic_list>
             <global_conf>
                 <confEntry>
                     <entryKey>group.id</entryKey>
@@ -19,7 +21,9 @@
     </comsumers>
     <producers>
         <producer>
-            <topic>rdkafkaPtest</topic>
+            <topic_list>
+                <topic>rdkafkaPtest</topic>
+            </topic_list>
             <global_conf>
                 <confEntry>
                     <entryKey>metadata.broker.list</entryKey>

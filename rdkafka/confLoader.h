@@ -6,7 +6,7 @@
 #include <librdkafka/rdkafkacpp.h>
 #include <vector>
 
-typedef std::pair<RdKafka::Conf*, std::string> HandlerConf;
+typedef std::pair<std::pair<RdKafka::Conf*, RdKafka::Conf*>, std::vector<std::string>> HandlerConf;
 typedef std::pair<std::vector<HandlerConf>, std::vector<HandlerConf>> HandlerConfs;
 
 class ConfLoader
@@ -16,6 +16,7 @@ class ConfLoader
 
     private:
       static HandlerConf loadHandlerConf(TiXmlElement *handler);
+      static std::vector<std::string> loadTopicList(TiXmlElement *topicList);
       static RdKafka::Conf *loadGlobalConf(TiXmlElement *confList);
       static RdKafka::Conf *loadTopicConf(TiXmlElement *confList);
 };

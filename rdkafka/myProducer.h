@@ -27,7 +27,6 @@ class MyProducer
     private:
         RdKafka::Producer *producer = NULL;
         RdKafka::Topic *topic = NULL;
-        std::string topicName;
 
       public:
         MyProducer(HandlerConf handlerConf);

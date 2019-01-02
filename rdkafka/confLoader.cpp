@@ -7,7 +7,6 @@ HandlerConfs ConfLoader::load(std::string filename)
     TiXmlDocument doc(filename.c_str());
     if(!doc.LoadFile())
     {
-        std::cerr << "can't loadFile" << std::endl;
         return handlerConfs;
     }
     TiXmlElement* root = doc.FirstChildElement();
@@ -19,7 +18,6 @@ HandlerConfs ConfLoader::load(std::string filename)
     {
         for (TiXmlElement *consumer = consumers->FirstChildElement(); consumer != NULL; consumer = consumer->NextSiblingElement())
         {
-            std::cerr << "load consumer" << std::endl;
             consumerConfs.push_back(loadHandlerConf(consumer));
         }
     }
@@ -29,7 +27,6 @@ HandlerConfs ConfLoader::load(std::string filename)
     {
         for (TiXmlElement *producer = producers->FirstChildElement(); producer != NULL; producer = producer->NextSiblingElement())
         {
-            std::cerr << "load producer" << std::endl;
             producerConfs.push_back(loadHandlerConf(producer));
         }
     }
@@ -39,17 +36,27 @@ HandlerConfs ConfLoader::load(std::string filename)
 HandlerConf ConfLoader::loadHandlerConf(TiXmlElement *handler)
 {
     HandlerConf handlerConf;
-    TiXmlElement *topic = handler->FirstChildElement();
-    handlerConf.second = topic->GetText();
-    TiXmlElement *globalConfList = topic ? topic->NextSiblingElement() : NULL;
+    TiXmlElement *topicList = handler->FirstChildElement();
+    TiXmlElement *globalConfList = topicList ? topicList->NextSiblingElement() : NULL;
     TiXmlElement *topicConfList = globalConfList ? globalConfList->NextSiblingElement() : NULL;
+    handlerConf.second = loadTopicList(topicList);
     RdKafka::Conf *globalConf = loadGlobalConf(globalConfList);
     RdKafka::Conf *topicConf = loadTopicConf(topicConfList);
-    std::string errstr;
-    globalConf->set("default_topic_conf", topicConf, errstr);
-    delete topicConf;
-    handlerConf.first = globalConf;
+    handlerConf.first = std::make_pair(globalConf, topicConf);
     return handlerConf;
+}
+
+std::vector<std::string> ConfLoader::loadTopicList(TiXmlElement *topicList)
+{
+    std::vector<std::string> topics;
+    if (topicList != NULL)
+    {
+        for (TiXmlElement *topic = topicList->FirstChildElement(); topic != NULL; topic = topic->NextSiblingElement())
+        {
+            topics.push_back(topic->GetText());
+        }
+    }
+    return topics;
 }
 
 RdKafka::Conf* ConfLoader::loadGlobalConf(TiXmlElement *confList)
