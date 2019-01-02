@@ -113,8 +113,8 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
 //            }
             for (int i = 0; i < products.length; i++){
                 if (!value.contains(products[i])){
-                    System.out.println("case1");
-                    System.out.println(products[i]);
+                    // System.out.println("case1");
+                    // System.out.println(products[i]);
                     JSONObject message = new JSONObject();
                     message.put("FEEDCODE", products[i]);
                     message.put("TIMESTAMP", latest);
@@ -123,7 +123,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
                 }
             }
         } else {
-            System.out.println("case2");
+            // System.out.println("case2");
             JSONObject message = new JSONObject();
             message.put("FEEDCODE", "ALL");
             message.put("TIMESTAMP", latest);

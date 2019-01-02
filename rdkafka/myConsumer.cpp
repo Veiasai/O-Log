@@ -83,38 +83,27 @@ class ExampleEventCb : public RdKafka::EventCb {
 MyConsumer::MyConsumer(){
 }
 
-MyConsumer::MyConsumer(std::string ConfPath){
+MyConsumer::MyConsumer(HandlerConf handlerConf){
     
     std::string errstr;
-    
-    RdKafka::Conf *conf = RdKafka::Conf::create(RdKafka::Conf::CONF_GLOBAL);
-    RdKafka::Conf *tconf = RdKafka::Conf::create(RdKafka::Conf::CONF_TOPIC);
-
-    // ExampleRebalanceCb ex_rebalance_cb;
-    // conf->set("rebalance_cb", &ex_rebalance_cb, errstr);
-    conf->set("group.id", "test_group_id", errstr);
-    // conf->set("metadata.broker.list", "ist-slave5:9092, ist-slave6:9092, s07:9092", errstr);
-    conf->set("metadata.broker.list", "kafka:9092", errstr);
-
+    topics = std::move(handlerConf.second);
     ExampleEventCb ex_event_cb;
-    conf->set("event_cb", &ex_event_cb, errstr);
-
-    conf->set("default_topic_conf", tconf, errstr);
-    delete tconf;
+    handlerConf.first.first->set("event_cb", &ex_event_cb, errstr);
+    handlerConf.first.first->set("default_topic_conf", handlerConf.first.second, errstr);
+    delete handlerConf.first.second;
 
     signal(SIGINT, sigterm);
     signal(SIGTERM, sigterm);
 
-    consumer = RdKafka::KafkaConsumer::create(conf, errstr);
+    consumer = RdKafka::KafkaConsumer::create(handlerConf.first.first, errstr);
     if (!consumer) {
         std::cerr << "Failed to create consumer: " << errstr << std::endl;
         exit(1);
     }
 
-    delete conf;
+    delete handlerConf.first.first;
 
     std::cout << "% Created consumer " << consumer->name() << std::endl;
-    std::cout<<"end init\n";
 }
 
 MyConsumer::~MyConsumer()
@@ -124,14 +113,16 @@ MyConsumer::~MyConsumer()
 
 void MyConsumer::subscribe()
 {
-    std::cout<<"begin subscribe\n";
-    std::vector<std::string> topics;
-    topics.push_back("fluent-newData");
     RdKafka::ErrorCode err = consumer->subscribe(topics);
-    if (err) {
+    if (err)
+    {
         std::cerr << "Failed to subscribe to " << topics.size() << " topics: "
                 << RdKafka::err2str(err) << std::endl;
         exit(1);
+    }
+    else
+    {
+        std::cout << "subscribe success" << std::endl;
     }
 }
 

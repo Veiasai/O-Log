@@ -1,6 +1,4 @@
 #pragma once
-#include <iostream>
-#include <string>
 #include <cstdlib>
 #include <cstdio>
 #include <csignal>
@@ -21,8 +19,8 @@
 #include <unistd.h>
 #endif
 
-#include <librdkafka/rdkafkacpp.h>
-#include "lib/tinyxml2.h"
+#include "lib/tinyxml.h"
+#include "confLoader.h"
 
 class MyProducer
 {
@@ -31,7 +29,7 @@ class MyProducer
         RdKafka::Topic *topic = NULL;
 
       public:
-        MyProducer(std::string ConfPath);
+        MyProducer(HandlerConf handlerConf);
         ~MyProducer();
         void produce(std::string message);
         void poll(int timeout_ms);

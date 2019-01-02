@@ -1,23 +1,19 @@
 #include "myProducer.h"
 
-MyProducer::MyProducer(std::string ConfPath)
+MyProducer::MyProducer(HandlerConf handlerConf)
 {
     std::string errstr = "";
-    RdKafka::Conf *conf = RdKafka::Conf::create(RdKafka::Conf::CONF_GLOBAL);
-    conf->set("metadata.broker.list", "kafka:9092", errstr);
-    //conf->set("metadata.broker.list", "ist-slave5:9092, ist-slave6:9092, s07:9092", errstr);
     
-    producer = RdKafka::Producer::create(conf, errstr);
-    delete conf;
+    producer = RdKafka::Producer::create(handlerConf.first.first, errstr);
+    delete handlerConf.first.first;
     if (!producer) {
       std::cerr << "Failed to create producer: " << errstr << std::endl;
       exit(1);
     }
     std::cout << "% Created producer " << producer->name() << std::endl;
 
-    RdKafka::Conf *tconf = RdKafka::Conf::create(RdKafka::Conf::CONF_TOPIC);
-    topic = RdKafka::Topic::create(producer, "rdkafkaPtest", tconf, errstr);
-    delete tconf;
+    topic = RdKafka::Topic::create(producer, handlerConf.second[0], handlerConf.first.second, errstr);
+    delete handlerConf.first.second;
     if (!topic) {
       std::cerr << "Failed to create topic: " << errstr << std::endl;
       exit(1);
