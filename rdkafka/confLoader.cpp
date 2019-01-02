@@ -39,7 +39,7 @@ HandlerConf ConfLoader::loadHandlerConf(TiXmlElement *handler)
     TiXmlElement *topicList = handler->FirstChildElement();
     TiXmlElement *globalConfList = topicList ? topicList->NextSiblingElement() : NULL;
     TiXmlElement *topicConfList = globalConfList ? globalConfList->NextSiblingElement() : NULL;
-    handlerConf.second = loadTopicList(topicList);
+    handlerConf.second = std::move(loadTopicList(topicList));
     RdKafka::Conf *globalConf = loadGlobalConf(globalConfList);
     RdKafka::Conf *topicConf = loadTopicConf(topicConfList);
     handlerConf.first = std::make_pair(globalConf, topicConf);
