@@ -5,7 +5,7 @@
 bool run = true;
 
 int main(){
-    HandlerConfs handlerConfs= ConfLoader::load("conf/cppStream.xml");
+    HandlerConfs handlerConfs= ConfLoader::load("rdkafka/conf/cppStream.xml");
     if (handlerConfs.first.size()==0 || handlerConfs.second.size()==0)
     {
         std::cerr << handlerConfs.first.size() << std::endl
