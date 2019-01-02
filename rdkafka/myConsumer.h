@@ -3,6 +3,7 @@
 #include "processor.h"
 #include <sys/time.h>
 #include <chrono>
+#include "confLoader.h"
 
 class MyConsumer
 {
@@ -10,11 +11,12 @@ class MyConsumer
         RdKafka::KafkaConsumer *consumer;
         MyProducer *producer;
         Processor * processor;
+        std::vector<std::string> topics;
         void msg_consume(RdKafka::Message* message, void* opaque);
         
     public:
 	MyConsumer();
-        MyConsumer(std::string ConfPath);
+        MyConsumer(HandlerConf handlerConf);
         ~MyConsumer();
         void subscribe();
         void consume();
