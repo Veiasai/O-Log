@@ -86,7 +86,7 @@ MyConsumer::MyConsumer(){
 MyConsumer::MyConsumer(HandlerConf handlerConf){
     
     std::string errstr;
-    topics = handlerConf.second;
+    topics = std::move(handlerConf.second);
     ExampleEventCb ex_event_cb;
     handlerConf.first.first->set("event_cb", &ex_event_cb, errstr);
     handlerConf.first.first->set("default_topic_conf", handlerConf.first.second, errstr);
@@ -113,12 +113,16 @@ MyConsumer::~MyConsumer()
 
 void MyConsumer::subscribe()
 {
-    std::cout<<"begin subscribe\n";
     RdKafka::ErrorCode err = consumer->subscribe(topics);
-    if (err) {
+    if (err)
+    {
         std::cerr << "Failed to subscribe to " << topics.size() << " topics: "
                 << RdKafka::err2str(err) << std::endl;
         exit(1);
+    }
+    else
+    {
+        std::cout << "subscribe success" << std::endl;
     }
 }
 
