@@ -74,6 +74,16 @@ pipeline:
     when:
       branch: master
 
+  spublish:
+    group: test
+    image: plugins/docker
+    repo: veiasai/kafka-stream-monitor
+    tags: ["latest"]
+    secrets: [ docker_username, docker_password ]
+    dockerfile: StreamDockerfile
+    when:
+      branch: master
+
 services: 
   zookeeper:
     image: zookeeper:3.4

@@ -1,0 +1,7 @@
+FROM veiasai/java:8
+
+WORKDIR /home
+
+COPY kafka-stream/target/KafkaStreamsDemo-1.0-SNAPSHOT-jar-with-dependencies.jar ./monitor.jar
+
+CMD ["java -jar /home/monitor.jar"]
