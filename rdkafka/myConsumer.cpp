@@ -109,7 +109,7 @@ MyConsumer::MyConsumer(HandlerConf handlerConf){
 
 MyConsumer::~MyConsumer()
 {
-    delete consumer;
+
 }
 
 void MyConsumer::subscribe()
@@ -192,4 +192,8 @@ void MyConsumer::setProducer(MyProducer *myProducer)
 
 void MyConsumer::setProcessor(Processor * p){
     processor = p;
+}
+
+void  MyConsumer::clear(){
+    delete consumer;
 }

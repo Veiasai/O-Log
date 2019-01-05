@@ -15,11 +15,12 @@ class MyConsumer
         void msg_consume(RdKafka::Message* message, void* opaque);
         
     public:
-	MyConsumer();
+	    MyConsumer();
         MyConsumer(HandlerConf handlerConf);
         ~MyConsumer();
         void subscribe();
         void consume();
         void setProducer(MyProducer *myProducer);
         void setProcessor(Processor * processor);
+        void clear();
 };

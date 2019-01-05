@@ -56,5 +56,11 @@ int main(){
             myProducer.poll(0);
         }
     }
+
+    for (auto& myConsumer : myConsumers)
+    {
+        myConsumer.clear();
+    }
+
 }
 
