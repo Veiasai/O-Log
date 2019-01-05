@@ -5,6 +5,7 @@ import kafka.admin.RackAwareMode;
 import kafka.utils.ZkUtils;
 import kafka.utils.json.JsonObject;
 import net.sf.json.JSONObject;
+import org.apache.kafka.common.errors.TopicExistsException;
 import org.apache.kafka.common.security.JaasUtils;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
@@ -16,11 +17,18 @@ import java.util.concurrent.CountDownLatch;
 
 public class DemoCount {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
-        ZkUtils zkUtils = ZkUtils.apply("zookeeper:2181", 30000, 30000, JaasUtils.isZkSecurityEnabled());
-        AdminUtils.createTopic(zkUtils, "demo-count-output", 1, 1, new Properties(), RackAwareMode.Enforced$.MODULE$);
-        zkUtils.close();
+        try {
+            ZkUtils zkUtils = ZkUtils.apply("zookeeper:2181", 30000, 30000, JaasUtils.isZkSecurityEnabled());
+            AdminUtils.createTopic(zkUtils, "demo-count-output", 1, 1, new Properties(), RackAwareMode.Enforced$.MODULE$);
+            zkUtils.close();
+            AdminUtils.createTopic(zkUtils, "fluent-newData", 1, 1, new Properties(), RackAwareMode.Enforced$.MODULE$);
+            zkUtils.close();
+        }
+        catch (TopicExistsException ignored){
+
+        }
 
         Properties props = new Properties();
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "streams-democount");

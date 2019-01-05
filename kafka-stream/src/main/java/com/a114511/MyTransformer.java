@@ -49,7 +49,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
                         @Override
                         public void run() {
                             while (true) {
-                                if (writable) {
+                                if (writable && !isFirst) {
                                     checkRecords();
                                 }
                                 try {
@@ -85,7 +85,6 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             String value = strArry[0];
             records.merge(recordKey, value, (a, b) -> a + "," + b);
             if (retVec.size() != 0) {
-                // System.out.println("hhhh");
                 KeyValue temp = retVec.get(0);
                 retVec.remove(0);
                 return temp;
