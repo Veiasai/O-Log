@@ -13,15 +13,15 @@ int main(){
     // }
 
     vector<MyConsumer> myConsumers;
-    // for (auto& handlerConf : handlerConfs.first)
-    // {
-    //     myConsumers.emplace_back(MyConsumer(handlerConf));
-    // }
-    myConsumers.emplace_back(MyConsumer(handlerConfs.first[0]));
+    for (auto& handlerConf : handlerConfs.first)
+    {
+        myConsumers.push_back(MyConsumer(handlerConf));
+    }
+
     vector<MyProducer> myProducers;
     for (auto& handlerConf : handlerConfs.second)
     {
-        myProducers.emplace_back(MyProducer(handlerConf));
+        myProducers.push_back(MyProducer(handlerConf));
     }
     std::cout << "1" << endl;
     Processor *dp = new Demo_processor();
