@@ -3,7 +3,6 @@ FROM veiasai/rdkafka:v4
 WORKDIR /home
 
 COPY rdkafka/monitor .
-
 COPY rdkafka/conf ./rdkafka/
 
 CMD ["/home/monitor"]
