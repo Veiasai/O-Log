@@ -33,5 +33,4 @@ class MyProducer
         ~MyProducer();
         void produce(std::string message);
         void poll(int timeout_ms);
-        void clear();
 };

@@ -22,5 +22,4 @@ class MyConsumer
         void consume();
         void setProducer(MyProducer *myProducer);
         void setProcessor(Processor * processor);
-        void clear();
 };

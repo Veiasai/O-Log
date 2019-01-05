@@ -22,7 +22,8 @@ MyProducer::MyProducer(HandlerConf handlerConf)
 
 MyProducer::~MyProducer()
 {
-
+    delete topic;
+    delete producer;
 }
 
 void MyProducer::produce(std::string message)
@@ -44,10 +45,4 @@ void MyProducer::produce(std::string message)
 void MyProducer::poll(int timeout_ms)
 {
     producer->poll(timeout_ms);
-}
-
-void MyProducer::clear()
-{
-    delete topic;
-    delete producer;
 }
