@@ -15,13 +15,13 @@ int main(){
     vector<MyConsumer> myConsumers;
     for (auto& handlerConf : handlerConfs.first)
     {
-        myConsumers.emplace_back(myConsumer(handlerConf));
+        myConsumers.emplace_back(MyConsumer(handlerConf));
     }
 
     vector<MyProducer> myProducers;
     for (auto& handlerConf : handlerConfs.second)
     {
-        myProducers.emplace_back(myProducer(handlerConf));
+        myProducers.emplace_back(MyProducer(handlerConf));
     }
 
     Processor *dp = new Demo_processor();
