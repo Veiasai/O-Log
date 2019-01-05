@@ -13,9 +13,9 @@ int main(){
     // }
 
     vector<MyConsumer> myConsumers;
-    for (int i = 0; i < handlerConfs.first.size();i++)
+    for (auto& handlerConf : handlerConfs.first)
     {
-        myConsumers.emplace_back(MyConsumer(handlerConfs.first[i]));
+        myConsumers.emplace_back(MyConsumer(handlerConf));
     }
 
     vector<MyProducer> myProducers;
