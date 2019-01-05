@@ -20,7 +20,7 @@
         </comsumer>
     </comsumers>
     <producers>
-        <producer>
+        <!-- <producer>
             <topic_list>
                 <topic>rdkafkaPtest</topic>
             </topic_list>
@@ -30,6 +30,6 @@
                     <entryValue>kafka:9092</entryValue>
                 </confEntry>
             </global_conf>
-        </producer>
+        </producer> -->
     </producers>
 </cppStream>
