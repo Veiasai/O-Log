@@ -61,6 +61,10 @@ int main(){
     {
         myConsumer.clear();
     }
+    for (auto& myProducer : myProducers)
+    {
+        myProducer.clear();
+    }
 
 }
 
