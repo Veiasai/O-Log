@@ -116,7 +116,7 @@ void MyConsumer::subscribe()
 {
     std::cout << topics.size() << std::endl;
     std::cout << topics[0] << std::endl;
-    std::cout << consumer << std::endl;
+    std::cout << consumer->name() << std::endl;
     RdKafka::ErrorCode err = consumer->subscribe(topics);
     std::cout << 5 << std::endl;
     if (err)
