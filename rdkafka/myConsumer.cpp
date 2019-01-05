@@ -87,7 +87,7 @@ MyConsumer::MyConsumer(HandlerConf handlerConf){
     
     std::string errstr;
     topics = std::move(handlerConf.second);
-    std::cout << topic.size() << std::endl;
+    std::cout << topics.size() << std::endl;
     ExampleEventCb ex_event_cb;
     handlerConf.first.first->set("event_cb", &ex_event_cb, errstr);
     handlerConf.first.first->set("default_topic_conf", handlerConf.first.second, errstr);
@@ -114,7 +114,7 @@ MyConsumer::~MyConsumer()
 
 void MyConsumer::subscribe()
 {
-    std::cout << topic.size() << std::endl;
+    std::cout << topics.size() << std::endl;
     RdKafka::ErrorCode err = consumer->subscribe(topics);
     if (err)
     {
