@@ -57,7 +57,7 @@ public class Monitor {
                 .windowedBy(TimeWindows.of(Duration.ofMillis(500)).grace(Duration.ofSeconds(30)))
                 .count()
                 .suppress(Suppressed.untilWindowCloses(unbounded()))
-                .filter((windowedUserId, count) -> count == 0)
+                .filter((windowedUserId, count) -> count < 1)
                 .toStream()
                 .filter((window, count) -> count != null)
                 .map((windowedUserId, count) -> new KeyValue<>(windowedUserId.toString(), windowedUserId.toString()))
