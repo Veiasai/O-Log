@@ -1,4 +1,4 @@
-FROM veiasai/rdkafka:v4
+FROM xiaoyaolang/librdkafka-printpoint:latest
 
 WORKDIR /home
 
