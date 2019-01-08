@@ -1,14 +1,14 @@
 CC = gcc
 CXX = g++
 CFLAGS = -lrdkafka -lz -lpthread -lrt 
-CXXFLAGS = -std=c++11  -lrdkafka++ -lz -lpthread -lrt -ljsoncpp
+CXXFLAGS = -std=c++11 -lz -lpthread -lrt -ljsoncpp #-lrdkafka++
 
 bin = monitor
-Target: $(bin) rdkafka
+Target: rdkafka $(bin)
 
 all: $(Target)
 
-monitor: main.o  myConsumer.o myProducer.o demo_processor.o utils.o confLoader.o lib/tinystr.o lib/tinyxml.o lib/tinyxmlerror.o lib/tinyxmlparser.o
+monitor: main.o  myConsumer.o myProducer.o demo_processor.o utils.o confLoader.o lib/tinystr.o lib/tinyxml.o lib/tinyxmlerror.o lib/tinyxmlparser.o link_lib/librdkafka++.so link_lib/librdkafka.so
 	$(CXX) -g $^ -o $@ $(CXXFLAGS)
 
 rdkafka:
