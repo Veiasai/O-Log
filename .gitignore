@@ -1,9 +1,11 @@
 .vscode/
 core.*
 *.o
+*.lds
 PythonScript/DataDir/*.log
 PythonScript/DebugLog/
+rdkafka/monitor
 
 target/
 
-.idea/
+.idea/s
