@@ -11,6 +11,7 @@ all: $(Target)
 monitor: main.o  myConsumer.o myProducer.o demo_processor.o utils.o confLoader.o lib/tinystr.o lib/tinyxml.o lib/tinyxmlerror.o lib/tinyxmlparser.o #link_lib/librdkafka++.so link_lib/librdkafka.so
 	$(CXX) -g $^ -o $@ $(CXXFLAGS)
 
+
 rdkafka:
 	cp ./librdkafka-PrintPoint/src/librdkafka.a ./link_lib/
 	cp ./librdkafka-PrintPoint/src/librdkafka.so.1 ./link_lib/
