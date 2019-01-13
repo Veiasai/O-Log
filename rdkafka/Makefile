@@ -12,10 +12,6 @@ monitor: main.o  myConsumer.o myProducer.o demo_processor.o utils.o confLoader.o
 	$(CXX) -g $^ -o $@ $(CXXFLAGS)
 
 rdkafka:
-	cd librdkafka-PrintPoint
-	make clean
-	make
-	cd ..
 	cp ./librdkafka-PrintPoint/src/librdkafka.a ./link_lib/
 	cp ./librdkafka-PrintPoint/src/librdkafka.so.1 ./link_lib/
 	ln -s librdkafka.so.1 ./link_lib/librdkafka.so -f

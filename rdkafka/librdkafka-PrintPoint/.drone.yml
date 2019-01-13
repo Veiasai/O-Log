@@ -6,6 +6,7 @@ pipeline:
   mpublish:
     image: plugins/docker
     repo: xiaoyaolang/librdkafka-printpoint
+    # repo: xiaoyaolang/jsoncpp_gcc
     tags: ["latest"]
     secrets: [ docker_username, docker_password ]
     dockerfile: Dockerfile
