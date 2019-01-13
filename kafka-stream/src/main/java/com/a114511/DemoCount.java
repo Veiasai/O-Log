@@ -18,11 +18,9 @@ import java.util.concurrent.CountDownLatch;
 public class DemoCount {
 
     public static void main(String[] args) {
-
         try {
             ZkUtils zkUtils = ZkUtils.apply("zookeeper:2181", 30000, 30000, JaasUtils.isZkSecurityEnabled());
             AdminUtils.createTopic(zkUtils, "demo-count-output", 1, 1, new Properties(), RackAwareMode.Enforced$.MODULE$);
-            zkUtils.close();
             AdminUtils.createTopic(zkUtils, "fluent-newData", 1, 1, new Properties(), RackAwareMode.Enforced$.MODULE$);
             zkUtils.close();
         }
