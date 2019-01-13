@@ -5,5 +5,4 @@ WORKDIR /home
 COPY rdkafka/monitor .
 COPY rdkafka/conf ./rdkafka/conf/
 
-
 CMD ["/home/monitor"]
