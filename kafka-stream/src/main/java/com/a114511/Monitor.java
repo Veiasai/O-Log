@@ -46,13 +46,13 @@ public class Monitor {
 
         builder.stream("fluent-newData", Consumed.with(Serdes.String(), Serdes.String()))
                 .map((key, value) -> {
-                    System.out.println(value);
+//                    System.out.println(value);
                     JSONObject message = JSONObject.fromObject(value);
                     String[] strArry = message.getString("detail").split(",");
                     return KeyValue.pair(strArry[0], value);
                 })
                 .groupByKey(Grouped.with(Serdes.String(), Serdes.String()))
-                .windowedBy(TimeWindows.of(Duration.ofMillis(500)).grace(Duration.ofSeconds(30)))
+                .windowedBy(TimeWindows.of(Duration.ofMillis(100)).grace(Duration.ofSeconds(30)))
                 .count()
                 .suppress(Suppressed.untilWindowCloses(unbounded()))
                 .toStream((key, value) -> String.valueOf(key))
