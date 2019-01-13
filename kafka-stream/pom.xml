@@ -115,7 +115,7 @@
             <configuration>
                 <archive>
                     <manifest>
-                        <mainClass>com.a114511.Monitor</mainClass>
+                        <mainClass>com.a114511.DemoCount</mainClass>
                     </manifest>
                 </archive>
                 <descriptorRefs>
