@@ -1,7 +1,7 @@
 CC = gcc
 CXX = g++
 CFLAGS = -lrdkafka -lz -lpthread -lrt 
-CXXFLAGS = -std=c++11 -lz -lpthread -lrt -ljsoncpp #-lrdkafka++
+CXXFLAGS = -std=c++11 -lz -lpthread -lrt #-ljsoncpp -lrdkafka++
 
 bin = monitor
 Target: rdkafka $(bin)
