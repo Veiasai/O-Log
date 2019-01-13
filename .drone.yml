@@ -12,7 +12,7 @@ pipeline:
       - /home/drone/maven-repo:/root/.m2
 
   build:
-    image: xiaoyaolang/librdkafka-printpoint:latest
+    image: veiasai/rdkafka:v4
     commands:
       - cp fluent-bit/*.conf /cache
       - cd rdkafka
@@ -38,30 +38,30 @@ pipeline:
     image:  jsenon/kafka-consumer:latest
     environment:
       - MY_KAFKABOOTSTRAP=kafka:9092 
-      - MY_TOPIC=demo-count-output  
+      - MY_TOPIC=demo-count-output
       - MY_GROUPID=stream-consumer
     detach: true
 
-  consumer:
-    image:  jsenon/kafka-consumer:latest
-    environment:
-      - MY_KAFKABOOTSTRAP=kafka:9092 
-      - MY_TOPIC=rdkafkaPtest  
-      - MY_GROUPID=console-consumer
-    detach: true
+  # consumer:
+  #   image:  jsenon/kafka-consumer:latest
+  #   environment:
+  #     - MY_KAFKABOOTSTRAP=kafka:9092
+  #     - MY_TOPIC=rdkafkaPtest
+  #     - MY_GROUPID=console-consumer
+  #   detach: true
 
-  test:
-    group: test
-    image: xiaoyaolang/librdkafka-printpoint:latest
-    commands:
-      - chmod 700 test.sh && ./test.sh
+  # test:
+  #   group: test
+  #   image: veiasai/rdkafka:v4
+  #   commands:
+  #     - chmod 700 test.sh && ./test.sh
 
   streamtest:
     group: test
     image: veiasai/java:8
     commands:
       - cd kafka-stream
-      - timeout 60 java -jar target/KafkaStreamsDemo-1.0-SNAPSHOT-jar-with-dependencies.jar
+      - timeout 120 java -jar target/KafkaStreamsDemo-1.0-SNAPSHOT-jar-with-dependencies.jar
       - exit 0
 
   mpublish:
