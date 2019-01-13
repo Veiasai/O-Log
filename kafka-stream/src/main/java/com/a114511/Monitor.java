@@ -51,7 +51,7 @@ public class Monitor {
                     return KeyValue.pair(strArry[0], value);
                 })
                 .groupByKey(Grouped.with(Serdes.String(), Serdes.String()))
-                .windowedBy(TimeWindows.of(Duration.ofMillis(500)).grace(Duration.ofSeconds(30)))
+                .windowedBy(TimeWindows.of(Duration.ofMillis(500)).grace(Duration.ofSeconds(30)).advanceBy(Duration.ofMillis(500)))
                 .count()
                 .suppress(Suppressed.untilWindowCloses(unbounded()))
                 .filter((windowedUserId, count) -> count < 1)
