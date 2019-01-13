@@ -54,11 +54,13 @@ public class Monitor {
                 .windowedBy(TimeWindows.of(Duration.ofMillis(500)).grace(Duration.ofSeconds(30)).advanceBy(Duration.ofMillis(500)))
                 .count()
                 .suppress(Suppressed.untilWindowCloses(unbounded()))
-                .filter((windowedUserId, count) -> count < 1)
-                .toStream()
-                .filter((window, count) -> count != null)
-                .map((windowedUserId, count) -> new KeyValue<>(windowedUserId.toString(), windowedUserId.toString()))
-                .to("demo-count-output", Produced.with(stringSerde, stringSerde));
+                .toStream((key, value) -> String.valueOf(key))
+                .foreach((key, value) -> System.out.println(key + ", " + value));
+//                .filter((windowedUserId, count) -> count < 1)
+//                .toStream()
+//                .filter((window, count) -> count != null)
+//                .map((windowedUserId, count) -> new KeyValue<>(windowedUserId.toString(), windowedUserId.toString()))
+//                .to("demo-count-output", Produced.with(stringSerde, stringSerde));
 
         final KafkaStreams streams = new KafkaStreams(builder.build(), streamsConfiguration);
 
