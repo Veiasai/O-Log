@@ -46,6 +46,7 @@ public class Monitor {
 
         builder.stream("fluent-newData", Consumed.with(Serdes.String(), Serdes.String()))
                 .map((key, value) -> {
+                    System.out.println(value);
                     JSONObject message = JSONObject.fromObject(value);
                     String[] strArry = message.getString("detail").split(",");
                     return KeyValue.pair(strArry[0], value);
