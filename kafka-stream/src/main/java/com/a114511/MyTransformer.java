@@ -83,7 +83,9 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             if (records.containsKey(recordKey)) {
                 List<String> temp = records.get(recordKey);
                 if (!temp.contains(value)) {
-                    temp.add(value);
+                    if (!temp.add(value)) {
+                        System.out.println(recordKey+ " " + value + " add failed");
+                    }
                 }
                 records.replace(recordKey, temp);
             } else {
