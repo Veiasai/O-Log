@@ -19,10 +19,11 @@ public class DemoCount {
 
     public static void main(String[] args) {
 
+        System.out.println(">>>>>>>>>>>>>");
+        
         try {
             ZkUtils zkUtils = ZkUtils.apply("zookeeper:2181", 30000, 30000, JaasUtils.isZkSecurityEnabled());
             AdminUtils.createTopic(zkUtils, "demo-count-output", 1, 1, new Properties(), RackAwareMode.Enforced$.MODULE$);
-            zkUtils.close();
             AdminUtils.createTopic(zkUtils, "fluent-newData", 1, 1, new Properties(), RackAwareMode.Enforced$.MODULE$);
             zkUtils.close();
         }
@@ -47,6 +48,8 @@ public class DemoCount {
                     return KeyValue.pair(generatedKey, value);
                 });
 
+
+        
         // raw.foreach((key, value) -> System.out.println("key: " + key + " value: " + value));
 
         KStream<String, String> processed1 = raw.transform(new MyTransformerSupplyer());
