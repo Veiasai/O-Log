@@ -37,7 +37,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             @Override
             public void run() {
                 try {
-                    Thread.sleep(TimeUnit.SECONDS.toMillis(50));
+                    Thread.sleep(TimeUnit.SECONDS.toMillis(10));
                     writable = true;
                     new Thread(new Runnable() {
                         @Override
@@ -122,6 +122,9 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
 //            }
             for (int i = 0; i < products.size(); i++) {
                 if (!value.contains(products.get(i))) {
+                    for (int j = 0; j < value.size(); ++j){
+                        System.out.println(value.get(j));
+                    }
                     JSONObject message = new JSONObject();
                     message.put("FEEDCODE", products.get(i));
                     message.put("TIMESTAMP", latest);
