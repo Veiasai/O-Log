@@ -42,19 +42,19 @@ pipeline:
       - MY_GROUPID=stream-consumer
     detach: true
 
-  consumer:
-    image:  jsenon/kafka-consumer:latest
-    environment:
-      - MY_KAFKABOOTSTRAP=kafka:9092 
-      - MY_TOPIC=rdkafkaPtest  
-      - MY_GROUPID=console-consumer
-    detach: true
+  # consumer:
+  #   image:  jsenon/kafka-consumer:latest
+  #   environment:
+  #     - MY_KAFKABOOTSTRAP=kafka:9092 
+  #     - MY_TOPIC=rdkafkaPtest  
+  #     - MY_GROUPID=console-consumer
+  #   detach: true
 
-  test:
-    group: test
-    image: xiaoyaolang/librdkafka-printpoint:latest
-    commands:
-      - chmod 700 test.sh && ./test.sh
+  # test:
+  #   group: test
+  #   image: xiaoyaolang/librdkafka-printpoint:latest
+  #   commands:
+  #     - chmod 700 test.sh && ./test.sh
 
   streamtest:
     group: test
