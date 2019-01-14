@@ -33,7 +33,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
 
     private Map<String, Vector<String>> records = new HashMap<String, Vector<String>>();
 
-    private Vector<KeyValue<String, String>> retVec = new Vector<KeyValue<String, String>>(20000);
+    private Vector<KeyValue<String, String>> retVec = new Vector<KeyValue<String, String>>();
 
     @Override
     @SuppressWarnings("unchecked")
@@ -84,7 +84,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             JSONObject message = JSONObject.fromObject(recordValue);
             String[] strArry = message.getString("detail").split(",");
             String value = strArry[0];
-            Vector<String> temp = new Vector<String>(20000);
+            Vector<String> temp = new Vector<String>(3000);
             temp.add(value);
             records.put(recordKey, temp);
             return null;
@@ -98,7 +98,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
                 temp.add(value);
                 records.replace(recordKey, temp);
             } else {
-                Vector<String> temp = new Vector<String>(20000);
+                Vector<String> temp = new Vector<String>(3000);
                 temp.add(value);
                 records.put(recordKey, temp);
             }
@@ -114,7 +114,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
 
     private void checkRecords() {
         boolean isFound = false;
-        Vector<String> value = new Vector<>();
+        Vector<String> value = new Vector<String>();
         for (Map.Entry<String, Vector<String>> entry : records.entrySet()) {
             if (entry.getKey().contains(String.valueOf(latest))) {
                 isFound = true;
