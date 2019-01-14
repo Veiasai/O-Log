@@ -78,6 +78,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             return null;
         } else {
             JSONObject message = JSONObject.fromObject(recordValue);
+            System.out.println("recordvalue: " + recordValue );
             String[] strArry = message.getString("detail").split(",");
             String value = strArry[0];
             System.out.println("aaaaaaa" + value);
