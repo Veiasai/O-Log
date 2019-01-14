@@ -71,7 +71,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             JSONObject message = JSONObject.fromObject(recordValue);
             String[] strArry = message.getString("detail").split(",");
             String value = strArry[0];
-            List<String> temp = new ArrayList<String>(30000);
+            List<String> temp = new ArrayList<String>();
             temp.add(value);
             records.put(recordKey, temp);
             return null;
@@ -87,7 +87,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
                 }
                 records.replace(recordKey, temp);
             } else {
-                List<String> temp = new ArrayList<String>(30000);
+                List<String> temp = new ArrayList<String>();
                 temp.add(value);
                 records.put(recordKey, temp);
             }
