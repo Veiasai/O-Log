@@ -7,9 +7,7 @@ import org.apache.kafka.streams.kstream.Transformer;
 import org.apache.kafka.streams.processor.ProcessorContext;
 
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 
@@ -29,9 +27,9 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
     private boolean writable;
     private boolean isFirst = true;
 
-    private Vector<String> products = new Vector<String>();
+    private List<String> products = new ArrayList<>();
 
-    private Map<String, Vector<String>> records = new HashMap<String, Vector<String>>();
+    private Map<String, List<String>> records = new HashMap<String, List<String>>();
 
     private Vector<KeyValue<String, String>> retVec = new Vector<KeyValue<String, String>>();
 
@@ -84,7 +82,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             JSONObject message = JSONObject.fromObject(recordValue);
             String[] strArry = message.getString("detail").split(",");
             String value = strArry[0];
-            Vector<String> temp = new Vector<String>(20000);
+            List<String> temp = new ArrayList<>();
             temp.add(value);
             records.put(recordKey, temp);
             return null;
@@ -94,13 +92,13 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             String value = strArry[0];
 //            records.merge(recordKey, value, (a, b) -> a + "," + b);
             if (records.containsKey(recordKey)) {
-                Vector<String> temp = records.get(recordKey);
+                List<String> temp = records.get(recordKey);
                 if (!temp.contains(value)) {
                     temp.add(value);
                 }
                 records.replace(recordKey, temp);
             } else {
-                Vector<String> temp = new Vector<String>(20000);
+                List<String> temp = new ArrayList<>();
                 temp.add(value);
                 records.put(recordKey, temp);
             }
@@ -116,8 +114,8 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
 
     private void checkRecords() {
         boolean isFound = false;
-        Vector<String> value = new Vector<String>();
-        for (Map.Entry<String, Vector<String>> entry : records.entrySet()) {
+        List<String> value = new ArrayList<>();
+        for (Map.Entry<String, List<String>> entry : records.entrySet()) {
             if (entry.getKey().contains(String.valueOf(latest))) {
                 isFound = true;
                 value = entry.getValue();
