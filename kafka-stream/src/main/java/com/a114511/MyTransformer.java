@@ -84,7 +84,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             JSONObject message = JSONObject.fromObject(recordValue);
             String[] strArry = message.getString("detail").split(",");
             String value = strArry[0];
-            Vector<String> temp = new Vector<String>(20000);
+            Vector<String> temp = new Vector<>(3000);
             temp.add(value);
             records.put(recordKey, temp);
             return null;
@@ -98,7 +98,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
                 temp.add(value);
                 records.replace(recordKey, temp);
             } else {
-                Vector<String> temp = new Vector<String>(20000);
+                Vector<String> temp = new Vector<>(3000);
                 temp.add(value);
                 records.put(recordKey, temp);
             }
