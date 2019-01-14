@@ -103,7 +103,7 @@ MyConsumer::MyConsumer(HandlerConf handlerConf){
 
     delete handlerConf.first.first;
 
-    std::cout << "% Created consumer " << consumer->name() << std::endl;
+    // std::cout << "% Created consumer " << consumer->name() << std::endl;
 }
 
 MyConsumer::~MyConsumer()
@@ -122,7 +122,7 @@ void MyConsumer::subscribe()
     }
     else
     {
-        std::cout << "subscribe success" << std::endl;
+        // std::cout << "subscribe success" << std::endl;
     }
 }
 

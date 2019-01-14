@@ -3733,9 +3733,9 @@ rd_kafka_broker_t *rd_kafka_broker_add (rd_kafka_t *rk,
 					rd_kafka_secproto_t proto,
 					const char *name, uint16_t port,
 					int32_t nodeid) {
-        printf("begin rd_kafka_broker_add\n");
-        printf("nodename:%p\nport:%d\nnodeid:%d\n", name, port, nodeid);
-        sleep(60);
+        printf("begin rd_kafka_broker_add ");
+        printf("nodename:%s port:%d nodeid:%d\n", name, port, nodeid);
+        sleep(10);
 	rd_kafka_broker_t *rkb;
         int r;
 #ifndef _MSC_VER
@@ -3858,7 +3858,7 @@ rd_kafka_broker_t *rd_kafka_broker_add (rd_kafka_t *rk,
 	rd_kafka_broker_lock(rkb);
         rd_kafka_broker_keep(rkb); /* broker thread's refcnt */
         printf("before create broker thread\n");
-        sleep(60);
+        sleep(10);
 	if (thrd_create(&rkb->rkb_thread,
 			rd_kafka_broker_thread_main, rkb) != thrd_success) {
 		char tmp[512];
@@ -3883,7 +3883,7 @@ rd_kafka_broker_t *rd_kafka_broker_add (rd_kafka_t *rk,
 		return NULL;
 	}
         printf("after create broker thread\n");
-        sleep(60);
+        sleep(10);
 
         if (rkb->rkb_source != RD_KAFKA_INTERNAL) {
                 if (rk->rk_conf.security_protocol ==
@@ -3913,7 +3913,7 @@ rd_kafka_broker_t *rd_kafka_broker_add (rd_kafka_t *rk,
 #endif
 
         printf("end rd_kafka_broker_add\n");
-        sleep(60);
+        sleep(10);
 	return rkb;
 }
 
@@ -4101,7 +4101,7 @@ static int rd_kafka_broker_name_parse (rd_kafka_t *rk,
  */
 int rd_kafka_brokers_add0 (rd_kafka_t *rk, const char *brokerlist) {
         printf("begin rd_kafka_brokers_add0\n");
-        sleep(60);
+        sleep(10);
 	char *s_copy = rd_strdup(brokerlist);
 	char *s = s_copy;
 	int cnt = 0;
@@ -4127,7 +4127,7 @@ int rd_kafka_brokers_add0 (rd_kafka_t *rk, const char *brokerlist) {
 		if ((rkb = rd_kafka_broker_find(rk, proto, host, port)) &&
 		    rkb->rkb_source == RD_KAFKA_CONFIGURED) {
                         printf("broker_find\n");
-                        sleep(60);
+                        sleep(10);
 			cnt++;
 		} else if (rd_kafka_broker_add(rk, RD_KAFKA_CONFIGURED,
 					       proto, host, port,
@@ -4146,7 +4146,7 @@ int rd_kafka_brokers_add0 (rd_kafka_t *rk, const char *brokerlist) {
 	rd_free(s_copy);
 
         printf("end rd_kafka_brokers_add0\n");
-        sleep(60);
+        sleep(10);
 	return cnt;
 }
 

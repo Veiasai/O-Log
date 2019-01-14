@@ -10,7 +10,7 @@ MyProducer::MyProducer(HandlerConf handlerConf)
       std::cerr << "Failed to create producer: " << errstr << std::endl;
       exit(1);
     }
-    std::cout << "% Created producer " << producer->name() << std::endl;
+    // std::cout << "% Created producer " << producer->name() << std::endl;
 
     topic = RdKafka::Topic::create(producer, handlerConf.second[0], handlerConf.first.second, errstr);
     delete handlerConf.first.second;

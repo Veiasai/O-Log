@@ -176,7 +176,7 @@ rd_kafka_cgrp_t *rd_kafka_cgrp_new (rd_kafka_t *rk,
                                     const rd_kafkap_str_t *client_id) {
                                             
         printf("begin rd_kafka_cgrp_new\n");
-        sleep(60);
+        sleep(10);
         rd_kafka_cgrp_t *rkcg;
 
         rkcg = rd_calloc(1, sizeof(*rkcg));
@@ -222,8 +222,8 @@ rd_kafka_cgrp_t *rd_kafka_cgrp_new (rd_kafka_t *rk,
 				     auto_commit_interval_ms * 1000ll,
                                      rd_kafka_cgrp_offset_commit_tmr_cb,
                                      rkcg);
-        printf("begin rd_kafka_cgrp_new\n");
-        sleep(60);
+        printf("end rd_kafka_cgrp_new\n");
+        sleep(10);
 
         return rkcg;
 }

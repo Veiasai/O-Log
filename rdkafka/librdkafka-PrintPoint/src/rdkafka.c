@@ -1458,7 +1458,7 @@ static void rd_kafka_term_sig_handler (int sig) {
 rd_kafka_t *rd_kafka_new (rd_kafka_type_t type, rd_kafka_conf_t *app_conf,
 			  char *errstr, size_t errstr_size) {
         printf("begin rd_kafka_new\n");
-        sleep(60);
+        sleep(10);
 	rd_kafka_t *rk;
 	static rd_atomic32_t rkid;
         rd_kafka_conf_t *conf;
@@ -1701,7 +1701,7 @@ rd_kafka_t *rd_kafka_new (rd_kafka_type_t type, rd_kafka_conf_t *app_conf,
                 rk->rk_background.q = rd_kafka_q_new(rk);
                 
                 printf("before create background thread\n");
-                sleep(60);
+                sleep(10);
                 if ((thrd_create(&rk->rk_background.thread,
                                  rd_kafka_background_thread_main, rk)) !=
                     thrd_success) {
@@ -1721,7 +1721,7 @@ rd_kafka_t *rd_kafka_new (rd_kafka_type_t type, rd_kafka_conf_t *app_conf,
                         goto fail;
                 }
                 printf("after create background thread\n");
-                sleep(60);
+                sleep(10);
 
                 rd_kafka_wrunlock(rk);
         }
@@ -1733,7 +1733,7 @@ rd_kafka_t *rd_kafka_new (rd_kafka_type_t type, rd_kafka_conf_t *app_conf,
 	rd_kafka_wrlock(rk);
 
         printf("before create handler thread\n");
-        sleep(60);
+        sleep(10);
 	/* Create handler thread */
 	if ((thrd_create(&rk->rk_thread,
 			 rd_kafka_thread_main, rk)) != thrd_success) {
@@ -1751,7 +1751,7 @@ rd_kafka_t *rd_kafka_new (rd_kafka_type_t type, rd_kafka_conf_t *app_conf,
                 goto fail;
         }
         printf("after create handler thread\n");
-        sleep(60);
+        sleep(10);
 
         rd_kafka_wrunlock(rk);
 
@@ -1764,12 +1764,12 @@ rd_kafka_t *rd_kafka_new (rd_kafka_type_t type, rd_kafka_conf_t *app_conf,
 
         mtx_lock(&rk->rk_internal_rkb_lock);
         printf("before add internal broker thread\n");
-        sleep(60);
+        sleep(10);
 	rk->rk_internal_rkb = rd_kafka_broker_add(rk, RD_KAFKA_INTERNAL,
 						  RD_KAFKA_PROTO_PLAINTEXT,
 						  "", 0, RD_KAFKA_NODEID_UA);
         printf("after add internal broker thread\n");
-        sleep(60);
+        sleep(10);
         mtx_unlock(&rk->rk_internal_rkb_lock);
 
 	/* Add initial list of brokers from configuration */
@@ -1801,7 +1801,7 @@ rd_kafka_t *rd_kafka_new (rd_kafka_type_t type, rd_kafka_conf_t *app_conf,
                      rk->rk_conf.builtin_features, rk->rk_conf.debug);
 
         printf("end rd_kafka_new\n");
-        sleep(60);
+        sleep(10);
 	return rk;
 
 fail:
