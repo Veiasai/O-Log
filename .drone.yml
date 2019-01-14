@@ -23,7 +23,7 @@ pipeline:
   script:
     image: python:2.7
     commands:
-      - python PythonScript/generateData.py --fileAmount 1500 --timeLength 120 --dropTime 4 --dropInterval 10 --dropFileAmount 10 --messageType 2 --feedCodeStartId 4000
+      - python PythonScript/generateData.py --fileAmount 3000 --timeLength 120 --dropTime 4 --dropInterval 10 --dropFileAmount 10 --messageType 2 --feedCodeStartId 4000
       - ls /olog/src/github.com/veiasai/olog
     detach: true
 
@@ -74,15 +74,15 @@ pipeline:
   #   when:
   #     branch: master
 
-  spublish:
-    group: test
-    image: plugins/docker
-    repo: veiasai/kafka-stream-monitor
-    tags: ["latest"]
-    secrets: [ docker_username, docker_password ]
-    dockerfile: StreamDockerfile
-    when:
-      branch: [ master, veia-stream ]
+  # spublish:
+  #   group: test
+  #   image: plugins/docker
+  #   repo: veiasai/kafka-stream-monitor
+  #   tags: ["latest"]
+  #   secrets: [ docker_username, docker_password ]
+  #   dockerfile: StreamDockerfile
+  #   when:
+  #     branch: [ master, veia-stream ]
 
 services: 
   zookeeper:

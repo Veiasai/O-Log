@@ -80,6 +80,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             JSONObject message = JSONObject.fromObject(recordValue);
             String[] strArry = message.getString("detail").split(",");
             String value = strArry[0];
+            System.out.println("aaaaaaa" + value);
 //            records.merge(recordKey, value, (a, b) -> a + "," + b);
             if (records.containsKey(recordKey)) {
                 List<String> temp = records.get(recordKey);
