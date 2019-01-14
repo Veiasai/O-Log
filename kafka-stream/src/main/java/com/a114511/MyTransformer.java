@@ -31,7 +31,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
 
     private Vector<String> products = new Vector<String>();
 
-    private Map<String, String> records = new HashMap<String, String>();
+    private Map<String, Vector<String>> records = new HashMap<String, Vector<String>>();
 
     private Vector<KeyValue<String, String>> retVec = new Vector<KeyValue<String, String>>();
 
@@ -40,10 +40,10 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
     public void init(ProcessorContext context) {
         // Not needed.
 
-        int productNum = 823;
+        int productNum = 1000;
         int productIdStart = 4000;
-        for (int i = 0; i < productNum; ++i){
-            products.add("rb" +String.valueOf(productIdStart + i));
+        for (int i = 0; i < productNum; ++i) {
+            products.add("rb" + String.valueOf(productIdStart + i));
         }
 
         new Thread(new Runnable() {
@@ -84,13 +84,25 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             JSONObject message = JSONObject.fromObject(recordValue);
             String[] strArry = message.getString("detail").split(",");
             String value = strArry[0];
-            records.put(recordKey, value);
+            Vector<String> temp = new Vector<String>();
+            temp.add(value);
+            records.put(recordKey, temp);
             return null;
         } else {
             JSONObject message = JSONObject.fromObject(recordValue);
             String[] strArry = message.getString("detail").split(",");
             String value = strArry[0];
-            records.merge(recordKey, value, (a, b) -> a + "," + b);
+//            records.merge(recordKey, value, (a, b) -> a + "," + b);
+            if (records.containsKey(recordKey)) {
+                Vector<String> temp = records.get(recordKey);
+                temp.add(value);
+                records.replace(recordKey, temp);
+                ;
+            } else {
+                Vector<String> temp = new Vector<String>();
+                temp.add(value);
+                records.put(recordKey, temp);
+            }
             if (retVec.size() != 0) {
                 KeyValue temp = retVec.get(0);
                 retVec.remove(0);
@@ -103,8 +115,8 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
 
     private void checkRecords() {
         boolean isFound = false;
-        String value = "";
-        for (Map.Entry<String, String> entry : records.entrySet()) {
+        Vector<String> value = new Vector<>();
+        for (Map.Entry<String, Vector<String>> entry : records.entrySet()) {
             if (entry.getKey().contains(String.valueOf(latest))) {
                 isFound = true;
                 value = entry.getValue();
@@ -118,8 +130,8 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
 //                    value.contains("rb1002")&&value.contains("rb1003")&&value.contains("rb1004"))){
 //                retVec.add(KeyValue.pair(String.valueOf(latest), String.valueOf(latest)));
 //            }
-            for (int i = 0; i < products.size(); i++){
-                if (!value.contains(products.get(i))){
+            for (int i = 0; i < products.size(); i++) {
+                if (!value.contains(products.get(i))) {
                     JSONObject message = new JSONObject();
                     message.put("FEEDCODE", products.get(i));
                     message.put("TIMESTAMP", latest);
