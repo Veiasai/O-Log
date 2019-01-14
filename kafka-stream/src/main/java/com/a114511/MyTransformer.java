@@ -29,7 +29,10 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
     private boolean writable;
     private boolean isFirst = true;
 
-    private String[] products = {"rb1000", "rb1001"};
+    private Vector<String> products;
+    private int productIdStart = 4000;
+    private int productNum = 100;
+
     private Map<String, String> records = new HashMap<String, String>();
 
     private Vector<KeyValue<String, String>> retVec = new Vector<KeyValue<String, String>>();
@@ -38,6 +41,10 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
     @SuppressWarnings("unchecked")
     public void init(ProcessorContext context) {
         // Not needed.
+
+        for (int i = 0; i < productNum; ++i){
+            products.add("rb" +String.valueOf(productIdStart + i));
+        }
 
         new Thread(new Runnable() {
             @Override
@@ -111,12 +118,12 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
 //                    value.contains("rb1002")&&value.contains("rb1003")&&value.contains("rb1004"))){
 //                retVec.add(KeyValue.pair(String.valueOf(latest), String.valueOf(latest)));
 //            }
-            for (int i = 0; i < products.length; i++){
-                if (!value.contains(products[i])){
+            for (int i = 0; i < products.size(); i++){
+                if (!value.contains(products.get(i))){
                     // System.out.println("case1");
                     // System.out.println(products[i]);
                     JSONObject message = new JSONObject();
-                    message.put("FEEDCODE", products[i]);
+                    message.put("FEEDCODE", products.get(i));
                     message.put("TIMESTAMP", latest);
                     message.put("LOG", "miss");
                     retVec.add(KeyValue.pair(String.valueOf(latest), message.toString()));

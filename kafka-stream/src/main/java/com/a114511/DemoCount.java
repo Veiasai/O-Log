@@ -25,7 +25,7 @@ public class DemoCount {
             zkUtils.close();
         }
         catch (TopicExistsException ignored){
-
+            System.out.println("ignore existed topic");
         }
 
         System.out.println(">>>>>>>>>>>>>>>>>");
