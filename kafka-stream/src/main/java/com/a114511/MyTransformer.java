@@ -29,9 +29,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
     private boolean writable;
     private boolean isFirst = true;
 
-    private Vector<String> products;
-    private int productIdStart = 4000;
-    private int productNum = 100;
+    private Vector<String> products = new Vector<String>();
 
     private Map<String, String> records = new HashMap<String, String>();
 
@@ -42,7 +40,9 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
     public void init(ProcessorContext context) {
         // Not needed.
 
+        int productNum = 100;
         for (int i = 0; i < productNum; ++i){
+            int productIdStart = 4000;
             products.add("rb" +String.valueOf(productIdStart + i));
         }
 
