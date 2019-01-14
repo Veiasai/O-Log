@@ -37,7 +37,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             @Override
             public void run() {
                 try {
-                    Thread.sleep(TimeUnit.SECONDS.toMillis(10));
+                    Thread.sleep(TimeUnit.SECONDS.toMillis(30));
                     writable = true;
                     new Thread(new Runnable() {
                         @Override
@@ -69,6 +69,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             isFirst = false;
             latest = Long.valueOf(recordKey);
             JSONObject message = JSONObject.fromObject(recordValue);
+            System.out.println("Begin time: " + recordKey);
             String[] strArry = message.getString("detail").split(",");
             String value = strArry[0];
             List<String> temp = new ArrayList<String>();
