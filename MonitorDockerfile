@@ -6,7 +6,6 @@ COPY rdkafka/monitor .
 COPY rdkafka/conf ./rdkafka/conf/
 COPY rdkafka/link_lib/* /usr/lib/
 
-RUN link -s /usr/lib/libjsoncpp.so.0.10.6 /usr/lib/libjsoncpp.so
-RUN link -s /usr/lib/libjsoncpp.so.0.10.6 /usr/lib/libjsoncpp.so.0
+RUN ln -s /usr/lib/libjsoncpp.so.0.10.6 /usr/lib/libjsoncpp.so.0
 
 CMD ["/home/monitor"]git 
