@@ -1,27 +1,16 @@
 package com.a114511;
 
 import net.sf.json.JSONObject;
-import org.apache.kafka.common.protocol.types.Field;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.Transformer;
 import org.apache.kafka.streams.processor.ProcessorContext;
 
-import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 
 public class MyTransformer implements Transformer<String, String, KeyValue<String, String>> {
 
-//    private class DataRecord {
-//        public Long dataTime;
-//        public Long count;
-//
-//        public DataRecord(Long dataTime, Long count) {
-//            this.dataTime = dataTime;
-//            this.count = count;
-//        }
-//    }
 
     private Long latest = 0L;
     private boolean writable;
@@ -82,7 +71,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             JSONObject message = JSONObject.fromObject(recordValue);
             String[] strArry = message.getString("detail").split(",");
             String value = strArry[0];
-            List<String> temp = new ArrayList<>();
+            List<String> temp = new ArrayList<String>(6000);
             temp.add(value);
             records.put(recordKey, temp);
             return null;
@@ -98,7 +87,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
                 }
                 records.replace(recordKey, temp);
             } else {
-                List<String> temp = new ArrayList<>();
+                List<String> temp = new ArrayList<String>(6000);
                 temp.add(value);
                 records.put(recordKey, temp);
             }
