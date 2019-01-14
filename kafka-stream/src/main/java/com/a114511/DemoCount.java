@@ -48,6 +48,7 @@ public class DemoCount {
                 });
 
 
+        
         // raw.foreach((key, value) -> System.out.println("key: " + key + " value: " + value));
 
         KStream<String, String> processed1 = raw.transform(new MyTransformerSupplyer());
