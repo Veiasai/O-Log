@@ -27,7 +27,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
     public void init(ProcessorContext context) {
         // Not needed.
 
-        int productNum = 3000;
+        int productNum = 1500;
         int productIdStart = 4000;
         for (int i = 0; i < productNum; ++i) {
             products.add("rb" + String.valueOf(productIdStart + i));
@@ -122,9 +122,6 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
 //            }
             for (int i = 0; i < products.size(); i++) {
                 if (!value.contains(products.get(i))) {
-                    for (int j = 0; j < value.size(); ++j){
-                        System.out.println(value.get(j));
-                    }
                     JSONObject message = new JSONObject();
                     message.put("FEEDCODE", products.get(i));
                     message.put("TIMESTAMP", latest);
