@@ -12,7 +12,7 @@ pipeline:
       - /home/drone/maven-repo:/root/.m2
 
   build:
-    image: xiaoyaolang/librdkafka-printpoint:latest
+    image: gcc
     commands:
       - cp fluent-bit/*.conf /cache
       - cd rdkafka
@@ -52,7 +52,7 @@ pipeline:
 
   test:
     group: test
-    image: xiaoyaolang/librdkafka-printpoint:latest
+    image: gcc
     commands:
       - chmod 700 test.sh && ./test.sh
 

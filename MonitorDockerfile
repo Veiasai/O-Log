@@ -1,4 +1,4 @@
-FROM xiaoyaolang/librdkafka-printpoint:latest
+FROM gcc
 
 WORKDIR /home
 
