@@ -82,7 +82,7 @@ pipeline:
     secrets: [ docker_username, docker_password ]
     dockerfile: StreamDockerfile
     when:
-      branch: master, veia-stream
+      branch: [ master, veia-stream ]
 
 services: 
   zookeeper:
