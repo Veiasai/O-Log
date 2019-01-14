@@ -64,15 +64,15 @@ pipeline:
       - timeout 240 java -jar target/KafkaStreamsDemo-1.0-SNAPSHOT-jar-with-dependencies.jar
       - exit 0
 
-  mpublish:
-    group: test
-    image: plugins/docker
-    repo: veiasai/kafka-monitor
-    tags: ["latest"]
-    secrets: [ docker_username, docker_password ]
-    dockerfile: MonitorDockerfile
-    when:
-      branch: master
+  # mpublish:
+  #   group: test
+  #   image: plugins/docker
+  #   repo: veiasai/kafka-monitor
+  #   tags: ["latest"]
+  #   secrets: [ docker_username, docker_password ]
+  #   dockerfile: MonitorDockerfile
+  #   when:
+  #     branch: master
 
   spublish:
     group: test
@@ -82,7 +82,7 @@ pipeline:
     secrets: [ docker_username, docker_password ]
     dockerfile: StreamDockerfile
     when:
-      branch: master
+      branch: [ master, veia-stream ]
 
 services: 
   zookeeper:
