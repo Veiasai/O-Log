@@ -4,6 +4,6 @@ WORKDIR /home
 
 COPY rdkafka/monitor .
 COPY rdkafka/conf ./rdkafka/conf/
-COPY rdkafka/link_lib/* .
+COPY rdkafka/link_lib/* ./
 
 CMD ["/home/monitor"]git 
