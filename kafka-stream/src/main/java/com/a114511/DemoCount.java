@@ -28,6 +28,7 @@ public class DemoCount {
 
         }
 
+        System.out.println(">>>>>>>>>>>>>>>>>");
         Properties props = new Properties();
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "streams-democount");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka:9092");
