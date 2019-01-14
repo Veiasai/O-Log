@@ -84,7 +84,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             JSONObject message = JSONObject.fromObject(recordValue);
             String[] strArry = message.getString("detail").split(",");
             String value = strArry[0];
-            Vector<String> temp = new Vector<>(3000);
+            Vector<String> temp = new Vector<String>(3000);
             temp.add(value);
             records.put(recordKey, temp);
             return null;
@@ -95,10 +95,12 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
 //            records.merge(recordKey, value, (a, b) -> a + "," + b);
             if (records.containsKey(recordKey)) {
                 Vector<String> temp = records.get(recordKey);
-                temp.add(value);
+                if (!temp.contains(value)) {
+                    temp.add(value);
+                }
                 records.replace(recordKey, temp);
             } else {
-                Vector<String> temp = new Vector<>(3000);
+                Vector<String> temp = new Vector<String>(3000);
                 temp.add(value);
                 records.put(recordKey, temp);
             }
