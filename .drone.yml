@@ -77,9 +77,9 @@ pipeline:
   spublish:
     group: test
     image: plugins/docker
-    repo: 201608ybs/kafka
+    repo: veiasai/kafka-stream-monitor
     tags: ["latest"]
-    secrets: [ ybs_docker_username, ybs_docker_password ]
+    secrets: [ docker_username, docker_password ]
     dockerfile: StreamDockerfile
     when:
       branch: master
