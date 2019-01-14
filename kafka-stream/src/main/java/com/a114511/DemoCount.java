@@ -20,6 +20,7 @@ public class DemoCount {
     public static void main(String[] args) {
 
         System.out.println(">>>>>>>>>>>>>");
+        
         try {
             ZkUtils zkUtils = ZkUtils.apply("zookeeper:2181", 30000, 30000, JaasUtils.isZkSecurityEnabled());
             AdminUtils.createTopic(zkUtils, "demo-count-output", 1, 1, new Properties(), RackAwareMode.Enforced$.MODULE$);
