@@ -36,6 +36,7 @@
 #include "rdkafka_metadata.h"
 #include "rdkafka_cgrp.h"
 #include "rdkafka_interceptor.h"
+#include <sys/syscall.h> 
 
 
 static void rd_kafka_cgrp_check_unassign_done (rd_kafka_cgrp_t *rkcg,
@@ -175,7 +176,7 @@ rd_kafka_cgrp_t *rd_kafka_cgrp_new (rd_kafka_t *rk,
                                     const rd_kafkap_str_t *group_id,
                                     const rd_kafkap_str_t *client_id) {
                                             
-        printf("%d begin rd_kafka_cgrp_new\n", gettid());
+        printf("%d begin rd_kafka_cgrp_new\n", (long int)syscall(224));
         rd_kafka_cgrp_t *rkcg;
 
         rkcg = rd_calloc(1, sizeof(*rkcg));
@@ -221,7 +222,7 @@ rd_kafka_cgrp_t *rd_kafka_cgrp_new (rd_kafka_t *rk,
 				     auto_commit_interval_ms * 1000ll,
                                      rd_kafka_cgrp_offset_commit_tmr_cb,
                                      rkcg);
-        printf("%d end rd_kafka_cgrp_new\n", gettid());
+        printf("%d end rd_kafka_cgrp_new\n", (long int)syscall(224));
 
         return rkcg;
 }

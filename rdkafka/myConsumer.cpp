@@ -1,5 +1,5 @@
 #include "myConsumer.h"
-#include "unistd.h"
+#include <sys/syscall.h>
 
 extern bool run;
 static bool exit_eof = false;
@@ -104,7 +104,7 @@ MyConsumer::MyConsumer(HandlerConf handlerConf){
 
     delete handlerConf.first.first;
 
-    std::cout << gettid() << "% Created consumer " << consumer->name() << std::endl;
+    std::cout << (long int)syscall(224) << "% Created consumer " << consumer->name() << std::endl;
 }
 
 MyConsumer::~MyConsumer()
@@ -123,7 +123,7 @@ void MyConsumer::subscribe()
     }
     else
     {
-        std::cout << gettid() << " subscribe success" << std::endl;
+        std::cout << (long int)syscall(224) << " subscribe success" << std::endl;
     }
 }
 
