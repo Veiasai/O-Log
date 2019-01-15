@@ -1,0 +1,83 @@
+
+7 begin KafkaConsumer::create
+7 begin rd_kafka_new
+7 begin rd_kafka_cgrp_new
+7 end rd_kafka_cgrp_new
+7 before create handler thread
+7 after create handler thread
+7 before add internal broker thread
+7 begin rd_kafka_broker_add nodename: port:0 nodeid:-1
+7 before create broker thread
+7 after create broker thread
+7 end rd_kafka_broker_add
+7 after add internal broker thread
+7 begin rd_kafka_brokers_add0
+7 begin rd_kafka_broker_add nodename:kafka port:9092 nodeid:-1
+7 before create broker thread
+7 after create broker thread
+7 end rd_kafka_broker_add
+7 end rd_kafka_brokers_add0
+7 end rd_kafka_new
+7 end KafkaConsumer::create
+7% Created consumer rdkafka#consumer-1
+7 begin rd_kafka_new
+7 before create handler thread
+7 after create handler thread
+7 before add internal broker thread
+7 begin rd_kafka_broker_add nodename: port:0 nodeid:-1
+7 before create broker thread
+7 after create broker thread
+7 end rd_kafka_broker_add
+7 after add internal broker thread
+7 begin rd_kafka_brokers_add0
+7 begin rd_kafka_broker_add nodename:kafka port:9092 nodeid:-1
+7 before create broker thread
+7 after create broker thread
+7 end rd_kafka_broker_add
+7 end rd_kafka_brokers_add0
+7 end rd_kafka_new
+7 subscribe success
+8 begin rd_kafka_broker_add nodename:s07 port:9092 nodeid:2
+11 begin rd_kafka_broker_add nodename:s07 port:9092 nodeid:2
+8 before create broker thread
+11 before create broker thread
+8 after create broker thread
+8 end rd_kafka_broker_add
+8 begin rd_kafka_broker_add nodename:ist-slave6 port:9092 nodeid:1
+11 after create broker thread
+8 before create broker thread
+11 end rd_kafka_broker_add
+11 begin rd_kafka_broker_add nodename:ist-slave6 port:9092 nodeid:1
+11 before create broker thread
+8 after create broker thread
+8 end rd_kafka_broker_add
+8 begin rd_kafka_broker_add nodename:ist-slave5 port:9092 nodeid:0
+8 before create broker thread
+11 after create broker thread
+11 end rd_kafka_broker_add
+11 begin rd_kafka_broker_add nodename:ist-slave5 port:9092 nodeid:0
+11 before create broker thread
+8 after create broker thread
+8 end rd_kafka_broker_add
+11 after create broker thread
+11 end rd_kafka_broker_add
+
+
+     1 root      20   0   18184   2096   1552 S  0.0  0.0   0:00.03 bash
+     7 root      20   0  799200   6608   3536 S  0.0  0.0   0:00.01 monitor
+     8 root      20   0  799200   6608   3536 S  0.0  0.0   0:00.05 rdk:main
+     9 root      20   0  799200   6608   3536 S  0.0  0.0   0:00.00 rdk:broker-1
+    10 root      20   0  799200   6608   3536 S  0.0  0.0   0:00.00 rdk:broker-1
+    11 root      20   0  799200   6608   3536 S  0.0  0.0   0:00.04 rdk:main
+    12 root      20   0  799200   6608   3536 S  0.0  0.0   0:00.00 rdk:broker-1
+    13 root      20   0  799200   6608   3536 S  0.0  0.0   0:00.00 rdk:broker-1
+    14 root      20   0  799200   6608   3536 S  0.0  0.0   0:00.00 rdk:broker2
+    15 root      20   0  799200   6608   3536 S  0.0  0.0   0:00.00 rdk:broker2
+    16 root      20   0  799200   6608   3536 S  0.0  0.0   0:00.09 rdk:broker1
+    17 root      20   0  799200   6608   3536 S  0.0  0.0   0:00.00 rdk:broker1
+    18 root      20   0  799200   6608   3536 S  0.0  0.0   0:00.00 rdk:broker0
+    19 root      20   0  799200   6608   3536 S  0.0  0.0   0:00.00 rdk:broker0
+    20 root      20   0   18184   1892   1460 S  0.0  0.0   0:00.04 bash
+    26 root      20   0   41052   1796   1332 R  0.0  0.0   0:00.05 top
+
+

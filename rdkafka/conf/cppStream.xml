@@ -14,7 +14,7 @@
                 </confEntry>
                 <confEntry>
                     <entryKey>metadata.broker.list</entryKey>
-                    <entryValue>kafka:9092</entryValue>
+                    <entryValue>kafka:9092, ist-slave5:9092</entryValue>
                 </confEntry>
             </global_conf>
         </comsumer>
