@@ -1,4 +1,5 @@
 #include "myConsumer.h"
+#include "unistd.h"
 
 extern bool run;
 static bool exit_eof = false;
@@ -103,7 +104,7 @@ MyConsumer::MyConsumer(HandlerConf handlerConf){
 
     delete handlerConf.first.first;
 
-    // std::cout << "% Created consumer " << consumer->name() << std::endl;
+    std::cout << gettid() << "% Created consumer " << consumer->name() << std::endl;
 }
 
 MyConsumer::~MyConsumer()
@@ -122,7 +123,7 @@ void MyConsumer::subscribe()
     }
     else
     {
-        // std::cout << "subscribe success" << std::endl;
+        std::cout << gettid() << " subscribe success" << std::endl;
     }
 }
 

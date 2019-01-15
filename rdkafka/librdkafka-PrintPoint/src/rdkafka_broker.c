@@ -68,7 +68,7 @@
 #include <openssl/err.h>
 #endif
 #include "rdendian.h"
-
+#include "unistd.h"
 
 const char *rd_kafka_broker_state_names[] = {
 	"INIT",
@@ -3733,9 +3733,8 @@ rd_kafka_broker_t *rd_kafka_broker_add (rd_kafka_t *rk,
 					rd_kafka_secproto_t proto,
 					const char *name, uint16_t port,
 					int32_t nodeid) {
-        printf("begin rd_kafka_broker_add ");
+        printf("%d begin rd_kafka_broker_add ", gettid());
         printf("nodename:%s port:%d nodeid:%d\n", name, port, nodeid);
-        sleep(10);
 	rd_kafka_broker_t *rkb;
         int r;
 #ifndef _MSC_VER
@@ -3857,8 +3856,7 @@ rd_kafka_broker_t *rd_kafka_broker_add (rd_kafka_t *rk,
 	 * the broker thread until we've finalized the rkb. */
 	rd_kafka_broker_lock(rkb);
         rd_kafka_broker_keep(rkb); /* broker thread's refcnt */
-        printf("before create broker thread\n");
-        sleep(10);
+        printf("%d before create broker thread\n", gettid());
 	if (thrd_create(&rkb->rkb_thread,
 			rd_kafka_broker_thread_main, rkb) != thrd_success) {
 		char tmp[512];
@@ -3882,8 +3880,7 @@ rd_kafka_broker_t *rd_kafka_broker_add (rd_kafka_t *rk,
 
 		return NULL;
 	}
-        printf("after create broker thread\n");
-        sleep(10);
+        printf("%d after create broker thread\n", gettid());
 
         if (rkb->rkb_source != RD_KAFKA_INTERNAL) {
                 if (rk->rk_conf.security_protocol ==
@@ -3912,8 +3909,7 @@ rd_kafka_broker_t *rd_kafka_broker_add (rd_kafka_t *rk,
 	pthread_sigmask(SIG_SETMASK, &oldset, NULL);
 #endif
 
-        printf("end rd_kafka_broker_add\n");
-        sleep(10);
+        printf("%d end rd_kafka_broker_add\n", gettid());
 	return rkb;
 }
 
@@ -4100,8 +4096,7 @@ static int rd_kafka_broker_name_parse (rd_kafka_t *rk,
  * Lock prereqs: none
  */
 int rd_kafka_brokers_add0 (rd_kafka_t *rk, const char *brokerlist) {
-        printf("begin rd_kafka_brokers_add0\n");
-        sleep(10);
+        printf("%d begin rd_kafka_brokers_add0\n", gettid());
 	char *s_copy = rd_strdup(brokerlist);
 	char *s = s_copy;
 	int cnt = 0;
@@ -4126,8 +4121,7 @@ int rd_kafka_brokers_add0 (rd_kafka_t *rk, const char *brokerlist) {
 
 		if ((rkb = rd_kafka_broker_find(rk, proto, host, port)) &&
 		    rkb->rkb_source == RD_KAFKA_CONFIGURED) {
-                        printf("broker_find\n");
-                        sleep(10);
+                        printf("%d broker_find\n", gettid());
 			cnt++;
 		} else if (rd_kafka_broker_add(rk, RD_KAFKA_CONFIGURED,
 					       proto, host, port,
@@ -4145,8 +4139,7 @@ int rd_kafka_brokers_add0 (rd_kafka_t *rk, const char *brokerlist) {
 
 	rd_free(s_copy);
 
-        printf("end rd_kafka_brokers_add0\n");
-        sleep(10);
+        printf("%d end rd_kafka_brokers_add0\n", gettid());
 	return cnt;
 }
 
