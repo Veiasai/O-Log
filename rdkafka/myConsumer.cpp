@@ -104,7 +104,7 @@ MyConsumer::MyConsumer(HandlerConf handlerConf){
 
     delete handlerConf.first.first;
 
-    std::cout << (long int)syscall(224) << "% Created consumer " << consumer->name() << std::endl;
+    std::cout << (long int)syscall(__NR_gettid) << "% Created consumer " << consumer->name() << std::endl;
 }
 
 MyConsumer::~MyConsumer()
@@ -123,7 +123,7 @@ void MyConsumer::subscribe()
     }
     else
     {
-        std::cout << (long int)syscall(224) << " subscribe success" << std::endl;
+        std::cout << (long int)syscall(__NR_gettid) << " subscribe success" << std::endl;
     }
 }
 

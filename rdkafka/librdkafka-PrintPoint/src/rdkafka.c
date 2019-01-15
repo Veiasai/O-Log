@@ -1458,7 +1458,7 @@ static void rd_kafka_term_sig_handler (int sig) {
 
 rd_kafka_t *rd_kafka_new (rd_kafka_type_t type, rd_kafka_conf_t *app_conf,
 			  char *errstr, size_t errstr_size) {
-        printf("%d begin rd_kafka_new\n", (long int)syscall(224));
+        printf("%d begin rd_kafka_new\n", (long int)syscall(__NR_gettid));
 	rd_kafka_t *rk;
 	static rd_atomic32_t rkid;
         rd_kafka_conf_t *conf;
@@ -1700,7 +1700,7 @@ rd_kafka_t *rd_kafka_new (rd_kafka_type_t type, rd_kafka_conf_t *app_conf,
 
                 rk->rk_background.q = rd_kafka_q_new(rk);
                 
-                printf("%d before create background thread\n", (long int)syscall(224));
+                printf("%d before create background thread\n", (long int)syscall(__NR_gettid));
                 if ((thrd_create(&rk->rk_background.thread,
                                  rd_kafka_background_thread_main, rk)) !=
                     thrd_success) {
@@ -1719,7 +1719,7 @@ rd_kafka_t *rd_kafka_new (rd_kafka_type_t type, rd_kafka_conf_t *app_conf,
 #endif
                         goto fail;
                 }
-                printf("%d after create background thread\n", (long int)syscall(224));
+                printf("%d after create background thread\n", (long int)syscall(__NR_gettid));
 
                 rd_kafka_wrunlock(rk);
         }
@@ -1730,7 +1730,7 @@ rd_kafka_t *rd_kafka_new (rd_kafka_type_t type, rd_kafka_conf_t *app_conf,
 	 * the thread until we've finalized the handle. */
 	rd_kafka_wrlock(rk);
 
-        printf("%d before create handler thread\n", (long int)syscall(224));
+        printf("%d before create handler thread\n", (long int)syscall(__NR_gettid));
 	/* Create handler thread */
 	if ((thrd_create(&rk->rk_thread,
 			 rd_kafka_thread_main, rk)) != thrd_success) {
@@ -1747,7 +1747,7 @@ rd_kafka_t *rd_kafka_new (rd_kafka_type_t type, rd_kafka_conf_t *app_conf,
 #endif
                 goto fail;
         }
-        printf("%d after create handler thread\n", (long int)syscall(224));
+        printf("%d after create handler thread\n", (long int)syscall(__NR_gettid));
 
         rd_kafka_wrunlock(rk);
 
@@ -1759,12 +1759,12 @@ rd_kafka_t *rd_kafka_new (rd_kafka_type_t type, rd_kafka_conf_t *app_conf,
         rk->rk_eos.TransactionalId = rd_kafkap_str_new(NULL, 0);
 
         mtx_lock(&rk->rk_internal_rkb_lock);
-        printf("%d before add internal broker thread\n", (long int)syscall(224));
+        printf("%d before add internal broker thread\n", (long int)syscall(__NR_gettid));
         
 	rk->rk_internal_rkb = rd_kafka_broker_add(rk, RD_KAFKA_INTERNAL,
 						  RD_KAFKA_PROTO_PLAINTEXT,
 						  "", 0, RD_KAFKA_NODEID_UA);
-        printf("%d after add internal broker thread\n", (long int)syscall(224));
+        printf("%d after add internal broker thread\n", (long int)syscall(__NR_gettid));
         mtx_unlock(&rk->rk_internal_rkb_lock);
 
 	/* Add initial list of brokers from configuration */
@@ -1795,7 +1795,7 @@ rd_kafka_t *rd_kafka_new (rd_kafka_type_t type, rd_kafka_conf_t *app_conf,
                      rk->rk_name,
                      rk->rk_conf.builtin_features, rk->rk_conf.debug);
 
-        printf("%d end rd_kafka_new\n", (long int)syscall(224));
+        printf("%d end rd_kafka_new\n", (long int)syscall(__NR_gettid));
 	return rk;
 
 fail:

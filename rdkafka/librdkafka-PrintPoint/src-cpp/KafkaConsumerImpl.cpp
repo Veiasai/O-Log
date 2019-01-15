@@ -37,7 +37,7 @@ RdKafka::KafkaConsumer::~KafkaConsumer () {}
 
 RdKafka::KafkaConsumer *RdKafka::KafkaConsumer::create (RdKafka::Conf *conf,
                                                         std::string &errstr) {
-  std::cout<<(long int)syscall(224)<<" begin KafkaConsumer::create"<<std::endl;
+  std::cout<<(long int)syscall(__NR_gettid)<<" begin KafkaConsumer::create"<<std::endl;
   char errbuf[512];
   RdKafka::ConfImpl *confimpl = dynamic_cast<RdKafka::ConfImpl *>(conf);
   RdKafka::KafkaConsumerImpl *rkc = new RdKafka::KafkaConsumerImpl();
@@ -75,7 +75,7 @@ RdKafka::KafkaConsumer *RdKafka::KafkaConsumer::create (RdKafka::Conf *conf,
   /* Redirect handle queue to cgrp's queue to provide a single queue point */
   rd_kafka_poll_set_consumer(rk);
 
-  std::cout<<(long int)syscall(224)<<" end KafkaConsumer::create"<<std::endl;
+  std::cout<<(long int)syscall(__NR_gettid)<<" end KafkaConsumer::create"<<std::endl;
   return rkc;
 }
 
