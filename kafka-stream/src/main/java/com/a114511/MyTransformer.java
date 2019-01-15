@@ -33,6 +33,7 @@ public class MyTransformer implements Transformer<String, String, KeyValue<Strin
             products.add("rb" + String.valueOf(productIdStart + i));
         }
 
+        
         new Thread(new Runnable() {
             @Override
             public void run() {
