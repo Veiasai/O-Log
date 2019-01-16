@@ -60,7 +60,7 @@ public class Monitor {
                 // .filter((windowedUserId, count) -> count < 2)
                 .toStream()
                 .filter((window, count) -> count != null)
-                .map((windowedUserId, count) -> new KeyValue<>(windowedUserId.toString(), windowedUserId.toString()))
+                .map((windowedUserId, count) -> new KeyValue<>(windowedUserId.toString(), windowedUserId.toString() + "count:" + count.toString()))
                 .to("demo-count-output", Produced.with(stringSerde, stringSerde));
 
         final KafkaStreams streams = new KafkaStreams(builder.build(), streamsConfiguration);
