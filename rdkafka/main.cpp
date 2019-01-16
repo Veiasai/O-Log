@@ -1,6 +1,5 @@
-#include "myConsumer.h"
-#include "demo_processor.h"
-#include "confLoader.h"
+#include "EventLoop.h"
+#include <thread>
 
 bool run = true;
 
@@ -11,53 +10,12 @@ int main(){
     //     std::cerr << "Load Conf Error." << std::endl;
     //     return 1;
     // }
-
-    vector<MyConsumer*> myConsumers;
-    for (auto& handlerConf : handlerConfs.first)
-    {
-        myConsumers.push_back(new MyConsumer(handlerConf));
-    }
-
-    vector<MyProducer*> myProducers;
-    for (auto& handlerConf : handlerConfs.second)
-    {
-        myProducers.push_back(new MyProducer(handlerConf));
-    }
-    Processor *dp = new Demo_processor();
-
-    for (int i = 0; i < myConsumers.size(); i++)
-    {
-        if (!myProducers.empty())
-        {
-            myConsumers[i]->setProducer(myProducers[i%myProducers.size()]);
-        }
-        myConsumers[i]->setProcessor(dp);
-        myConsumers[i]->subscribe();
-    }
-    // dp->exec("{\"@timestamp\":1545893491.708491, \"log_time\":\"1545893491503\", \"MessageType\":\"LIMon_StatisticsFeed\", \"detail\":\"rb1000,2306359659839382000,6414.451840,6414.451840,6468.784659,6468.784659,CLOSING_PRICE_PREVIOUS_TRADING_DAY,6414.451840,1,6414.451840,1,0,6468.784659,523,1545893491502980951,7115.663125,5821.906193,54465099783379212,1545893491500000000\"}");
-    // myConsumer.setProcessor(dp);
-    // myConsumer.setProducer(&myProducer);
-    // myProducer.produce("init");
-    // myConsumer.subscribe();
-    while(run){
-        for (auto myConsumer : myConsumers)
-        {
-            myConsumer->consume();
-        }
-        for (auto myProducer : myProducers)
-        {
-            myProducer->poll(0);
-        }
-    }
-
-    for (auto myConsumer : myConsumers)
-    {
-        delete myConsumer;
-    }
-    for (auto myProducer : myProducers)
-    {
-        delete myProducer;
-    }
-
+    EventLoop eventLoop;
+    eventLoop.setMyConsumer(handlerConfs.first[0]);
+    eventLoop.setMyProducer(handlerConfs.second[0]);
+    eventLoop.addProcessor(DeficiencyProcessor);
+    thread myThread(&EventLoop::run, &eventLoop);
+    myThread.join();
+    return 0;
 }
 

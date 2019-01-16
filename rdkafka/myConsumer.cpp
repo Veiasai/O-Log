@@ -127,14 +127,13 @@ void MyConsumer::subscribe()
     }
 }
 
-void MyConsumer::consume()
+RdKafka::Message* MyConsumer::consume()
 {
     RdKafka::Message *msg = consumer->consume(1000);
-    msg_consume(msg, NULL);
-    delete msg;
+    return msg_consume(msg, NULL);
 }
 
-void MyConsumer::msg_consume(RdKafka::Message* message, void* opaque) {
+RdKafka::Message* MyConsumer::msg_consume(RdKafka::Message* message, void* opaque) {
     switch (message->err()) {
         case RdKafka::ERR__TIMED_OUT:
             break;
@@ -142,21 +141,7 @@ void MyConsumer::msg_consume(RdKafka::Message* message, void* opaque) {
         case RdKafka::ERR_NO_ERROR:
             /* Real message */
             {
-                // printf("%.*s\n", static_cast<int>(message->len()), static_cast<const char *>(message->payload()));
-                // char buffer[static_cast<int>(message->len()) + 1];
-                // printf(buffer, "%.*s", static_cast<int>(message->len()), static_cast<const char *>(message->payload()));
-                // std::cout<<"input: "<<getCurrentTime()<< std::endl;
-                std::string messageStr(static_cast<const char *>(message->payload()));
-                // auto inputTime = std::chrono::duration_cast<chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
-                // std::cout<<"input: "<<inputTime.count()<<std::endl;
-                processor->exec(messageStr);
-                Pro_res res = processor->getResult();
-                if (res.code != Status::OK){
-                    // auto outputTime = std::chrono::duration_cast<chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
-                    // std::cout<<"output: "<<outputTime.count()<< std::endl;
-                    producer->produce(res.json);
-                }
-                break;
+                return message;
             }
 
         case RdKafka::ERR__PARTITION_EOF:
@@ -179,6 +164,7 @@ void MyConsumer::msg_consume(RdKafka::Message* message, void* opaque) {
             std::cerr << "Consume failed: " << message->errstr() << std::endl;
             run = false;
     }
+    return NULL;
 }
 
 void MyConsumer::setProducer(MyProducer *myProducer)

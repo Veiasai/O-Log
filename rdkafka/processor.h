@@ -11,6 +11,12 @@ struct Process_result_ {
     Status::code code;
 };
 
+enum ProcessorType
+{
+    ValidityProcessor,
+    DeficiencyProcessor
+};
+
 class Processor {
     public:
         virtual void exec(const string & target) =0;

@@ -12,14 +12,14 @@ class MyConsumer
         MyProducer *producer;
         Processor * processor;
         std::vector<std::string> topics;
-        void msg_consume(RdKafka::Message* message, void* opaque);
+        RdKafka::Message* msg_consume(RdKafka::Message* message, void* opaque);
         
     public:
 	    MyConsumer();
         MyConsumer(HandlerConf handlerConf);
         ~MyConsumer();
         void subscribe();
-        void consume();
+        RdKafka::Message* consume();
         void setProducer(MyProducer *myProducer);
         void setProcessor(Processor * processor);
 };
