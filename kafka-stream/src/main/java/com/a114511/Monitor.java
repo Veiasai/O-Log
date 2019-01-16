@@ -54,10 +54,10 @@ public class Monitor {
                     return KeyValue.pair(strArry[0], value);
                 })
                 .groupByKey(Grouped.with(Serdes.String(), Serdes.String()))
-                .windowedBy(TimeWindows.of(Duration.ofMillis(500)).advanceBy(Duration.ofMillis(500)).grace(Duration.ofSeconds(30)))
+                .windowedBy(TimeWindows.of(Duration.ofMillis(5000)).advanceBy(Duration.ofMillis(4000)).grace(Duration.ofSeconds(30)))
                 .count()
                 .suppress(Suppressed.untilWindowCloses(unbounded()))
-                // .filter((windowedUserId, count) -> count < 2)
+                .filter((windowedUserId, count) -> count < 20)
                 .toStream()
                 .filter((window, count) -> count != null)
                 .map((windowedUserId, count) -> new KeyValue<>(windowedUserId.toString(), windowedUserId.toString() + "count:" + count.toString()))
