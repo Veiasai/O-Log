@@ -37,7 +37,7 @@ public class Monitor {
         streamsConfiguration.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         // Set the commit interval to 500ms so that any changes are flushed frequently. The low latency
         // would be important for anomaly detection.
-        streamsConfiguration.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 250);
+        streamsConfiguration.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 500);
 
         streamsConfiguration.put(StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG, MyTimeExtractor.class);
 
@@ -54,12 +54,12 @@ public class Monitor {
                     return KeyValue.pair(strArry[0], value);
                 })
                 .groupByKey(Grouped.with(Serdes.String(), Serdes.String()))
-                .windowedBy(TimeWindows.of(Duration.ofMillis(500)).advanceBy(Duration.ofMillis(500)).grace(Duration.ofSeconds(30)))
+                .windowedBy(TimeWindows.of(Duration.ofMillis(750)).advanceBy(Duration.ofMillis(500)).grace(Duration.ofSeconds(30)))
                 .count()
                 .suppress(Suppressed.untilWindowCloses(unbounded()))
                 .filter((windowedUserId, count) -> count == null || count < 1)
                 .toStream()
-                // .filter((window, count) -> count != null)
+                .filter((window, count) -> count != null)
                 .map((windowedUserId, count) -> new KeyValue<>(windowedUserId.toString(), windowedUserId.toString()))
                 .to("demo-count-output", Produced.with(stringSerde, stringSerde));
 
