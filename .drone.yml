@@ -23,7 +23,8 @@ pipeline:
   script:
     image: python:3.7
     commands:
-      - python PythonScript/generateData.py
+      - cd PythonScript
+      - python generateData.py
       - ls /olog/src/github.com/veiasai/olog
     detach: true
 
