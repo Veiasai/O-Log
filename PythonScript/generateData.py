@@ -288,7 +288,7 @@ def generateData(LastLegalFeed, conf):
         
         nowTime = int(round(time.time() * 1000))
     file.close()
-    print LastLegalFeed.statisticsFeed.FEEDCODE+" done"
+    print(LastLegalFeed.statisticsFeed.FEEDCODE+" done")
 
 def generateInitFeeds(num, feedCodeStartId):
     LastLegalFeeds = {}
