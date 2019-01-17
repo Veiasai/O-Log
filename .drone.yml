@@ -55,7 +55,8 @@ pipeline:
     group: test
     image: gcc
     commands:
-      - chmod 700 test.sh && sh test.sh
+      - cd rdkafka
+      - ./monitor
 
   streamtest:
     group: test
