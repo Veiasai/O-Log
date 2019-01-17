@@ -15,8 +15,8 @@ struct Process_result_ {
 
 enum ProcessorType
 {
-    ValidityProcessor,
-    DeficiencyProcessor
+    Validity,
+    Deficiency
 };
 
 class Processor {

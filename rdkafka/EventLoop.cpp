@@ -39,10 +39,10 @@ void EventLoop::addProcessor(ProcessorType processorType)
 {
     switch (processorType)
     {
-        case ValidityProcessor:
+        case Validity:
             processors.push_back(new ValidityProcessor());
             break;
-        case DeficiencyProcessor:
+        case Deficiency:
             processors.push_back(new DeficiencyProcessor());
             break;
         default:
