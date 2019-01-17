@@ -8,7 +8,7 @@ Target: rdkafka $(bin)
 
 all: $(Target)
 
-monitor: main.o  EventLoop.o myConsumer.o myProducer.o DeficiencyProcessor.o utils.o confLoader.o lib/tinystr.o lib/tinyxml.o lib/tinyxmlerror.o lib/tinyxmlparser.o link_lib/librdkafka++.so.1 link_lib/librdkafka.so.1 link_lib/libjsoncpp.so.0.10.6 link_lib/libssl.so.1.0.0 link_lib/libcrypto.so.1.0.0
+monitor: main.o  EventLoop.o myConsumer.o myProducer.o DeficiencyProcessor.o ValidityProcessor.o utils.o confLoader.o lib/tinystr.o lib/tinyxml.o lib/tinyxmlerror.o lib/tinyxmlparser.o link_lib/librdkafka++.so.1 link_lib/librdkafka.so.1 link_lib/libjsoncpp.so.0.10.6 link_lib/libssl.so.1.0.0 link_lib/libcrypto.so.1.0.0
 	$(CXX) -g $^ -o $@ $(CXXFLAGS)
 
 rdkafka:
