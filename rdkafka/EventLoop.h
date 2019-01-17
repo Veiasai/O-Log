@@ -3,7 +3,7 @@
 #include "myConsumer.h"
 #include "processor.h"
 #include "confLoader.h"
-#include "demo_processor.h"
+#include "DeficiencyProcessor.h"
 
 class EventLoop
 {

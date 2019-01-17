@@ -19,7 +19,7 @@ public:
 
 using pq = priority_queue<StatisticsFeed*, std::vector<StatisticsFeed*>, feedcmp>;
 
-class Demo_processor : public Processor{
+class DeficiencyProcessor : public Processor{
     public:
         static int64_t localTime;
     private:
@@ -28,6 +28,8 @@ class Demo_processor : public Processor{
         string tags;
         map<string, pq*> msg_q;
         map<string, int64_t> msg_t;
+        map<string, double> msg_turnover_value;
+        map<string, int32_t> msg_turnover_volume;
         Pro_res res;
         bool checkTime(int64_t t, int64_t expect_t);
     public:

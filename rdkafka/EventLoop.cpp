@@ -43,7 +43,7 @@ void EventLoop::addProcessor(ProcessorType processorType)
             
             break;
         case DeficiencyProcessor:
-            processors.push_back(new Demo_processor());
+            processors.push_back(new DeficiencyProcessor());
             break;
     
         default:
@@ -60,10 +60,12 @@ void EventLoop::run()
         for(auto& processor : processors)
         {
             // for now exec use string as input, you should change it to RdKafka::Message*, and don't forget to delete it.
-            processor->exec(messageStr);
+            processor->exec(message);
             Pro_res res = processor->getResult();
             if (res.code != Status::OK){
-                myProducer->produce(res.json);
+                for (string s : res.json){
+                    myProducer->produce(s);
+                }
             }
         }
         myProducer->poll(0);

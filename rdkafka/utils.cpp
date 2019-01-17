@@ -22,3 +22,17 @@ int StatisticsFeed::build(string body){
     return 0;
 }
     
+int PriceFeed::build(string body){
+    try{
+        stringstream ss;
+        for (auto & c : body)
+            if (c == ',') c = ' ';
+        ss.str(body);
+        ss >> FEEDCODE >> INSTRUMENT_ID >> SEQUENCE >> BID_PRICE >> BID_VOLUME >> BID_COUNT >> ASK_PRICE >> ASK_VOLUME >> ASK_COUNT >> LAST_TRADE_TICK >> STREAM_ID >> EVENT_TIME >> EXCHANGE_TIMESTAMP;
+    }
+    catch (exception e){
+        cout << "price feed build error" << endl;
+        return 1;
+    }
+    return 0;
+}
