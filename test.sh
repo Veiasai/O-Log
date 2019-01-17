@@ -1,2 +1,3 @@
-timeout 120 ./rdkafka/monitor
+cd rdkafka
+timeout 120 ./monitor
 exit 0
