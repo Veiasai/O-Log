@@ -64,6 +64,14 @@ pipeline:
       - timeout 120 java -jar target/KafkaStreamsDemo-1.0-SNAPSHOT-jar-with-dependencies.jar
       - exit 0
 
+  streamtest_concurrent:
+    group: test
+    image: veiasai/java:8
+    commands:
+      - cd kafka-stream
+      - timeout 120 java -jar target/KafkaStreamsDemo-1.0-SNAPSHOT-jar-with-dependencies.jar
+      - exit 0
+
   mpublish:
     group: test
     image: plugins/docker
