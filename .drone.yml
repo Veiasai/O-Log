@@ -55,7 +55,7 @@ pipeline:
     group: test
     image: gcc
     commands:
-      - chmod 700 test.sh && ./test.sh
+      - chmod 700 test.sh && sh test.sh
 
   streamtest:
     group: test
