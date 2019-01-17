@@ -26,6 +26,7 @@ pipeline:
       - cd PythonScript
       - python generateData.py
       - ls /olog/src/github.com/veiasai/olog/PythonScript/DataDir
+      - exit 0
     detach: true
 
   fluent:
@@ -59,6 +60,7 @@ pipeline:
       - cp link_lib/* /usr/lib/
       - ln -s /usr/lib/libjsoncpp.so.0.10.6 /usr/lib/libjsoncpp.so.0
       - timeout 120 ./monitor
+      - exit 0
 
   streamtest:
     group: test
