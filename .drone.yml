@@ -25,7 +25,7 @@ pipeline:
     commands:
       - cd PythonScript
       - python generateData.py
-      - ls /olog/src/github.com/veiasai/olog
+      - ls /olog/src/github.com/veiasai/olog/PythonScript/DataDir
     detach: true
 
   fluent:
