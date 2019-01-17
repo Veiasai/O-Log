@@ -13,4 +13,4 @@ class ValidityProcessor : public Processor{
         virtual Pro_res getResult();
         virtual void tag(string t);
         virtual string tag();
-}
+};
