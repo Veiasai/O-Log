@@ -21,9 +21,10 @@ pipeline:
       - /tmp/cache:/cache
 
   script:
-    image: python:2.7
+    image: python:3.7
     commands:
-      - python PythonScript/generateData.py --fileAmount 2 --timeLength 120 --dropTime 4 --dropInterval 10 --dropFileAmount 1 --messageType 2
+      - cd PythonScript
+      - python generateData.py
       - ls /olog/src/github.com/veiasai/olog
     detach: true
 
@@ -54,7 +55,8 @@ pipeline:
     group: test
     image: gcc
     commands:
-      - chmod 700 test.sh && ./test.sh
+      - cd rdkafka
+      - ./monitor
 
   streamtest:
     group: test

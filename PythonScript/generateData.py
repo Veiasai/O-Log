@@ -7,14 +7,14 @@ import random
 import re
 import copy
 import os
+import json
+from queue import Queue
 
 StreamIDUpBound = 1000
 OpenInterestUpBound = 1000
 
 PriceTag = 0x1
 StatisticsTag = 0x2
-ProgramTag = 0x3
-EnableNoise = 1
 DirPath = "DataDir/"
 RandomLogSet = []
 
@@ -58,6 +58,20 @@ class StatisticsFeed:
 class Feed:
     statisticsFeed = StatisticsFeed()
     priceFeed = PriceFeed()
+    FeedCodeId = 0
+    nextDropTimestamp = 0
+    currentDropTime = 0
+    nextDelayTimestamp = 0
+    nextResendTimestamp = 0
+    currentDelayTime = 0
+    nextErrorTurnoverTimestamp = 0
+    currentErrorTurnoverTime = 0
+    nextErrorBidAskTimestamp = 0
+    currentErrorBidAskTime = 0
+    nextErrorPriceTimestamp = 0
+    currentErrorPriceTime = 0
+    nextErrorVolumeTimestamp = 0
+    currentErrorVolumeTime = 0
 
 def generateLegalStatisticsFeed(LastLegalFeed):
     timestamp = int(round(time.time() * 1000))
@@ -135,61 +149,146 @@ def generateRandomData():
         resultStr = resultStr + '\n'
         RandomLogSet.append(resultStr)
 
+def inRange(FeedCodeId, startFeedCodeId, amount):
+    if FeedCodeId >= startFeedCodeId and FeedCodeId < startFeedCodeId + amount:
+        return True
+    else:
+        return False
+
 def GetRandomData():
     timestamp = int(round(time.time() * 1000))
     dataIndex = random.randint(0, len(RandomLogSet)-1)
     resultStr = '%i%s' % (timestamp, RandomLogSet[dataIndex])
     return resultStr
-    
-def writeData(LastLegalFeed, TimeLength, dropTime, dropInterval):
-    file = open(DirPath+LastLegalFeed.statisticsFeed.FEEDCODE+".log", "w")
+
+def writeStatisticsFeed(LastLegalFeed, file, errorFile, conf):
+    timestamp = int(round(time.time() * 1000))
+    statisticsFeed = LastLegalFeed.statisticsFeed
+    resultStr = ""
+    if (inRange(LastLegalFeed.FeedCodeId, conf["errorTurnover"]["feedCodeStartId"], conf["errorTurnover"]["instrumentAmount"]) and LastLegalFeed.currentErrorTurnoverTime < conf["errorTurnover"]["errorAmount"] and statisticsFeed.EXCHANGE_TIMESTAMP/100000000 == LastLegalFeed.nextErrorTurnoverTimestamp):
+        resultStr = '%i [Info  ] [DATA_RECORDER] [Data] LIMon_StatisticsFeed,%s,%i,%f,%f,%f,%f,%s,%f,%i,%f,%i,%i,%f,%i,%i,%f,%f,%i,%i\n' % \
+                    (timestamp, statisticsFeed.FEEDCODE, statisticsFeed.INSTRUMENT_ID, statisticsFeed.HIGH_PRICE, statisticsFeed.LOW_PRICE \
+                    ,statisticsFeed.OPENING_PRICE, statisticsFeed.CLOSING_PRICE, statisticsFeed.CLOSING_PRICE_TYPE, statisticsFeed.LAST_PRICE \
+                    ,statisticsFeed.LAST_VOLUME, 0.0, 0, statisticsFeed.TURNOVER_TRADE_COUNT \
+                    ,statisticsFeed.SETTLEMENT_PRICE, statisticsFeed.STREAM_ID, statisticsFeed.EVENT_TIME, statisticsFeed.UPPER_PRICE_LIMIT \
+                    , statisticsFeed.LOWER_PRICE_LIMIT, statisticsFeed.OPEN_INTEREST, statisticsFeed.EXCHANGE_TIMESTAMP)
+    else:
+        resultStr = '%i [Info  ] [DATA_RECORDER] [Data] LIMon_StatisticsFeed,%s,%i,%f,%f,%f,%f,%s,%f,%i,%f,%i,%i,%f,%i,%i,%f,%f,%i,%i\n' % \
+                    (timestamp, statisticsFeed.FEEDCODE, statisticsFeed.INSTRUMENT_ID, statisticsFeed.HIGH_PRICE, statisticsFeed.LOW_PRICE \
+                    ,statisticsFeed.OPENING_PRICE, statisticsFeed.CLOSING_PRICE, statisticsFeed.CLOSING_PRICE_TYPE, statisticsFeed.LAST_PRICE \
+                    ,statisticsFeed.LAST_VOLUME, statisticsFeed.TURNOVER_VALUE, statisticsFeed.TURNOVER_VOLUME, statisticsFeed.TURNOVER_TRADE_COUNT \
+                    ,statisticsFeed.SETTLEMENT_PRICE, statisticsFeed.STREAM_ID, statisticsFeed.EVENT_TIME, statisticsFeed.UPPER_PRICE_LIMIT \
+                    ,statisticsFeed.LOWER_PRICE_LIMIT, statisticsFeed.OPEN_INTEREST, statisticsFeed.EXCHANGE_TIMESTAMP)
+    if conf["base"]["messageType"] & StatisticsTag:
+        if (inRange(LastLegalFeed.FeedCodeId, conf["drop"]["feedCodeStartId"], conf["drop"]["instrumentAmount"]) and LastLegalFeed.currentDropTime < conf["drop"]["dropAmount"] and statisticsFeed.EXCHANGE_TIMESTAMP/100000000 == LastLegalFeed.nextDropTimestamp):
+            errorFile.write("drop:" + resultStr)
+        elif (inRange(LastLegalFeed.FeedCodeId, conf["delay"]["feedCodeStartId"], conf["delay"]["instrumentAmount"]) and LastLegalFeed.currentDelayTime < conf["delay"]["delayAmount"] and statisticsFeed.EXCHANGE_TIMESTAMP/100000000 == LastLegalFeed.nextDelayTimestamp):
+            errorFile.write("delay:" + resultStr)
+        elif (inRange(LastLegalFeed.FeedCodeId, conf["errorTurnover"]["feedCodeStartId"], conf["errorTurnover"]["instrumentAmount"]) and LastLegalFeed.currentErrorTurnoverTime < conf["errorTurnover"]["errorAmount"] and statisticsFeed.EXCHANGE_TIMESTAMP / 100000000 == LastLegalFeed.nextErrorTurnoverTimestamp):
+            errorFile.write("errorTurnover:" + resultStr)
+            file.write(resultStr)
+        else:
+            file.write(resultStr)
+
+def writePriceFeed(LastLegalFeed, file, errorFile, conf):
+    timestamp = int(round(time.time() * 1000))
+    priceFeed = LastLegalFeed.priceFeed
+    resultStr = ""
+    if (inRange(LastLegalFeed.FeedCodeId, conf["errorBidAsk"]["feedCodeStartId"], conf["errorBidAsk"]["instrumentAmount"]) and LastLegalFeed.currentErrorBidAskTime < conf["errorBidAsk"]["errorAmount"] and priceFeed.EXCHANGE_TIMESTAMP/100000000 == LastLegalFeed.nextErrorBidAskTimestamp):
+        resultStr = '%i [Info  ] [DATA_RECORDER] [Data] LIMon_PriceFeed,%s,%i,%i,%f,%i,%i,%f,%i,%i,%i,%i,%i,%i\n' % \
+                    (timestamp, priceFeed.FEEDCODE, priceFeed.INSTRUMENT_ID, priceFeed.SEQUENCE, priceFeed.ASK_PRICE, \
+                        priceFeed.BID_VOLUME, priceFeed.BID_COUNT, priceFeed.BID_PRICE, priceFeed.ASK_VOLUME, priceFeed.ASK_COUNT, \
+                        priceFeed.LAST_TRADE_TICK, priceFeed.STREAM_ID, priceFeed.EVENT_TIME, priceFeed.EXCHANGE_TIMESTAMP)
+    elif (inRange(LastLegalFeed.FeedCodeId, conf["errorPrice"]["feedCodeStartId"], conf["errorPrice"]["instrumentAmount"]) and LastLegalFeed.currentErrorPriceTime < conf["errorPrice"]["errorAmount"] and priceFeed.EXCHANGE_TIMESTAMP/100000000 == LastLegalFeed.nextErrorPriceTimestamp):
+        resultStr = '%i [Info  ] [DATA_RECORDER] [Data] LIMon_PriceFeed,%s,%i,%i,%f,%i,%i,%f,%i,%i,%i,%i,%i,%i\n' % \
+                    (timestamp, priceFeed.FEEDCODE, priceFeed.INSTRUMENT_ID, priceFeed.SEQUENCE, 0, \
+                        priceFeed.BID_VOLUME, priceFeed.BID_COUNT, 0-priceFeed.BID_PRICE, priceFeed.ASK_VOLUME, priceFeed.ASK_COUNT, \
+                        priceFeed.LAST_TRADE_TICK, priceFeed.STREAM_ID, priceFeed.EVENT_TIME, priceFeed.EXCHANGE_TIMESTAMP)
+    elif (inRange(LastLegalFeed.FeedCodeId, conf["errorVolume"]["feedCodeStartId"], conf["errorVolume"]["instrumentAmount"]) and LastLegalFeed.currentErrorVolumeTime < conf["errorVolume"]["errorAmount"] and priceFeed.EXCHANGE_TIMESTAMP/100000000 == LastLegalFeed.nextErrorVolumeTimestamp):
+        resultStr = '%i [Info  ] [DATA_RECORDER] [Data] LIMon_PriceFeed,%s,%i,%i,%f,%i,%i,%f,%i,%i,%i,%i,%i,%i\n' % \
+                    (timestamp, priceFeed.FEEDCODE, priceFeed.INSTRUMENT_ID, priceFeed.SEQUENCE, priceFeed.BID_PRICE, \
+                        0-priceFeed.BID_VOLUME, priceFeed.BID_COUNT, priceFeed.ASK_PRICE, 0-priceFeed.ASK_VOLUME, priceFeed.ASK_COUNT, \
+                        priceFeed.LAST_TRADE_TICK, priceFeed.STREAM_ID, priceFeed.EVENT_TIME, priceFeed.EXCHANGE_TIMESTAMP)
+    else:
+        resultStr = '%i [Info  ] [DATA_RECORDER] [Data] LIMon_PriceFeed,%s,%i,%i,%f,%i,%i,%f,%i,%i,%i,%i,%i,%i\n' % \
+                    (timestamp, priceFeed.FEEDCODE, priceFeed.INSTRUMENT_ID, priceFeed.SEQUENCE, priceFeed.BID_PRICE, \
+                        priceFeed.BID_VOLUME, priceFeed.BID_COUNT, priceFeed.ASK_PRICE, priceFeed.ASK_VOLUME, priceFeed.ASK_COUNT, \
+                        priceFeed.LAST_TRADE_TICK, priceFeed.STREAM_ID, priceFeed.EVENT_TIME, priceFeed.EXCHANGE_TIMESTAMP)
+    if conf["base"]["messageType"] & PriceTag:
+        if (inRange(LastLegalFeed.FeedCodeId, conf["drop"]["feedCodeStartId"], conf["drop"]["instrumentAmount"]) and LastLegalFeed.currentDropTime < conf["drop"]["dropAmount"] and priceFeed.EXCHANGE_TIMESTAMP/100000000 == LastLegalFeed.nextDropTimestamp):
+            errorFile.write("drop:" + resultStr)
+        elif (inRange(LastLegalFeed.FeedCodeId, conf["delay"]["feedCodeStartId"], conf["delay"]["instrumentAmount"]) and LastLegalFeed.currentDelayTime < conf["delay"]["delayAmount"] and priceFeed.EXCHANGE_TIMESTAMP/100000000 == LastLegalFeed.nextDelayTimestamp):
+            errorFile.write("delay:" + resultStr)
+        elif (inRange(LastLegalFeed.FeedCodeId, conf["errorBidAsk"]["feedCodeStartId"], conf["errorBidAsk"]["instrumentAmount"]) and LastLegalFeed.currentErrorBidAskTime < conf["errorBidAsk"]["errorAmount"] and priceFeed.EXCHANGE_TIMESTAMP/100000000 == LastLegalFeed.nextErrorBidAskTimestamp):
+            errorFile.write("errorBidAsk:" + resultStr)
+            file.write(resultStr)
+        elif (inRange(LastLegalFeed.FeedCodeId, conf["errorPrice"]["feedCodeStartId"], conf["errorPrice"]["instrumentAmount"]) and LastLegalFeed.currentErrorPriceTime < conf["errorPrice"]["errorAmount"] and priceFeed.EXCHANGE_TIMESTAMP/100000000 == LastLegalFeed.nextErrorPriceTimestamp):
+            errorFile.write("errorPrice:" + resultStr)
+            file.write(resultStr)
+        elif (inRange(LastLegalFeed.FeedCodeId, conf["errorVolume"]["feedCodeStartId"], conf["errorVolume"]["instrumentAmount"]) and LastLegalFeed.currentErrorVolumeTime < conf["errorVolume"]["errorAmount"] and priceFeed.EXCHANGE_TIMESTAMP/100000000 == LastLegalFeed.nextErrorVolumeTimestamp):
+            errorFile.write("errorVolume:" + resultStr)
+            file.write(resultStr)
+        else:
+            file.write(resultStr)
+
+def generateData(LastLegalFeed, conf):
+    file = open(DirPath + LastLegalFeed.statisticsFeed.FEEDCODE + ".log", "w")
+    errorFile = open(DirPath + LastLegalFeed.statisticsFeed.FEEDCODE + "_error.log", "w")
+    delayQueue = Queue()
     nowTime = int(round(time.time() * 1000))
-    endTime = nowTime + TimeLength*1000
-    dropTimestamp = nowTime / 500 * 5 + dropInterval * 10
-    nowDropTime = 0
+    endTime = nowTime + conf["base"]["timeLength"]*1000
+    LastLegalFeed.nextDropTimestamp = nowTime / 500 * 5 + conf["drop"]["dropInterval"] * 10
+    LastLegalFeed.nextDelayTimestamp = nowTime / 500 * 5 + conf["delay"]["delayInterval"] * 10
+    LastLegalFeed.nextResendTimestamp = LastLegalFeed.nextDelayTimestamp + conf["delay"]["delayTimeLength"] * 10
+    LastLegalFeed.nextErrorTurnoverTimestamp = nowTime / 500 * 5 + conf["errorTurnover"]["errorInterval"] * 10
+    LastLegalFeed.nextErrorBidAskTimestamp = nowTime / 500 * 5 + conf["errorTurnover"]["errorInterval"] * 10
+    LastLegalFeed.nextErrorPriceTimestamp = nowTime / 500 * 5 + conf["errorPrice"]["errorInterval"] * 10
+    LastLegalFeed.nextErrorVolumeTimestamp = nowTime / 500 * 5 + conf["errorVolume"]["errorInterval"] * 10
     while(nowTime < endTime):
         sendTime = nowTime / 100
         if (sendTime > LastLegalFeed.statisticsFeed.EXCHANGE_TIMESTAMP/100000000+5):
             LastLegalFeed = generateLegalStatisticsFeed(LastLegalFeed)
-            timestamp = int(round(time.time() * 1000))
-            statisticsFeed = LastLegalFeed.statisticsFeed
-            resultStr = '%i [Info  ] [DATA_RECORDER] [Data] LIMon_StatisticsFeed,%s,%i,%f,%f,%f,%f,%s,%f,%i,%f,%i,%i,%f,%i,%i,%f,%f,%i,%i\n' % \
-                        (timestamp, statisticsFeed.FEEDCODE, statisticsFeed.INSTRUMENT_ID, statisticsFeed.HIGH_PRICE, statisticsFeed.LOW_PRICE \
-                        ,statisticsFeed.OPENING_PRICE, statisticsFeed.CLOSING_PRICE, statisticsFeed.CLOSING_PRICE_TYPE, statisticsFeed.LAST_PRICE \
-                        ,statisticsFeed.LAST_VOLUME, statisticsFeed.TURNOVER_VALUE, statisticsFeed.TURNOVER_VOLUME, statisticsFeed.TURNOVER_TRADE_COUNT \
-                        ,statisticsFeed.SETTLEMENT_PRICE, statisticsFeed.STREAM_ID, statisticsFeed.EVENT_TIME, statisticsFeed.UPPER_PRICE_LIMIT \
-                        ,statisticsFeed.LOWER_PRICE_LIMIT, statisticsFeed.OPEN_INTEREST, statisticsFeed.EXCHANGE_TIMESTAMP)
-            if ProgramTag & StatisticsTag:
-                if (nowDropTime < dropTime and statisticsFeed.EXCHANGE_TIMESTAMP/100000000 == dropTimestamp):
-                    print resultStr
-                else:
-                    file.write(resultStr)
+            writeStatisticsFeed(LastLegalFeed, file, errorFile, conf)
             LastLegalFeed = generateLegalPriceFeed(LastLegalFeed)
-            timestamp = int(round(time.time() * 1000))
-            priceFeed = LastLegalFeed.priceFeed
-            resultStr = '%i [Info  ] [DATA_RECORDER] [Data] LIMon_PriceFeed,%s,%i,%i,%f,%i,%i,%f,%i,%i,%i,%i,%i,%i\n' % \
-                        (timestamp, priceFeed.FEEDCODE, priceFeed.INSTRUMENT_ID, priceFeed.SEQUENCE, priceFeed.BID_PRICE, \
-                         priceFeed.BID_VOLUME, priceFeed.BID_COUNT, priceFeed.ASK_PRICE, priceFeed.ASK_VOLUME, priceFeed.ASK_COUNT, \
-                         priceFeed.LAST_TRADE_TICK, priceFeed.STREAM_ID, priceFeed.EVENT_TIME, priceFeed.EXCHANGE_TIMESTAMP)
-            if ProgramTag & PriceTag:
-                if (nowDropTime < dropTime and statisticsFeed.EXCHANGE_TIMESTAMP/100000000 == dropTimestamp):
-                    print resultStr
-                else:
-                    file.write(resultStr)
-            if (nowDropTime < dropTime and statisticsFeed.EXCHANGE_TIMESTAMP/100000000 == dropTimestamp):
-                dropTimestamp = dropTimestamp + dropInterval * 10
-                nowDropTime = nowDropTime + 1
-        elif EnableNoise:
+            writePriceFeed(LastLegalFeed, file, errorFile, conf)
+            if (inRange(LastLegalFeed.FeedCodeId, conf["drop"]["feedCodeStartId"], conf["drop"]["instrumentAmount"]) and LastLegalFeed.currentDropTime < conf["drop"]["dropAmount"] and LastLegalFeed.statisticsFeed.EXCHANGE_TIMESTAMP/100000000 == LastLegalFeed.nextDropTimestamp):
+                LastLegalFeed.nextDropTimestamp += conf["drop"]["dropInterval"] * 10
+                LastLegalFeed.currentDropTime += 1
+            if (inRange(LastLegalFeed.FeedCodeId, conf["delay"]["feedCodeStartId"], conf["delay"]["instrumentAmount"]) and LastLegalFeed.currentDelayTime < conf["delay"]["delayAmount"] and LastLegalFeed.statisticsFeed.EXCHANGE_TIMESTAMP/100000000 == LastLegalFeed.nextDelayTimestamp):
+                LastLegalFeed.nextDelayTimestamp += conf["delay"]["delayInterval"] * 10
+                LastLegalFeed.currentDelayTime += 1
+                delayQueue.put(copy.deepcopy(LastLegalFeed))
+            if (inRange(LastLegalFeed.FeedCodeId, conf["delay"]["feedCodeStartId"], conf["delay"]["instrumentAmount"]) and LastLegalFeed.statisticsFeed.EXCHANGE_TIMESTAMP / 100000000 == LastLegalFeed.nextResendTimestamp):
+                if not delayQueue.empty():
+                    resendLegalFeed = delayQueue.get()
+                    errorFile.write("resend:"+str(resendLegalFeed.statisticsFeed.EXCHANGE_TIMESTAMP)+"\n")
+                    writeStatisticsFeed(resendLegalFeed, file, errorFile, conf)
+                    writePriceFeed(resendLegalFeed, file, errorFile, conf)
+                    if not delayQueue.empty():
+                        LastLegalFeed.nextResendTimestamp += conf["delay"]["delayInterval"] * 10
+            if (inRange(LastLegalFeed.FeedCodeId, conf["errorTurnover"]["feedCodeStartId"], conf["errorTurnover"]["instrumentAmount"]) and LastLegalFeed.currentErrorTurnoverTime < conf["errorTurnover"]["errorAmount"] and LastLegalFeed.statisticsFeed.EXCHANGE_TIMESTAMP/100000000 == LastLegalFeed.nextErrorTurnoverTimestamp):
+                LastLegalFeed.nextErrorTurnoverTimestamp += conf["errorTurnover"]["errorInterval"] * 10
+                LastLegalFeed.currentErrorTurnoverTime += 1
+            if (inRange(LastLegalFeed.FeedCodeId, conf["errorBidAsk"]["feedCodeStartId"], conf["errorBidAsk"]["instrumentAmount"]) and LastLegalFeed.currentErrorBidAskTime < conf["errorBidAsk"]["errorAmount"] and LastLegalFeed.statisticsFeed.EXCHANGE_TIMESTAMP/100000000 == LastLegalFeed.nextErrorBidAskTimestamp):
+                LastLegalFeed.nextErrorBidAskTimestamp += conf["errorBidAsk"]["errorInterval"] * 10
+                LastLegalFeed.currentErrorBidAskTime += 1
+            if (inRange(LastLegalFeed.FeedCodeId, conf["errorPrice"]["feedCodeStartId"], conf["errorPrice"]["instrumentAmount"]) and LastLegalFeed.currentErrorPriceTime < conf["errorPrice"]["errorAmount"] and LastLegalFeed.statisticsFeed.EXCHANGE_TIMESTAMP/100000000 == LastLegalFeed.nextErrorPriceTimestamp):
+                LastLegalFeed.nextErrorPriceTimestamp += conf["errorPrice"]["errorInterval"] * 10
+                LastLegalFeed.currentErrorPriceTime += 1
+            if (inRange(LastLegalFeed.FeedCodeId, conf["errorVolume"]["feedCodeStartId"], conf["errorVolume"]["instrumentAmount"]) and LastLegalFeed.currentErrorVolumeTime < conf["errorVolume"]["errorAmount"] and LastLegalFeed.statisticsFeed.EXCHANGE_TIMESTAMP/100000000 == LastLegalFeed.nextErrorVolumeTimestamp):
+                LastLegalFeed.nextErrorVolumeTimestamp += conf["errorVolume"]["errorInterval"] * 10
+                LastLegalFeed.currentErrorVolumeTime += 1
+        elif conf["base"]["enableNoise"]:
             resultStr = GetRandomData()
             file.write(resultStr)
-        if EnableNoise:
+        if conf["base"]["enableNoise"]:
             time.sleep(0.005)
         else:
             time.sleep(0.1)
         
         nowTime = int(round(time.time() * 1000))
     file.close()
-    print LastLegalFeed.statisticsFeed.FEEDCODE+" done"
+    print(LastLegalFeed.statisticsFeed.FEEDCODE+" done")
 
 def generateInitFeeds(num, feedCodeStartId):
     LastLegalFeeds = {}
@@ -219,53 +318,29 @@ def generateInitFeeds(num, feedCodeStartId):
         tempFeed = Feed()
         tempFeed.priceFeed = tempPriceFeed
         tempFeed.statisticsFeed = tempStatisticsFeed
+        tempFeed.FeedCodeId = i+feedCodeStartId
         LastLegalFeeds[i] = tempFeed
     return LastLegalFeeds
 
 def main():
-    parse=argparse.ArgumentParser()
-    parse.add_argument("--fileAmount", type=int, default=1, help="file amount")
-    parse.add_argument("--timeLength", type=int, default=30, help="time length")
-    parse.add_argument("--dropTime", type=int, default=1, help="drop time")
-    parse.add_argument("--dropInterval", type=int, default=10, help="drop interval (s)")
-    parse.add_argument("--dropFileAmount", type=int, default=1, help="drop file amount")
-    parse.add_argument("--messageType", type=int, default=3, help="messageType Price=0x1 Statistics=0x10")
-    parse.add_argument("--enableNoise", type=int, default=0, help="whether enable noise")
-    parse.add_argument("--feedCodeStartId", type=int, default=1000, help="whether enable noise")
-
-    flags,unparsed=parse.parse_known_args(sys.argv[1:])
+    confFile = open("conf.json", 'r')
+    conf = json.loads(confFile.read())
+    confFile.close()
 
     generateRandomData()
 
-    LastLegalFeeds = generateInitFeeds(flags.fileAmount, flags.feedCodeStartId)
+    LastLegalFeeds = generateInitFeeds(conf["base"]["instrumentAmount"], conf["base"]["feedCodeStartId"])
 
-    global ProgramTag
-    global EnableNoise
-    ProgramTag = flags.messageType
-    EnableNoise = flags.enableNoise
     if not os.path.exists(DirPath):
         os.mkdir(DirPath)
     threads = []
-    for i in range(flags.fileAmount):
-        if i<flags.dropFileAmount:
-            threads.append(threading.Thread(target=writeData,args=(LastLegalFeeds[i], flags.timeLength, flags.dropTime, flags.dropInterval,)))
+    for i in range(conf["base"]["instrumentAmount"]):
+        if i>=conf["drop"]["feedCodeStartId"] and i<conf["drop"]["feedCodeStartId"] + conf["drop"]["instrumentAmount"]:
+            threads.append(threading.Thread(target=generateData,args=(LastLegalFeeds[i], conf,)))
         else:
-            threads.append(threading.Thread(target=writeData,args=(LastLegalFeeds[i], flags.timeLength, 0, 0,)))
+            threads.append(threading.Thread(target=generateData,args=(LastLegalFeeds[i], conf,)))
 
     for t in threads:
         t.start()
 
-    # writeData(LastLegalStatisticsFeeds[0], flags.timeLength)
 main()
-
-def testGenerateLegalStatisticsFeed():
-    LastLegalFeeds = generateInitFeeds(1,1000)
-    LastLegalFeed = LastLegalFeeds[0]
-    totalTime = 0
-    for i in range(100):
-        beginTime = int(round(time.time() * 1000))
-        LastLegalFeed = generateLegalStatisticsFeed(LastLegalFeed)
-        endTime = int(round(time.time() * 1000))
-        totalTime += (endTime-beginTime)
-
-    print totalTime/100
