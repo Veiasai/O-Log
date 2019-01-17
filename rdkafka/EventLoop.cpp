@@ -56,6 +56,7 @@ void EventLoop::run()
 {
     while(true)
     {
+        std::cout << "in loop" << std::endl;
         RdKafka::Message *message = myConsumer->consume();
         std::string messageStr(static_cast<const char *>(message->payload()));
         for(auto& processor : processors)
