@@ -54,5 +54,4 @@ class PriceFeed{
         uint32_t STREAM_ID;
         int64_t EVENT_TIME;
         int64_t EXCHANGE_TIMESTAMP;
-}
-    
+};
