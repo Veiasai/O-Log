@@ -4,6 +4,7 @@
 #include "processor.h"
 #include "confLoader.h"
 #include "DeficiencyProcessor.h"
+#include "ValidityProcessor.h"
 
 class EventLoop
 {
