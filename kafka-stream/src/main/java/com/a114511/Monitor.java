@@ -21,7 +21,11 @@ import static org.apache.kafka.streams.kstream.Suppressed.BufferConfig.unbounded
 public class Monitor {
     public static void main(String[] args) throws Exception {
         ZkUtils zkUtils = ZkUtils.apply("zookeeper:2181", 30000, 30000, JaasUtils.isZkSecurityEnabled());
-        AdminUtils.createTopic(zkUtils, "demo-count-output", 1, 1, new Properties(), RackAwareMode.Enforced$.MODULE$);
+        try{
+            AdminUtils.createTopic(zkUtils, "demo-count-output", 1, 1, new Properties(), RackAwareMode.Enforced$.MODULE$);
+        }catch(Exception e){
+            
+        }
         zkUtils.close();
 
         final String bootstrapServers = args.length > 0 ? args[0] : "kafka:9092";
