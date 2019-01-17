@@ -30,6 +30,7 @@ EventLoop::~EventLoop()
 void EventLoop::setMyConsumer(HandlerConf handlerConf)
 {
     myConsumer = new MyConsumer(handlerConf);
+    myConsumer->subscribe();
 }
 void EventLoop::setMyProducer(HandlerConf handlerConf)
 {
