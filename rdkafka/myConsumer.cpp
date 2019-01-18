@@ -1,13 +1,13 @@
 #include "myConsumer.h"
 #include <sys/syscall.h>
 
-extern bool run;
+extern bool runTag;
 static bool exit_eof = false;
 static int eof_cnt = 0;
 static int partition_cnt = 0;
 static int verbosity = 1;
 static void sigterm (int sig) {
-	  run = false;
+	  runTag = false;
 }
 
 class ExampleRebalanceCb : public RdKafka::RebalanceCb {
@@ -51,7 +51,7 @@ class ExampleEventCb : public RdKafka::EventCb {
                 std::cerr << "ERROR (" << RdKafka::err2str(event.err()) << "): " <<
                     event.str() << std::endl;
                 if (event.err() == RdKafka::ERR__ALL_BROKERS_DOWN)
-                run = false;
+                runTag = false;
                 break;
 
             case RdKafka::Event::EVENT_STATS:
@@ -149,20 +149,20 @@ RdKafka::Message* MyConsumer::msg_consume(RdKafka::Message* message, void* opaqu
             if (exit_eof && ++eof_cnt == partition_cnt) {
                 std::cerr << "%% EOF reached for all " << partition_cnt <<
                     " partition(s)" << std::endl;
-                run = false;
+                runTag = false;
             }
             break;
 
         case RdKafka::ERR__UNKNOWN_TOPIC:
         case RdKafka::ERR__UNKNOWN_PARTITION:
             std::cerr << "Consume failed: " << message->errstr() << std::endl;
-            run = false;
+            runTag = false;
             break;
 
         default:
             /* Errors */
             std::cerr << "Consume failed: " << message->errstr() << std::endl;
-            run = false;
+            runTag = false;
     }
     return NULL;
 }

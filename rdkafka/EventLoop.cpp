@@ -1,6 +1,6 @@
 #include "EventLoop.h"
 
-bool run = true;
+bool runTag = true;
 
 EventLoop::EventLoop()
 {
@@ -56,7 +56,7 @@ void EventLoop::addProcessor(ProcessorType processorType)
 
 void EventLoop::run()
 {
-    while(run)
+    while(runTag)
     {
         RdKafka::Message *message = myConsumer->consume();
         if (message != NULL)
