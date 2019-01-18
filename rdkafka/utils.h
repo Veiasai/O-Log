@@ -34,4 +34,24 @@ class StatisticsFeed{
         int64_t OPEN_INTEREST;
         int64_t EXCHANGE_TIMESTAMP;
 };
-    
+
+class PriceFeed{
+    public:
+        int build(string body);
+
+    public:
+        int32_t TIMESTAMP;
+        string FEEDCODE;
+        int64_t INSTRUMENT_ID;
+        uint32_t SEQUENCE;
+        double BID_PRICE;
+        int32_t BID_VOLUME;
+        uint32_t BID_COUNT;
+        double ASK_PRICE;
+        int32_t ASK_VOLUME;
+        uint32_t ASK_COUNT;
+        uint32_t LAST_TRADE_TICK;
+        uint32_t STREAM_ID;
+        int64_t EVENT_TIME;
+        int64_t EXCHANGE_TIMESTAMP;
+};

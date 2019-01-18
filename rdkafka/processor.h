@@ -1,20 +1,22 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <vector>
 #include "utils.h"
+#include "json/json.h"
 
 using namespace std;
 
 using Pro_res = struct Process_result_;
 struct Process_result_ {
-    string json;
+    vector<string> json;
     Status::code code;
 };
 
 enum ProcessorType
 {
-    ValidityProcessor,
-    DeficiencyProcessor
+    Validity,
+    Deficiency
 };
 
 class Processor {
