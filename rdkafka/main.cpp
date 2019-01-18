@@ -1,8 +1,6 @@
 #include "EventLoop.h"
 #include <thread>
 
-bool run = true;
-
 int main(){
     HandlerConfs handlerConfs= ConfLoader::load("conf/cppStream.xml");
     if (handlerConfs.first.size()==0 || handlerConfs.second.size()==0)
