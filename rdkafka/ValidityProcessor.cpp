@@ -58,7 +58,7 @@ void ValidityProcessor::exec(const string &target)
                 break;
             }
         }
-        catch (int &a)
+        catch (...)
         {
             cout << "in catch\n";
         }
