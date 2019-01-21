@@ -24,7 +24,7 @@ void ValidityProcessor::exec(const string &target)
                 int64_t exchange_timestamp = pf->EXCHANGE_TIMESTAMP;
                 string feedcode = pf->FEEDCODE;
                 cout << "5\n";
-                string log = "";
+                string log = "testlog";
                 if ((pf->BID_PRICE >= pf->ASK_PRICE) || pf->BID_PRICE <= 0 || pf->BID_PRICE >= 1e15 || pf->ASK_PRICE <= 0 || pf->ASK_PRICE >= 1e15)
                 {
                     log += "Invalid price ";
@@ -36,7 +36,7 @@ void ValidityProcessor::exec(const string &target)
                 }
                 cout << "7\n";
                 res.code = Status::WARN;
-                char r[400];
+                char r[600];
                 cout << feedcode.c_str() << endl;
                 cout << exchange_timestamp << endl;
                 cout << pf->BID_PRICE << endl;
