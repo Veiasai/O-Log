@@ -63,7 +63,6 @@ void EventLoop::run()
             for (auto &processor : processors)
             {
                 // for now exec use string as input, you should change it to RdKafka::Message*, and don't forget to delete it.
-                cout << "begin process: " + messageStr << endl;
                 processor->exec(messageStr);
                 Pro_res res = processor->getResult();
                 if (res.code != Status::OK)
