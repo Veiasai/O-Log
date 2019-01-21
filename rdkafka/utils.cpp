@@ -25,13 +25,10 @@ int StatisticsFeed::build(string body){
 int PriceFeed::build(string body){
     try{
         stringstream ss;
-        cout << "in build\n";
         for (auto & c : body)
             if (c == ',') c = ' ';
         ss.str(body);
-        cout << "get ss\n";
         ss >> FEEDCODE >> INSTRUMENT_ID >> SEQUENCE >> BID_PRICE >> BID_VOLUME >> BID_COUNT >> ASK_PRICE >> ASK_VOLUME >> ASK_COUNT >> LAST_TRADE_TICK >> STREAM_ID >> EVENT_TIME >> EXCHANGE_TIMESTAMP;
-        cout << "end build\n";
     }
     catch (exception e){
         cout << "price feed build error" << endl;

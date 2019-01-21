@@ -6,7 +6,7 @@ using namespace std;
 
 void DeficiencyProcessor::exec(const string &target)
 {
-    cout << "in DeficiencyProcessor\n";
+    // cout << "in DeficiencyProcessor\n";
     // target time and expected time
     int64_t t, et;
     if (reader.parse(target, value))
