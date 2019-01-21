@@ -12,6 +12,7 @@ void DeficiencyProcessor::exec(const string &target)
     if (reader.parse(target, value))
     {
         res.code = Status::OK;
+        res.json.clear();
         try
         {
             string msg_type = value["MessageType"].asString();
