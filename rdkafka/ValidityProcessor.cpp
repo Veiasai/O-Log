@@ -44,11 +44,11 @@ void ValidityProcessor::exec(const string &target)
                 cout << pf->BID_VOLUME << endl;
                 cout << pf->ASK_VOLUME << endl;
                 cout << log.c_str() << endl;
-                // sprintf(r, "{\"FEEDCODE\":\"%s\", \"TIMESTAMP\":%lld, \"BID_PRICE\":%f, \"ASK_PRICE\":%f,\"BID_VOLUME\":%f, \"ASK_VOLUME\":%f, \"LOG\":\"%s\"}",
-                //         feedcode.c_str(), exchange_timestamp, pf->BID_PRICE,
-                //         pf->ASK_PRICE, pf->BID_VOLUME, pf->ASK_VOLUME, log.c_str());
-                sprintf(r, "{\"FEEDCODE\":\"%s\", \"TIMESTAMP\":%lld, \"LOG\":\"%s\"}",
-                        feedcode.c_str(), exchange_timestamp, log.c_str());
+                sprintf(r, "{\"FEEDCODE\":\"%s\", \"TIMESTAMP\":%lld, \"BID_PRICE\":%f, \"ASK_PRICE\":%f,\"BID_VOLUME\":%d, \"ASK_VOLUME\":%d, \"LOG\":\"%s\"}",
+                        feedcode.c_str(), exchange_timestamp, pf->BID_PRICE,
+                        pf->ASK_PRICE, pf->BID_VOLUME, pf->ASK_VOLUME, log.c_str());
+                // sprintf(r, "{\"FEEDCODE\":\"%s\", \"TIMESTAMP\":%lld, \"LOG\":\"%s\"}",
+                //         feedcode.c_str(), exchange_timestamp, log.c_str());
                 cout << "8\n";
                 res.json.push_back(string(r));
                 cout << "9\n";
