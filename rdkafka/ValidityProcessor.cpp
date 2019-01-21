@@ -4,6 +4,7 @@ using namespace std;
 
 void ValidityProcessor::exec(const string &target)
 {
+    cout << "in ValidityProcessor\n";
     if (reader.parse(target, value))
     {
         res.code = Status::OK;
