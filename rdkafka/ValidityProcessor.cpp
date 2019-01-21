@@ -36,7 +36,7 @@ void ValidityProcessor::exec(const string &target)
                 }
                 cout << "7\n";
                 res.code = Status::WARN;
-                char r[200];
+                char r[400];
                 sprintf(r, "{\"FEEDCODE\":\"%s\", \"TIMESTAMP\":%lld, \"BID_PRICE\":%lf, \"ASK_PRICE\":%lf,\"BID_VOLUME\":%lf, \"ASK_VOLUME\":%lf, \"LOG\":\"%s\"}", 
                 feedcode.c_str(), exchange_timestamp, pf->BID_PRICE, 
                              pf->ASK_PRICE, pf->BID_VOLUME, pf->ASK_VOLUME, log.c_str());
