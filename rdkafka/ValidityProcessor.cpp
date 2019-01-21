@@ -37,9 +37,16 @@ void ValidityProcessor::exec(const string &target)
                 cout << "7\n";
                 res.code = Status::WARN;
                 char r[400];
-                sprintf(r, "{\"FEEDCODE\":\"%s\", \"TIMESTAMP\":%lld, \"BID_PRICE\":%lf, \"ASK_PRICE\":%lf,\"BID_VOLUME\":%lf, \"ASK_VOLUME\":%lf, \"LOG\":\"%s\"}", 
-                feedcode.c_str(), exchange_timestamp, pf->BID_PRICE, 
-                             pf->ASK_PRICE, pf->BID_VOLUME, pf->ASK_VOLUME, log.c_str());
+                cout << feedcode.c_str() << endl;
+                cout << exchange_timestamp << endl;
+                cout << pf->BID_PRICE << endl;
+                cout << pf->ASK_PRICE << endl;
+                cout << pf->BID_VOLUME << endl;
+                cout << pf->ASK_VOLUME << endl;
+                cout << log.c_str() << endl;
+                sprintf(r, "{\"FEEDCODE\":\"%s\", \"TIMESTAMP\":%lld, \"BID_PRICE\":%lf, \"ASK_PRICE\":%lf,\"BID_VOLUME\":%lf, \"ASK_VOLUME\":%lf, \"LOG\":\"%s\"}",
+                        feedcode.c_str(), exchange_timestamp, pf->BID_PRICE,
+                        pf->ASK_PRICE, pf->BID_VOLUME, pf->ASK_VOLUME, log.c_str());
                 cout << "8\n";
                 res.json.push_back(string(r));
                 cout << "9\n";
