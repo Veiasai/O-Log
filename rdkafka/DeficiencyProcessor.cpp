@@ -44,6 +44,7 @@ void DeficiencyProcessor::exec(const string &target)
                     bool isValid = true;
                     msg_turnover_value[feedcode] = sf->TURNOVER_VALUE > 0 ? sf->TURNOVER_VALUE : 0;
                     msg_turnover_volume[feedcode] = sf->TURNOVER_VOLUME > 0 ? sf->TURNOVER_VOLUME : 0;
+                    cout << "1" << endl;
                 }
 
                 // skip head
@@ -61,12 +62,14 @@ void DeficiencyProcessor::exec(const string &target)
                     res.json.push_back(string(r));
                     break;
                 }
+                cout << "2" << endl;
 
                 // insert
                 pq *sf_pq = msg_q[feedcode];
                 sf_pq->push(sf);
                 while (sf_pq->size() > 0)
                 {
+                    cout << "3" << endl;
                     t = sf_pq->top()->EXCHANGE_TIMESTAMP;
                     if (t == et)
                     {
@@ -96,6 +99,7 @@ void DeficiencyProcessor::exec(const string &target)
                         break;
                     }
                 }
+                cout << "4" << endl;
 
                 msg_t[feedcode] = et;
                 if (sf_pq->size() > 120)
