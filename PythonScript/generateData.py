@@ -8,7 +8,7 @@ import re
 import copy
 import os
 import json
-from queue import Queue
+import Queue
 
 StreamIDUpBound = 1000
 OpenInterestUpBound = 1000
@@ -233,8 +233,8 @@ def writePriceFeed(LastLegalFeed, file, errorFile, conf):
 
 def generateData(LastLegalFeed, conf):
     file = open(DirPath + LastLegalFeed.statisticsFeed.FEEDCODE + ".log", "w")
-    errorFile = open(DirPath + LastLegalFeed.statisticsFeed.FEEDCODE + ".error", "w")
-    delayQueue = Queue()
+    errorFile = open(DirPath + "error_" + LastLegalFeed.statisticsFeed.FEEDCODE + ".log", "w")
+    delayQueue = Queue.Queue()
     nowTime = int(round(time.time() * 1000))
     endTime = nowTime + conf["base"]["timeLength"]*1000
     LastLegalFeed.nextDropTimestamp = nowTime / 500 * 5 + conf["drop"]["dropInterval"] * 10
