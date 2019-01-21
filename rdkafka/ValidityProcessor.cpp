@@ -28,7 +28,7 @@ void ValidityProcessor::exec(const string &target)
                 {
                     log += "Invalid volume";
                 }
-                if(!log.empty())
+                if(log.size()!=0)
                 {
                     res.code = Status::WARN;
                 }
