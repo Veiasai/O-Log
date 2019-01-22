@@ -73,7 +73,7 @@ void EventLoop::run()
                     }
                 }
             }
-            myConsumer->setOffset(message->offset(), message->partition());
+            // myConsumer->setOffset(message->offset(), message->partition());
         }
         myProducer->poll(0);
     }
