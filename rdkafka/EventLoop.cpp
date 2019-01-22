@@ -37,7 +37,7 @@ void EventLoop::setMyProducer(HandlerConf handlerConf)
 {
     myProducer = new MyProducer(handlerConf);
 }
-void EventLoop::addProcessor(ProcessorType processorType)
+void EventLoop::addProcessor(ProcessorType processorType, ContextMap* contextMap)
 {
     switch (processorType)
     {
@@ -45,8 +45,12 @@ void EventLoop::addProcessor(ProcessorType processorType)
         processors.push_back(new ValidityProcessor());
         break;
     case Deficiency:
-        processors.push_back(new DeficiencyProcessor());
-        break;
+        {
+            auto tempProcessor = new DeficiencyProcessor();
+            tempProcessor->setContextMap(contextMap);
+            processors.push_back(tempProcessor);
+            break;
+        }
     default:
         break;
     }

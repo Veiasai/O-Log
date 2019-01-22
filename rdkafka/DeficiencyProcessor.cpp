@@ -9,6 +9,7 @@ void DeficiencyProcessor::exec(const string &target)
     // cout << "in DeficiencyProcessor\n";
     // target time and expected time
     int64_t t, et;
+    Context *context;
     if (reader.parse(target, value))
     {
         res.code = Status::OK;
@@ -37,23 +38,26 @@ void DeficiencyProcessor::exec(const string &target)
                     res.json.push_back(string(r));
                 }
 
-                if (msg_q[feedcode] == nullptr)
+                if (!contextMap->has(feedcode))
                 {
                     cout << "new pq:" << feedcode << " test:" << sf->OPEN_INTEREST << " time:" << sf->EXCHANGE_TIMESTAMP << endl;
-                    msg_q[feedcode] = new pq;
-                    msg_t[feedcode] = sf->EXCHANGE_TIMESTAMP;
-                    char r[200];
-                    bool isValid = true;
-                    msg_turnover_value[feedcode] = sf->TURNOVER_VALUE > 0 ? sf->TURNOVER_VALUE : 0;
-                    msg_turnover_volume[feedcode] = sf->TURNOVER_VOLUME > 0 ? sf->TURNOVER_VOLUME : 0;
+                    contextMap->create(feedcode);
+                    context = contextMap->getContext(feedcode);
+                    context->lock();
+                    context->setExpectTimestamp(sf->EXCHANGE_TIMESTAMP);
+                    context->setPreValue(sf->TURNOVER_VALUE > 0 ? sf->TURNOVER_VALUE : 0);
+                    context->setPreVolume(sf->TURNOVER_VOLUME > 0 ? sf->TURNOVER_VOLUME : 0);
+                    context->unlock();
                 }
-
+                
+                context->lock();
                 // skip head
-                et = msg_t[feedcode];
+                et = context->getExpectTimestamp();
                 if (et == sf->EXCHANGE_TIMESTAMP)
                 {
-                    msg_t[feedcode] += INTERVAL;
+                    context->setExpectTimestamp(et + INTERVAL);
                     delete sf;
+                    context->unlock();
                     break;
                 }
                 else if (et > sf->EXCHANGE_TIMESTAMP)
@@ -62,11 +66,12 @@ void DeficiencyProcessor::exec(const string &target)
                     char r[200];
                     sprintf(r, "{\"FEEDCODE\":\"%s\", \"TIMESTAMP\": %lld, \"LOG\":\"delay %fs\"}", feedcode.c_str(), sf->EXCHANGE_TIMESTAMP, (et - sf->EXCHANGE_TIMESTAMP) / 1000000000.0);
                     res.json.push_back(string(r));
+                    context->unlock();
                     break;
                 }
 
                 // insert
-                pq *sf_pq = msg_q[feedcode];
+                pq *sf_pq = context->getQueue();
                 sf_pq->push(sf);
                 while (sf_pq->size() > 0)
                 {
@@ -74,7 +79,7 @@ void DeficiencyProcessor::exec(const string &target)
                     if (t == et)
                     {
                         // detect continuity                      
-                        if (sf->TURNOVER_VALUE < msg_turnover_value[feedcode] || sf->TURNOVER_VOLUME < msg_turnover_volume[feedcode])
+                        if (sf->TURNOVER_VALUE < context->getPreValue() || sf->TURNOVER_VOLUME < context->getPreVolume())
                         {
                             char r[200];
                             sprintf(r, "{\"FEEDCODE\":\"%s\", \"TIMESTAMP\":%lld, \"TURNOVER_VOLUME\":%d, \"TURNOVER_VALUE\":%lf, \"LOG\":\"%s\"}", feedcode.c_str(), sf->TIMESTAMP, sf->TURNOVER_VOLUME, sf->TURNOVER_VALUE, "Turnover value or turnover volume should be monotonically increase");
@@ -82,8 +87,8 @@ void DeficiencyProcessor::exec(const string &target)
                         }
                         else
                         {
-                            msg_turnover_value[feedcode] = sf->TURNOVER_VALUE;
-                            msg_turnover_volume[feedcode] = sf->TURNOVER_VOLUME;
+                            context->setPreValue(sf->TURNOVER_VALUE);
+                            context->setPreVolume(sf->TURNOVER_VOLUME);
                         }
                         delete sf_pq->top();
                         sf_pq->pop();
@@ -96,26 +101,28 @@ void DeficiencyProcessor::exec(const string &target)
                     }
                     else
                     {
+                        context->unlock();
                         break;
                     }
                 }
 
-                msg_t[feedcode] = et;
+                context->setExpectTimestamp(et);
                 if (sf_pq->size() > 120)
                 {
                     // miss
                     res.code = Status::WARN;
                     char r[200];
-                    sprintf(r, "{\"FEEDCODE\":\"%s\", \"TIMESTAMP\":%lld, \"LOG\":\"%s\"}", feedcode.c_str(), msg_t[feedcode], "miss");
+                    sprintf(r, "{\"FEEDCODE\":\"%s\", \"TIMESTAMP\":%lld, \"LOG\":\"%s\"}", feedcode.c_str(), context->getExpectTimestamp(), "miss");
                     res.json.push_back(string(r));
 
                     // ignore and continue
-                    msg_t[feedcode] += INTERVAL;
+                    context->setExpectTimestamp(context->getExpectTimestamp()+INTERVAL);
                 }
                 else
                 {
                     // wating
                 }
+                context->unlock();
             }
             break;
             default:
@@ -158,4 +165,9 @@ bool DeficiencyProcessor::checkTime(int64_t t, int64_t expect_t)
     {
         return false;
     }
+}
+
+void setContextMap(ContextMap *cm)
+{
+    contextMap = cm;
 }

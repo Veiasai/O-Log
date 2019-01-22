@@ -17,6 +17,6 @@ class EventLoop
       ~EventLoop();
       void setMyConsumer(HandlerConf handlerConf);
       void setMyProducer(HandlerConf handlerConf);
-      void addProcessor(ProcessorType processorType);
+      void addProcessor(ProcessorType processorType, ContextMap* contextMap = NULL);
       void run();
 };
