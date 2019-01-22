@@ -58,6 +58,7 @@ void DeficiencyProcessor::exec(const string &target)
                 }
                 else if (et > sf->EXCHANGE_TIMESTAMP)
                 {
+                    res.code = Status::WARN;
                     char r[200];
                     sprintf(r, "{\"FEEDCODE\":\"%s\", \"TIMESTAMP\": %lld, \"LOG\":\"delay %fs\"}", feedcode.c_str(), sf->EXCHANGE_TIMESTAMP, (et - sf->EXCHANGE_TIMESTAMP) / 1000000000.0);
                     res.json.push_back(string(r));
