@@ -59,6 +59,7 @@ void EventLoop::run()
         RdKafka::Message *message = myConsumer->consume();
         if (message != NULL)
         {
+            cout << "message at offset:" << message->offset() << " in partition:" << message->partition() << endl;
             std::string messageStr(static_cast<const char *>(message->payload()));
             for (auto &processor : processors)
             {
@@ -72,6 +73,7 @@ void EventLoop::run()
                     }
                 }
             }
+            myConsumer->setOffset(message->offset(), message->partition());
         }
         myProducer->poll(0);
     }

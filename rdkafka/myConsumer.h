@@ -20,6 +20,5 @@ class MyConsumer
         ~MyConsumer();
         void subscribe();
         RdKafka::Message* consume();
-        void setProducer(MyProducer *myProducer);
-        void setProcessor(Processor * processor);
+        void setOffset(int64_t offset, int32_t partition);
 };

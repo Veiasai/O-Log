@@ -167,11 +167,15 @@ RdKafka::Message* MyConsumer::msg_consume(RdKafka::Message* message, void* opaqu
     return NULL;
 }
 
-void MyConsumer::setProducer(MyProducer *myProducer)
+void MyConsumer::setOffset(int64_t offset, int32_t partition)
 {
-    producer = myProducer;
-}
-
-void MyConsumer::setProcessor(Processor * p){
-    processor = p;
+    std::vector<RdKafka::TopicPartition *> partitions = consumer->assignment();
+    for(auto& tp : partitions)
+    {
+        if(tp->partition() == partition)
+        {
+            tp->set_offset(offset);
+        }
+    }
+    consumer->assign(partitions);
 }
