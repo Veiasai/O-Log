@@ -4,7 +4,7 @@
         "messageType": 3,
         "enableNoise": false,
         "feedCodeStartId": 1000,
-        "timeLength": 160
+        "timeLength": 240
     },
     "drop":{
         "instrumentAmount": 1,

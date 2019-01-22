@@ -59,7 +59,7 @@ pipeline:
       - cd rdkafka
       - cp link_lib/* /usr/lib/
       - ln -s /usr/lib/libjsoncpp.so.0.10.6 /usr/lib/libjsoncpp.so.0
-      - timeout 120 ./monitor
+      - timeout 240 ./monitor
       - exit 0
 
   # streamtest:
