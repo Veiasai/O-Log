@@ -2,7 +2,7 @@
 #include <map>
 
 using namespace std;
-#define INTERVAL 500000000;
+#define INTERVAL 500000000
 
 void DeficiencyProcessor::exec(const string &target)
 {
@@ -167,7 +167,7 @@ bool DeficiencyProcessor::checkTime(int64_t t, int64_t expect_t)
     }
 }
 
-void setContextMap(ContextMap *cm)
+void DeficiencyProcessor::setContextMap(ContextMap *cm)
 {
     contextMap = cm;
 }
