@@ -169,7 +169,8 @@ RdKafka::Message* MyConsumer::msg_consume(RdKafka::Message* message, void* opaqu
 
 void MyConsumer::setOffset(int64_t offset, int32_t partition)
 {
-    std::vector<RdKafka::TopicPartition *> partitions = consumer->assignment();
+    std::vector<RdKafka::TopicPartition *> partitions;
+    consumer->assignment(partitions);
     for(auto& tp : partitions)
     {
         if(tp->partition() == partition)
