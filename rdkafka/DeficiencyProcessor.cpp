@@ -6,7 +6,7 @@ using namespace std;
 
 void DeficiencyProcessor::exec(const string &target)
 {
-    // cout << "in DeficiencyProcessor\n";
+    cout << "in DeficiencyProcessor\n";
     // target time and expected time
     int64_t t, et;
     Context *context;
@@ -40,7 +40,7 @@ void DeficiencyProcessor::exec(const string &target)
 
                 if (!contextMap->has(feedcode))
                 {
-                    cout << "new pq:" << feedcode << " test:" << sf->OPEN_INTEREST << " time:" << sf->EXCHANGE_TIMESTAMP << endl;
+                    cout << "new context:" << feedcode << " time:" << sf->EXCHANGE_TIMESTAMP << endl;
                     contextMap->create(feedcode);
                     context = contextMap->getContext(feedcode);
                     context->lock();
@@ -50,6 +50,7 @@ void DeficiencyProcessor::exec(const string &target)
                     context->unlock();
                 }
                 
+                context = contextMap->getContext(feedcode);
                 context->lock();
                 // skip head
                 et = context->getExpectTimestamp();
