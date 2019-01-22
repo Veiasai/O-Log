@@ -8,12 +8,14 @@ int main(){
         std::cerr << "Load Conf Error." << std::endl;
         return 1;
     }
+
     EventLoop eventLoop;
     eventLoop.setMyConsumer(handlerConfs.first[0]);
     eventLoop.setMyProducer(handlerConfs.second[0]);
     eventLoop.addProcessor(Deficiency);
     eventLoop.addProcessor(Validity);
     thread myThread(&EventLoop::run, &eventLoop);
+    
     myThread.join();
     return 0;
 }
