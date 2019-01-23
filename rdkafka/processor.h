@@ -4,6 +4,7 @@
 #include <vector>
 #include "utils.h"
 #include "json/json.h"
+#include "./librdkafka-PrintPoint/src-cpp/rdkafkacpp.h"
 
 using namespace std;
 

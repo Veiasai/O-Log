@@ -1,5 +1,4 @@
 #include "ValidityProcessor.h"
-#include "rdkafkacpp.h"
 
 using namespace std;
 

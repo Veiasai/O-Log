@@ -1,5 +1,4 @@
 #include "DeficiencyProcessor.h"
-#include "rdkafkacpp.h"
 #include <map>
 
 using namespace std;
