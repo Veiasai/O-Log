@@ -87,13 +87,15 @@ void DeficiencyProcessor::exec(MyMessage* message){
                         context->setPreValue(sf->TURNOVER_VALUE);
                         context->setPreVolume(sf->TURNOVER_VOLUME);
                     }
-                    delete sf_pq->top();
+                    ((MyMessage*)sf_to_m[sf_pq->top()])->kill();
+                    sf_to_m.erase(sf_pq->top());
                     sf_pq->pop();
                     et += INTERVAL;
                 }
                 else if (t < et)
                 {
-                    delete sf_pq->top();
+                    ((MyMessage*)sf_to_m[sf_pq->top()])->kill();
+                    sf_to_m.erase(sf_pq->top());
                     sf_pq->pop();
                 }
                 else

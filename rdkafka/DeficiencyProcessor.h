@@ -21,7 +21,6 @@ class DeficiencyProcessor : public Processor{
         bool checkTime(int64_t t, int64_t expect_t);
     public:
         virtual void exec(MyMessage* message);
-        virtual void exec(const string & target);
         virtual Pro_res getResult();
         virtual void tag(string t);
         virtual string tag();

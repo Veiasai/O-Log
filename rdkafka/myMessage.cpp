@@ -1,9 +1,13 @@
 #include "myMessage.h"
+#include <cassert>
+
+static Json::Reader reader;
 
 MyMessage::MyMessage(RdKafka::Message* message){
     this->_message = message;
     this->_live = 0;
-    if (reader.parse(this->message, value))
+    Json::Value value;
+    if (reader.parse(string(static_cast<const char *>(message->payload())), value))
     {
         try
         {
@@ -14,14 +18,17 @@ MyMessage::MyMessage(RdKafka::Message* message){
             {
                 PriceFeed *pf = new PriceFeed();
                 pf->build(value["detail"].asString());
-                this->feed = pf;
-                this->type = Type::feedtype::Price;
+                _feed = pf;
+                this->_type = Type::feedtype::Price;
+                break;
             }
-            case 'S':
+            case 'S':{
                 StatisticsFeed * sf = new StatisticsFeed();
                 sf->build(value["detail"].asString());
-                this->feed = sf;
-                this->type = Type::feedtype::Statistics;
+                _feed = sf;
+                _type = Type::feedtype::Statistics;
+                break;
+            }
             default:
                 break;
             }
@@ -40,6 +47,7 @@ MyMessage::MyMessage(RdKafka::Message* message){
 MyMessage::~MyMessage(){
     // here delete void *, be careful that feed has no destructor
     delete this->_feed;
+
     delete this->_message;
 };
 
@@ -62,4 +70,8 @@ void MyMessage::kill(){
 
 bool MyMessage::free(){
     return this->_live == 0;
+}
+
+Type::feedtype MyMessage::type(){
+    return this->_type;
 }

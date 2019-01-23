@@ -81,6 +81,7 @@ void EventLoop::run()
                 }
             }
             if (loopCount > 1000){
+                loopCount = 0;
                 store_offset();
             }
         }
@@ -98,6 +99,7 @@ void EventLoop::store_offset(){
                 if (cur != NULL)
                     delete cur;
                 cur = next;
+                q.second.pop();
             }else{
                 break;
             }

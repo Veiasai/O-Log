@@ -5,9 +5,6 @@
 
 class MyMessage {
     public:
-        static Json::Reader reader;
-        static Json::Value value;
-
         MyMessage(RdKafka::Message* message);
         ~MyMessage();
         RdKafka::Message* message();
