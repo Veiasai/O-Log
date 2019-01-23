@@ -2263,6 +2263,7 @@ static rd_kafka_message_t *rd_kafka_consume0 (rd_kafka_t *rk,
                          * stop dispatching the queue and return. */
                         rd_kafka_set_last_error(RD_KAFKA_RESP_ERR__INTR,
                                                 EINTR);
+                        printf("%d end rd_kafka_consume0\n", (long int)syscall(__NR_gettid));
                         return NULL;
                 }
 
@@ -2274,6 +2275,7 @@ static rd_kafka_message_t *rd_kafka_consume0 (rd_kafka_t *rk,
 		/* Timeout reached with no op returned. */
 		rd_kafka_set_last_error(RD_KAFKA_RESP_ERR__TIMED_OUT,
 					ETIMEDOUT);
+                printf("%d end rd_kafka_consume0\n", (long int)syscall(__NR_gettid));
 		return NULL;
 	}
 
