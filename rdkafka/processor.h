@@ -3,7 +3,8 @@
 #include <string>
 #include <vector>
 #include "utils.h"
-#include "json/json.h"
+#include "./librdkafka-PrintPoint/src-cpp/rdkafkacpp.h"
+#include "myMessage.h"
 
 using namespace std;
 
@@ -21,7 +22,7 @@ enum ProcessorType
 
 class Processor {
     public:
-        virtual void exec(const string & target) =0;
+        virtual void exec(MyMessage* message) =0;
         virtual Pro_res getResult() =0;
         virtual void tag(string tag) =0;
         virtual string tag() =0;

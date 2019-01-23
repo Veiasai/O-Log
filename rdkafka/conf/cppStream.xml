@@ -16,6 +16,14 @@
                     <entryKey>metadata.broker.list</entryKey>
                     <entryValue>kafka:9092</entryValue>
                 </confEntry>
+                <confEntry>
+                    <entryKey>enable.auto.offset.store</entryKey>
+                    <entryValue>false</entryValue>
+                </confEntry>
+                <confEntry>
+                    <entryKey>auto.offset.reset</entryKey>
+                    <entryValue>earliest</entryValue>
+                </confEntry>
             </global_conf>
         </comsumer>
     </comsumers>

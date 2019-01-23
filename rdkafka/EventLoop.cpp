@@ -1,9 +1,11 @@
 #include "EventLoop.h"
+#include "myMessage.h"
 
 bool runTag = true;
 
 EventLoop::EventLoop()
 {
+    loopCount = 0;
 }
 
 EventLoop::~EventLoop()
@@ -63,11 +65,13 @@ void EventLoop::run()
         RdKafka::Message *message = myConsumer->consume();
         if (message != NULL)
         {
-            std::string messageStr(static_cast<const char *>(message->payload()));
+            loopCount++;
+            auto myMessage = new MyMessage(message);
+            offset[message->partition()].push(myMessage);
+            // std::string messageStr(static_cast<const char *>(message->payload()));
             for (auto &processor : processors)
             {
-                // for now exec use string as input, you should change it to RdKafka::Message*, and don't forget to delete it.
-                processor->exec(messageStr);
+                processor->exec(myMessage);
                 Pro_res res = processor->getResult();
                 if (res.code != Status::OK)
                 {
@@ -76,7 +80,33 @@ void EventLoop::run()
                     }
                 }
             }
+            if (loopCount > 1000){
+                loopCount = 0;
+                store_offset();
+            }
         }
         myProducer->poll(0);
+    }
+}
+
+void EventLoop::store_offset(){
+    for (auto & q : offset){
+        MyMessage* cur = NULL;
+        MyMessage* next= NULL;
+        while(!q.second.empty()){
+            next = q.second.front();
+            if (next->free()){
+                if (cur != NULL)
+                    delete cur;
+                cur = next;
+                q.second.pop();
+            }else{
+                break;
+            }
+        }
+        if (cur != NULL){
+            myConsumer->commit(cur->message());
+            delete cur;
+        }
     }
 }
