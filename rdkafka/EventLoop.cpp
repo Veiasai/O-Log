@@ -67,7 +67,7 @@ void EventLoop::run()
         {
             loopCount++;
             auto myMessage = new MyMessage(message);
-            offset[message->partition].push(myMessage);
+            offset[message->partition()].push(myMessage);
             // std::string messageStr(static_cast<const char *>(message->payload()));
             for (auto &processor : processors)
             {
