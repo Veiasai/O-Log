@@ -8,6 +8,11 @@ class Status{
         enum code {OK, ERROR, WARN};
 };
 
+class Type{
+    public:
+        enum feedtype {NONE, Statistics, Price};
+};
+
 class StatisticsFeed{
     public:
         int build(string body);

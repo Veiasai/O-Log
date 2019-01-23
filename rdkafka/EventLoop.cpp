@@ -1,4 +1,5 @@
 #include "EventLoop.h"
+#include "MyMessage.h"
 
 bool runTag = true;
 
@@ -63,11 +64,12 @@ void EventLoop::run()
         RdKafka::Message *message = myConsumer->consume();
         if (message != NULL)
         {
+            auto myMessage = new MyMessage(message);
+            offset[message->partition].push(myMessage);
             // std::string messageStr(static_cast<const char *>(message->payload()));
             for (auto &processor : processors)
             {
-                // for now exec use string as input, you should change it to RdKafka::Message*, and don't forget to delete it.
-                processor->exec(message);
+                processor->exec(myMessage);
                 Pro_res res = processor->getResult();
                 if (res.code != Status::OK)
                 {
