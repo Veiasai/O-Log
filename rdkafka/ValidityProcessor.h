@@ -9,6 +9,7 @@ class ValidityProcessor : public Processor{
         string tags;
         Pro_res res;
     public:
+        virtual void exec(const RdKafka::Message* message);
         virtual void exec(const string & target);
         virtual Pro_res getResult();
         virtual void tag(string t);

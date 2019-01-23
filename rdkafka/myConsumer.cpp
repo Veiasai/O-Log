@@ -91,6 +91,7 @@ MyConsumer::MyConsumer(HandlerConf handlerConf){
     ExampleEventCb ex_event_cb;
     handlerConf.first.first->set("event_cb", &ex_event_cb, errstr);
     handlerConf.first.first->set("default_topic_conf", handlerConf.first.second, errstr);
+    
     delete handlerConf.first.second;
 
     signal(SIGINT, sigterm);

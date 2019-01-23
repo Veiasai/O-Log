@@ -1,6 +1,12 @@
 #include "ValidityProcessor.h"
+#include "rdkafkacpp.h"
 
 using namespace std;
+
+void ValidityProcessor::exec(const RdKafka::Message* message){
+    std::string messageStr(static_cast<const char *>(message->payload()));
+    exec(messageStr);
+}
 
 void ValidityProcessor::exec(const string &target)
 {

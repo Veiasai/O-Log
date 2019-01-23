@@ -21,6 +21,7 @@ enum ProcessorType
 
 class Processor {
     public:
+        virtual void exec(const RdKafka::Message* message) =0;
         virtual void exec(const string & target) =0;
         virtual Pro_res getResult() =0;
         virtual void tag(string tag) =0;

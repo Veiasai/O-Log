@@ -1,8 +1,14 @@
 #include "DeficiencyProcessor.h"
+#include "rdkafkacpp.h"
 #include <map>
 
 using namespace std;
 #define INTERVAL 500000000
+
+void DeficiencyProcessor::exec(const RdKafka::Message* message){
+    std::string messageStr(static_cast<const char *>(message->payload()));
+    exec(messageStr);
+}
 
 void DeficiencyProcessor::exec(const string &target)
 {

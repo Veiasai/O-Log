@@ -63,11 +63,11 @@ void EventLoop::run()
         RdKafka::Message *message = myConsumer->consume();
         if (message != NULL)
         {
-            std::string messageStr(static_cast<const char *>(message->payload()));
+            // std::string messageStr(static_cast<const char *>(message->payload()));
             for (auto &processor : processors)
             {
                 // for now exec use string as input, you should change it to RdKafka::Message*, and don't forget to delete it.
-                processor->exec(messageStr);
+                processor->exec(message);
                 Pro_res res = processor->getResult();
                 if (res.code != Status::OK)
                 {

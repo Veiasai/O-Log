@@ -21,6 +21,7 @@ class DeficiencyProcessor : public Processor{
         Pro_res res;
         bool checkTime(int64_t t, int64_t expect_t);
     public:
+        virtual void exec(const RdKafka::Message* message);
         virtual void exec(const string & target);
         virtual Pro_res getResult();
         virtual void tag(string t);
