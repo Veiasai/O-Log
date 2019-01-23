@@ -4,7 +4,7 @@ using namespace std;
 
 void ValidityProcessor::exec(MyMessage* message){
     // cout << "in ValidityProcessor\n";
-    switch (message->type){
+    switch (message->type()){
         case Type::feedtype::Price:
         {
             // be careful to void *
@@ -36,7 +36,6 @@ void ValidityProcessor::exec(MyMessage* message){
             break;
         default:
             break;
-        }
     }
 }
 
