@@ -5,6 +5,8 @@ using namespace std;
 void ValidityProcessor::exec(MyMessage* message){
     // cout << "in ValidityProcessor\n";
     res.json.clear();
+    res.code = Status::OK;
+    
     switch (message->type()){
         case Type::feedtype::Price:
         {
