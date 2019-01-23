@@ -7,6 +7,7 @@ using namespace std;
 void DeficiencyProcessor::exec(MyMessage* message){
     // cout << "in DeficiencyProcessor\n";
     // target time and expected time
+    res.json.clear();
     int64_t t, et;
     Context *context;
     switch (message->type()){
