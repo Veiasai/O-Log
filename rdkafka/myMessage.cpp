@@ -43,7 +43,7 @@ MyMessage::~MyMessage(){
     delete this->_message;
 };
 
-const RdKafka::Message* MyMessage::message(){
+RdKafka::Message* MyMessage::message(){
     return this->_message;
 };
 

@@ -10,7 +10,7 @@ class MyMessage {
 
         MyMessage(RdKafka::Message* message);
         ~MyMessage();
-        const RdKafka::Message* message();
+        RdKafka::Message* message();
         const void * const feed();
         Type::feedtype type();
         void live();

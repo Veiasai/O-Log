@@ -103,7 +103,7 @@ void EventLoop::store_offset(){
             }
         }
         if (cur != NULL){
-            myConsumer->commit(cur->message);
+            myConsumer->commit(cur->message());
             delete cur;
         }
     }
