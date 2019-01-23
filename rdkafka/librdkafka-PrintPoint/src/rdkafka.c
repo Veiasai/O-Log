@@ -2241,6 +2241,7 @@ int rd_kafka_consume_callback_queue (rd_kafka_queue_t *rkqu,
 static rd_kafka_message_t *rd_kafka_consume0 (rd_kafka_t *rk,
                                               rd_kafka_q_t *rkq,
 					      int timeout_ms) {
+        printf("%d begin rd_kafka_consume0\n", (long int)syscall(__NR_gettid));
 	rd_kafka_op_t *rko;
 	rd_kafka_message_t *rkmessage = NULL;
 	rd_ts_t abs_timeout = rd_timeout_init(timeout_ms);
@@ -2288,6 +2289,7 @@ static rd_kafka_message_t *rd_kafka_consume0 (rd_kafka_t *rk,
 
 	rd_kafka_set_last_error(0, 0);
 
+        printf("%d end rd_kafka_consume0\n", (long int)syscall(__NR_gettid));
 	return rkmessage;
 }
 
