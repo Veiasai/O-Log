@@ -176,3 +176,7 @@ void MyConsumer::setProducer(MyProducer *myProducer)
 void MyConsumer::setProcessor(Processor * p){
     processor = p;
 }
+
+void MyConsumer::commit(RdKafka::Message* m){
+    consumer->commitAsync(m);
+}

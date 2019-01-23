@@ -1,6 +1,6 @@
 #pragma once
 #include "./librdkafka-PrintPoint/src-cpp/rdkafkacpp.h"
-#include "json.h"
+#include "json/json.h"
 #include "utils.h"
 
 class MyMessage {

@@ -22,4 +22,5 @@ class MyConsumer
         RdKafka::Message* consume();
         void setProducer(MyProducer *myProducer);
         void setProcessor(Processor * processor);
+        void commit(RdKafka::Message*);
 };
