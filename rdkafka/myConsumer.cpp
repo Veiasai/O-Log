@@ -129,6 +129,7 @@ void MyConsumer::subscribe()
 
 RdKafka::Message* MyConsumer::consume()
 {
+    std::cout << (long int)syscall(__NR_gettid) << " begin consume" << std::endl;
     RdKafka::Message *msg = consumer->consume(1000);
     return msg_consume(msg, NULL);
 }
