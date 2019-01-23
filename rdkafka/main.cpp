@@ -15,9 +15,13 @@ int main(){
     eventLoop.setMyProducer(handlerConfs.second[0]);
     eventLoop.addProcessor(Deficiency, contextMap);
     eventLoop.addProcessor(Validity);
+
+    sleep(10);
+    std::cout << "Begin eventLoop" << std::endl;
     thread myThread(&EventLoop::run, &eventLoop);
-    
     myThread.join();
+    std::cout << "End eventLoop" << std::endl;
+
     delete contextMap;
     return 0;
 }
