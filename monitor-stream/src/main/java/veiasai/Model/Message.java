@@ -1,14 +1,15 @@
 package veiasai.Model;
 
-public class Message {
-    String MessageType;
-    String detail;
+import com.google.gson.annotations.SerializedName;
 
-    @Override
-    public String toString() {
-        return "Message{" +
-                "MessageType='" + MessageType + '\'' +
-                ", detail='" + detail + '\'' +
-                '}';
-    }
+public class Message {
+    @SerializedName("@timestamp")
+    public Double timesSamp;
+
+    public Long log_time;
+
+    @SerializedName("MessageType")
+    public String messageType;
+
+    public String detail;
 }
