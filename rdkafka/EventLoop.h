@@ -7,6 +7,8 @@
 #include "DeficiencyProcessor.h"
 #include "ValidityProcessor.h"
 
+class ContextMap;
+
 class EventLoop
 {
     private:
