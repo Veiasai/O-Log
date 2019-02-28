@@ -5,7 +5,6 @@ bool runTag = true;
 
 EventLoop::EventLoop()
 {
-    loopCount = 0;
 }
 
 EventLoop::~EventLoop()
@@ -65,7 +64,6 @@ void EventLoop::run()
         RdKafka::Message *message = myConsumer->consume();
         if (message != NULL)
         {
-            loopCount++;
             auto myMessage = new MyMessage(message);
             offset[message->partition()].push(myMessage);
             // std::string messageStr(static_cast<const char *>(message->payload()));
@@ -79,10 +77,6 @@ void EventLoop::run()
                         myProducer->produce(s);
                     }
                 }
-            }
-            if (loopCount > 1000){
-                loopCount = 0;
-                store_offset();
             }
         }
         myProducer->poll(0);

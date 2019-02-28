@@ -12,6 +12,7 @@ int main(){
 
     ContextMap *contextMap = new ContextMap();
     EventLoop eventLoop;
+    contextMap->addEventLoop(&eventLoop);
     eventLoop.setMyConsumer(handlerConfs.first[0]);
     eventLoop.setMyProducer(handlerConfs.second[0]);
     eventLoop.addProcessor(Deficiency, contextMap);

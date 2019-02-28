@@ -65,5 +65,9 @@ void ContextMap::backupMetaData(Backuper *backuper)
         metaData = metaData + feedcode + "," + expectTimestamp + "," + preValue + "," + preVolume + ";";
     }
     backuper->produce(metaData);
+    for(auto eventLoop : myEventLoops)
+    {
+        eventLoop->store_offset();
+    }
     mutex_.unlock();
 }

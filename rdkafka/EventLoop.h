@@ -18,7 +18,7 @@ class EventLoop
       // int32_t: partition , it's not neccessary
       // i think that grouping messages by parition could decrease live=0 in queue.
       map<int32_t, queue<MyMessage*>> offset;
-      int32_t loopCount;
+      
     public:
       EventLoop();
       ~EventLoop();
