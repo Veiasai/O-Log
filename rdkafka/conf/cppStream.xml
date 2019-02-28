@@ -39,5 +39,16 @@
                 </confEntry>
             </global_conf>
         </producer>
+        <producer>
+            <topic_list>
+                <topic>rdkafkaBackup</topic>
+            </topic_list>
+            <global_conf>
+                <confEntry>
+                    <entryKey>metadata.broker.list</entryKey>
+                    <entryValue>kafka:9092</entryValue>
+                </confEntry>
+            </global_conf>
+        </producer>
     </producers>
 </cppStream>
