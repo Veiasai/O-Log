@@ -5,6 +5,8 @@
 #include "EventLoop.h"
 #include "Backuper.h"
 
+class EventLoop;
+
 class ContextMap
 {
     private:
