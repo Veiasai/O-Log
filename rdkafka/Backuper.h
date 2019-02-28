@@ -4,6 +4,7 @@
 #include "confLoader.h"
 
 using namespace std;
+class ContextMap;
 
 class Backuper
 {
