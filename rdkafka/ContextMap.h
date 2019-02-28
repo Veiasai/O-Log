@@ -6,6 +6,7 @@
 #include "Backuper.h"
 
 class EventLoop;
+class Backuper;
 
 class ContextMap
 {
