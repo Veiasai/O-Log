@@ -1,3 +1,4 @@
+#pragma once 
 #include <map>
 #include <unordered_map>
 #include "json/json.h"
