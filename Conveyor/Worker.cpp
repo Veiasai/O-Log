@@ -62,7 +62,7 @@ void Worker::run(){
         for (;i<batch_size;){
             string line;
             if (getline(inFile, line)){
-                if (filter->match(line)){
+                if (filter == NULL || filter->match(line)){
                     producer->produce(
                         topic, 
                         partition, 
@@ -87,7 +87,8 @@ void Worker::run(){
         // check: at least one send
         if (i > 0){
             producer->flush(0);
-            backuper->set(offset_s);
+            if (backuper)
+                backuper->set(offset_s);
         }
     }
 }
