@@ -13,6 +13,7 @@ class FileConf
 class ProducerConf
 {
     public:
+      string bootstrap_server;
       string topic;
       string userId;
       string clientId;
