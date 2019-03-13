@@ -1,7 +1,10 @@
 #pragma once
+#include <string>
+
+using namespace std;
 
 class Filter
 {
     public:
-        bool match(const string & line) const;
+        virtual bool match(const string & line) const;
 };

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<conveyor
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="conveyor.xsd">
+    <hostId>opdlvm0001</hostId>
+    <quotas>
+        <quota>1024*1024*2</quota>
+        <quota>1024*1024*4</quota>
+    </quotas>
+    <groups>
+        <group>
+            <worker>
+                <filePath>rb1000.log</filePath>
+                <brokers>kafka:9092</brokers>
+                <topic>rb1000</topic>
+                <filters>
+                    <filter>
+                        <filterType>regex</filterType>
+                        <filterRule>^[0-9]{13} \[Info  \] \[DATA_RECORDER\]</filterRule>
+                    </filter>
+                </filters>
+            </worker>
+            <worker>
+                <filePath>rb1001.log</filePath>
+                <brokers>kafka:9092</brokers>
+                <topic>rb1001</topic>
+                <filters>
+                    <filter>
+                        <filterType>regex</filterType>
+                        <filterRule>^[0-9]{13} \[Info  \] \[DATA_RECORDER\]</filterRule>
+                    </filter>
+                </filters>
+            </worker>
+        </group>
+        <group>
+            <worker>
+                <filePath>rb1002.log</filePath>
+                <brokers>kafka:9092</brokers>
+                <topic>rb1002</topic>
+                <filters>
+                    <filter>
+                        <filterType>regex</filterType>
+                        <filterRule>^[0-9]{13} \[Info  \] \[DATA_RECORDER\]</filterRule>
+                    </filter>
+                </filters>
+            </worker>
+            <worker>
+                <filePath>rb1003.log</filePath>
+                <brokers>kafka:9092</brokers>
+                <topic>rb1003</topic>
+                <filters>
+                    <filter>
+                        <filterType>regex</filterType>
+                        <filterRule>^[0-9]{13} \[Info  \] \[DATA_RECORDER\]</filterRule>
+                    </filter>
+                </filters>
+            </worker>
+        </group>
+    </groups>
+</conveyor>

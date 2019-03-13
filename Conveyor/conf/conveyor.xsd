@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://www.optiver.com.au/conveyor"
+    xmlns="http://www.optiver.com.au/conveyor"
+    elementFormDefault="qualified">
+
+<xs:element name="filter">
+    <xs:complexType>
+        <xs:element name="filterType" type="xs:string" maxOccurs="1" minOccurs="1"/>
+        <xs:element name="filterRule" type="xs:string" maxOccurs="1" minOccurs="1"/>
+    </xs:complexType>
+</xs:element>
+
+<xs:element name="worker">
+    <xs:complexType>
+        <xs:element name="filePath" type="xs:string" maxOccurs="1" minOccurs="1"/>
+        <xs:element name="brokers" type="xs:string" maxOccurs="1" minOccurs="1"/>
+        <xs:element name="topic" type="xs:string" maxOccurs="1" minOccurs="1"/>
+        <xs:element name="filters">
+            <filter maxOccurs="unbounded" minOccurs="1"/>
+        </xs:element>
+    </xs:complexType>
+</xs:element>
+
+<xs:element name="group">
+    <worker maxOccurs="unbounded" minOccurs="1"/>
+</xs:element>
+
+<xs:element name="conveyor">
+    <xs:complexType>
+        <xs:element name="hostId" type="xs:string" maxOccurs="1" minOccurs="1"/>
+        <xs:element name="quotas">
+            <xs:element name="quota" type="xs:integer" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:element>
+        <xs:element name="groups">
+            <group maxOccurs="unbounded" minOccurs="1"/>
+        </xs:element>
+    </xs:complexType>
+</xs:element>
+
+</xs:schema>

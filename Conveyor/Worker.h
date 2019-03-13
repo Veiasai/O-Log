@@ -3,6 +3,7 @@
 #include "Backuper.h"
 #include "utils.h"
 #include "rdkafkacpp.h"
+#include <fstream>
 
 class Worker
 {

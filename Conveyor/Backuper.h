@@ -1,9 +1,17 @@
 #pragma once
+#include <string>
+#include <fstream>
+
+using namespace std;
 
 class Backuper
 {
+    private:
+      ofstream ofs;
+      string filename;
+
     public:
-        int init(const string & store);
-        int set(const string &);
-        const string get();
+      int init(const string &_filename);
+      int set(uint64_t offset);
+      uint64_t get();
 };
