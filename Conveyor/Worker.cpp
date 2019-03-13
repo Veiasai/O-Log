@@ -87,7 +87,7 @@ void Worker::run(){
         // check: at least one send
         if (i > 0){
             producer->flush(0);
-            backuper->set(offset_s);
+            backuper->set(offset);
         }
     }
 }
