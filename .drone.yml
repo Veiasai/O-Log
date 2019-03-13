@@ -3,103 +3,114 @@ workspace:
   path: src/github.com/veiasai/olog
 
 pipeline:
-  streambuild:
-    image: maven:alpine
-    commands:
-      - cd kafka-stream
-      - mvn package assembly:assembly
-    volumes:
-      - /home/drone/maven-repo:/root/.m2
-
   build:
     image: gcc
     commands:
-      - cp fluent-bit/*.conf /cache
-      - cd rdkafka
+      - cd Conveyor
       - make
     volumes:
       - /tmp/cache:/cache
 
-  script:
-    image: python:2.7.15
-    commands:
-      - cd PythonScript
-      - python generateData.py
-      - ls /olog/src/github.com/veiasai/olog/PythonScript/DataDir
-      - exit 0
-    detach: true
+# workspace:
+#   base: /olog
+#   path: src/github.com/veiasai/olog
 
-  fluent:
-    image: fluent/fluent-bit:1.0
-    volumes:
-      - /tmp/cache/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
-      - /tmp/cache/parsers.conf:/fluent-bit/etc/parsers.conf
-    detach: true
+# pipeline:
+#   streambuild:
+#     image: maven:alpine
+#     commands:
+#       - cd kafka-stream
+#       - mvn package assembly:assembly
+#     volumes:
+#       - /home/drone/maven-repo:/root/.m2
 
-  # streamconsumer:
-  #   image:  jsenon/kafka-consumer:latest
-  #   environment:
-  #     - MY_KAFKABOOTSTRAP=kafka:9092 
-  #     - MY_TOPIC=demo-count-output  
-  #     - MY_GROUPID=stream-consumer
-  #   detach: true
+#   build:
+#     image: gcc
+#     commands:
+#       - cp fluent-bit/*.conf /cache
+#       - cd rdkafka
+#       - make
+#     volumes:
+#       - /tmp/cache:/cache
 
-  consumer:
-    image:  jsenon/kafka-consumer:latest
-    environment:
-      - MY_KAFKABOOTSTRAP=kafka:9092 
-      - MY_TOPIC=rdkafkaPtest  
-      - MY_GROUPID=console-consumer
-    detach: true
+#   script:
+#     image: python:2.7.15
+#     commands:
+#       - cd PythonScript
+#       - python generateData.py
+#       - ls /olog/src/github.com/veiasai/olog/PythonScript/DataDir
+#       - exit 0
+#     detach: true
 
-  test:
-    group: test
-    image: gcc
-    commands:
-      - cd rdkafka
-      - cp link_lib/* /usr/lib/
-      - ln -s /usr/lib/libjsoncpp.so.0.10.6 /usr/lib/libjsoncpp.so.0
-      - timeout 240 ./monitor
-      - exit 0
+#   fluent:
+#     image: fluent/fluent-bit:1.0
+#     volumes:
+#       - /tmp/cache/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+#       - /tmp/cache/parsers.conf:/fluent-bit/etc/parsers.conf
+#     detach: true
 
-  # streamtest:
-  #   group: test
-  #   image: veiasai/java:8
-  #   commands:
-  #     - cd kafka-stream
-  #     - timeout 60 java -jar target/KafkaStreamsDemo-1.0-SNAPSHOT-jar-with-dependencies.jar
-  #     - exit 0
+#   # streamconsumer:
+#   #   image:  jsenon/kafka-consumer:latest
+#   #   environment:
+#   #     - MY_KAFKABOOTSTRAP=kafka:9092 
+#   #     - MY_TOPIC=demo-count-output  
+#   #     - MY_GROUPID=stream-consumer
+#   #   detach: true
 
-  mpublish:
-    group: test
-    image: plugins/docker
-    repo: veiasai/kafka-monitor
-    tags: ["latest"]
-    secrets: [ docker_username, docker_password ]
-    dockerfile: MonitorDockerfile
-    when:
-      branch: master
+#   consumer:
+#     image:  jsenon/kafka-consumer:latest
+#     environment:
+#       - MY_KAFKABOOTSTRAP=kafka:9092 
+#       - MY_TOPIC=rdkafkaPtest  
+#       - MY_GROUPID=console-consumer
+#     detach: true
 
-  # spublish:
-  #   group: test
-  #   image: plugins/docker
-  #   repo: veiasai/kafka-stream-monitor
-  #   tags: ["latest"]
-  #   secrets: [ docker_username, docker_password ]
-  #   dockerfile: StreamDockerfile
-  #   when:
-  #     branch: master
+#   test:
+#     group: test
+#     image: gcc
+#     commands:
+#       - cd rdkafka
+#       - cp link_lib/* /usr/lib/
+#       - ln -s /usr/lib/libjsoncpp.so.0.10.6 /usr/lib/libjsoncpp.so.0
+#       - timeout 240 ./monitor
+#       - exit 0
 
-services: 
-  zookeeper:
-    image: zookeeper:3.4
+#   # streamtest:
+#   #   group: test
+#   #   image: veiasai/java:8
+#   #   commands:
+#   #     - cd kafka-stream
+#   #     - timeout 60 java -jar target/KafkaStreamsDemo-1.0-SNAPSHOT-jar-with-dependencies.jar
+#   #     - exit 0
 
-  kafka:
-    image:  digitalwonderland/kafka:latest
-    environment:
-      - KAFKA_BROKER_ID=0
-      - KAFKA_ADVERTISED_HOST_NAME=kafka
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper
-      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+#   mpublish:
+#     group: test
+#     image: plugins/docker
+#     repo: veiasai/kafka-monitor
+#     tags: ["latest"]
+#     secrets: [ docker_username, docker_password ]
+#     dockerfile: MonitorDockerfile
+#     when:
+#       branch: master
 
-  
+#   # spublish:
+#   #   group: test
+#   #   image: plugins/docker
+#   #   repo: veiasai/kafka-stream-monitor
+#   #   tags: ["latest"]
+#   #   secrets: [ docker_username, docker_password ]
+#   #   dockerfile: StreamDockerfile
+#   #   when:
+#   #     branch: master
+
+# services: 
+#   zookeeper:
+#     image: zookeeper:3.4
+
+#   kafka:
+#     image:  digitalwonderland/kafka:latest
+#     environment:
+#       - KAFKA_BROKER_ID=0
+#       - KAFKA_ADVERTISED_HOST_NAME=kafka
+#       - KAFKA_ZOOKEEPER_CONNECT=zookeeper
+#       - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true  
