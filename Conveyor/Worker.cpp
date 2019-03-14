@@ -12,7 +12,7 @@ Worker::Worker(){
     producer = NULL;
     topic = NULL;
     filter = NULL;
-    backuper == NULL;
+    backuper = NULL;
     partition = 0;
     state = 0;
 }
@@ -44,6 +44,7 @@ int Worker::init(const FileConf & fileConf, const ProducerConf & producerConf, c
     backuper = _backuper;
 
     state = 1;
+    return 0;
 }
 
  /**
@@ -88,7 +89,7 @@ void Worker::run(){
         if (i > 0){
             producer->flush(0);
             if (backuper)
-                backuper->set(offset_s);
+                backuper->set(offset);
         }
     }
 }

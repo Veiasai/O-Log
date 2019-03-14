@@ -8,21 +8,21 @@
 
 <xs:element name="confEntry">
     <xs:complexType>
-        <xs:element name="entryKey" type="xs:string" \>
-        <xs:element name="entryValue" type="xs:string" \>
+        <xs:element name="entryKey" type="xs:string" />
+        <xs:element name="entryValue" type="xs:string" />
     </xs:complexType>
 </xs:element>
 
 <xs:element name="consumer">
     <xs:complexType>
         <xs:element name="topic_list">
-            <xs:element name="topic" type="xs:string" maxOccurs="unbounded" minOccurs="1"\>
+            <xs:element name="topic" type="xs:string" maxOccurs="unbounded" minOccurs="1"/>
         </xs:element>
         <xs:element name="global_conf">
-            <confEntry maxOccurs="unbounded" \>
+            <confEntry maxOccurs="unbounded" />
         </xs:element>
         <xs:element name="topic_conf">
-            <confEntry maxOccurs="unbounded" \>
+            <confEntry maxOccurs="unbounded" />
         </xs:element>
     </xs:complexType>
 </xs:element>
@@ -30,13 +30,13 @@
 <xs:element name="producer">
     <xs:complexType>
         <xs:element name="topic_list">
-            <xs:element name="topic" type="xs:string" maxOccurs="1" minOccurs="1"\>
+            <xs:element name="topic" type="xs:string" maxOccurs="1" minOccurs="1"/>
         </xs:element>
         <xs:element name="global_conf">
-            <confEntry maxOccurs="unbounded" \>
+            <confEntry maxOccurs="unbounded" />
         </xs:element>
         <xs:element name="topic_conf">
-            <confEntry maxOccurs="unbounded" \>
+            <confEntry maxOccurs="unbounded" />
         </xs:element>
     </xs:complexType>
 </xs:element>
@@ -44,10 +44,10 @@
 <xs:element name="cppStream">
     <xs:complexType>
         <xs:element name = "consumers">
-            <consumer maxOccurs="unbounded" minOccurs="1">
+            <consumer maxOccurs="unbounded" minOccurs="1"/>
         </xs:element>
         <xs:element name = "producers">
-            <producer maxOccurs="unbounded" minOccurs="1">
+            <producer maxOccurs="unbounded" minOccurs="1"/>
         <xs:element name = "producers">
     </xs:complexType>
 </xs:element>
