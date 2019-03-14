@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include "utils.h"
-#include "RegexFilter.h"
+#include "Filter.h"
 #include "Backuper.h"
 
 class ConfLoader

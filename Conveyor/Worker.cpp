@@ -6,13 +6,13 @@
 
 using namespace std;
 
-// static const int batch_size = 20;
+static const int batch_size = 20;
 
 Worker::Worker(){
     producer = NULL;
     topic = NULL;
     filter = NULL;
-    backuper == NULL;
+    backuper = NULL;
     partition = 0;
     state = 0;
 }
@@ -22,27 +22,32 @@ int Worker::init(const FileConf & fileConf, const ProducerConf & producerConf, c
     // inFile.open(fileConf.filename, ifstream::in);
     // assert(inFile.is_open());
 
-    // inFile.seekg(fileConf.offset);
-    // assert(inFile.good());
+int Worker::init(const FileConf & fileConf, const ProducerConf & producerConf, const Filter * _filter, Backuper * _backuper){
+    // init file
+    inFile.open(fileConf.filename, ifstream::in);
+    assert(inFile.is_open());
 
-    // // init producer
-    // string errstr;
-    // RdKafka::Conf * conf = RdKafka::Conf::create(RdKafka::Conf::ConfType::CONF_GLOBAL); 
-    // conf->set("bootstrap.servers", producerConf.bootstrap_server, errstr);
-    // producer = RdKafka::Producer::create(conf, errstr);
-    // assert(producer);
+    inFile.seekg(fileConf.offset);
+    assert(inFile.good());
 
-    // RdKafka::Conf * tconf = RdKafka::Conf::create(RdKafka::Conf::ConfType::CONF_TOPIC); 
-    // topic = RdKafka::Topic::create(producer, producerConf.topic, tconf, errstr);
-    // assert(topic);
+    // init producer
+    string errstr;
+    RdKafka::Conf * conf = RdKafka::Conf::create(RdKafka::Conf::ConfType::CONF_GLOBAL); 
+    conf->set("bootstrap.servers", producerConf.bootstrap_server, errstr);
+    producer = RdKafka::Producer::create(conf, errstr);
+    assert(producer);
 
-    // partition = RdKafka::Topic::PARTITION_UA;
+    RdKafka::Conf * tconf = RdKafka::Conf::create(RdKafka::Conf::ConfType::CONF_TOPIC); 
+    topic = RdKafka::Topic::create(producer, producerConf.topic, tconf, errstr);
+    assert(topic);
 
-    // // filter and backuper
-    // filter = _filter;
-    // backuper = _backuper;
+    partition = RdKafka::Topic::PARTITION_UA;
 
-    // state = 1;
+    // filter and backuper
+    filter = _filter;
+    backuper = _backuper;
+
+    state = 1;
     return 0;
 }
 
@@ -52,42 +57,44 @@ int Worker::init(const FileConf & fileConf, const ProducerConf & producerConf, c
    *        Otherwise, return instantly.
    */
 void Worker::run(){
-    // if (state != 1) return;
+    if (state != 1) return;
 
-    // while(1){
-    //     int sleep_times = 0;
-    //     uint64_t offset = inFile.tellg();
-    //     string offset_s = to_string(offset);
-    //     int i = 0;
-    //     for (;i<batch_size;){
-    //         string line;
-    //         if (getline(inFile, line)){
-    //             if (filter->match(line)){
-    //                 producer->produce(
-    //                     topic, 
-    //                     partition, 
-    //                     RdKafka::Producer::RK_MSG_COPY, 
-    //                     &line,
-    //                     line.size(),
-    //                     &offset_s, 
-    //                     NULL); 
-    //                 i++;
-    //             }
-    //             offset = inFile.tellg();
-    //             offset_s = to_string(offset);
-    //         }else if(sleep_times < 5){
-    //             sleep_times++;
-    //             sleep(1);
-    //         }else{
-    //             // avoid sleeping forever when get tail of file
-    //             break;
-    //         }
-    //     }
+    while(1){
+        int sleep_times = 0;
+        u_int64_t offset = inFile.tellg();
+        string offset_s = to_string(offset);
+        int i = 0;
+        for (;i<batch_size;){
+            string line;
+            if (getline(inFile, line)){
+                if (filter == NULL || filter->match(line)){
+                    producer->produce(
+                        topic, 
+                        partition, 
+                        RdKafka::Producer::RK_MSG_COPY, 
+                        &line,
+                        line.size(),
+                        &offset_s, 
+                        NULL); 
+                    i++;
+                }
+                offset = inFile.tellg();
+                offset_s = to_string(offset);
+            }else if(sleep_times < 5){
+                sleep_times++;
+                sleep(1);
+            }else{
+                // avoid sleeping forever when get tail of file
+                break;
+            }
+        }
 
-    //     // check: at least one send
-    //     if (i > 0){
-    //         producer->flush(0);
-    //         backuper->set(offset);
-    //     }
-    // }
+        // check: at least one send
+        if (i > 0){
+            producer->flush(0);
+            if (backuper)
+                backuper->set(offset);
+        }
+    }
 }
+

@@ -1,4 +1,7 @@
 #include "ConfLoader.h"
+#include "Filter.h"
+#include "RegexFilter.h"
+
 
 vector<WorkerConfGroup*> ConfLoader::load(string filename)
 {
