@@ -18,6 +18,7 @@
         <xs:element name="filePath" type="xs:string" maxOccurs="1" minOccurs="1"/>
         <xs:element name="brokers" type="xs:string" maxOccurs="1" minOccurs="1"/>
         <xs:element name="topic" type="xs:string" maxOccurs="1" minOccurs="1"/>
+        <xs:element name="backupType" type="xs:string" maxOccurs="1" minOccurs="1"/>
         <xs:element name="filters">
             <filter maxOccurs="unbounded" minOccurs="1"/>
         </xs:element>

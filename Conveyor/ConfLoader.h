@@ -6,7 +6,10 @@
 #include <vector>
 #include "utils.h"
 #include "Filter.h"
-#include "Backuper.h"
+#include "OnlineBackuper.h"
+#include "DiskBackuper.h"
+#include "OnlineRecover.h"
+#include "DiskRecover.h"
 
 class ConfLoader
 {

@@ -3,6 +3,7 @@
 #include "Filter.h"
 #include "Backuper.h"
 #include <vector>
+#include "Recover.h"
 
 using namespace std;
 
@@ -29,6 +30,7 @@ class WorkerConf
       ProducerConf* producerConf;
       Filter *filter;
       Backuper *backuper;
+      Recover *recover;
       WorkerConf();
       ~WorkerConf();
 };

@@ -74,12 +74,21 @@ WorkerConf* ConfLoader::loadWorkerConf(TiXmlElement *worker)
         element = element->NextSiblingElement();
         workerConf->producerConf->topic = element->GetText();
         element = element->NextSiblingElement();
+        string backupType = element->GetText();
+        element = element->NextSiblingElement();
         workerConf->filter = loadFilter(element->FirstChildElement());
-        string backupFilename = workerConf->fileConf->filename.substr(0, workerConf->fileConf->filename.find_first_of('.'));
-        backupFilename += ".backup";
-        Backuper *backuper = new Backuper();
-        backuper->init(backupFilename);
-        workerConf->backuper = backuper;
+        if (strcmp(backupType.c_str(),"online")==0)
+        {
+            workerConf->backuper = new OnlineBackuper();
+            workerConf->recover = new OnlineRecover(workerConf->producerConf->bootstrap_server, workerConf->producerConf->topic);
+        }
+        else if(strcmp(backupType.c_str(), "disk") == 0)
+        {
+            string backupFilename = workerConf->fileConf->filename.substr(0, workerConf->fileConf->filename.find_first_of('.'));
+            backupFilename += ".backup";
+            workerConf->backuper = new DiskBackuper(backupFilename);
+            workerConf->recover = new DiskRecover(backupFilename);
+        }
     }
     return workerConf;
 }

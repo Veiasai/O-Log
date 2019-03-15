@@ -16,7 +16,7 @@ int main()
         {
             workerConf->producerConf->clientId = workerConf->fileConf->filename;
             workerConf->producerConf->userId = userId;
-            workerConf->fileConf->offset = workerConf->backuper->get();
+            workerConf->fileConf->offset = workerConf->recover->getOffset();
             Worker *worker = new Worker();
 
             //Tips: fileConf and producerConf will be delete after worker inited, so don't keep those two instance

@@ -39,6 +39,11 @@ WorkerConf::~WorkerConf()
         delete producerConf;
         producerConf = NULL;
     }
+    if(recover != NULL)
+    {
+        delete recover;
+        recover = NULL;
+    }
     filter = NULL;
     backuper = NULL;
 }
