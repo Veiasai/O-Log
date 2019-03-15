@@ -18,9 +18,7 @@ Worker::Worker(){
 }
 
 int Worker::init(const FileConf & fileConf, const ProducerConf & producerConf, const Filter * _filter, Backuper * _backuper){
-    // // init file
-    // inFile.open(fileConf.filename, ifstream::in);
-    // assert(inFile.is_open());
+    // init file
     inFile.open(fileConf.filename, ifstream::in);
     assert(inFile.is_open());
 
@@ -58,7 +56,7 @@ void Worker::run(){
 
     while(1){
         int sleep_times = 0;
-        u_int64_t offset = inFile.tellg();
+        uint64_t offset = inFile.tellg();
         string offset_s = to_string(offset);
         int i = 0;
         for (;i<batch_size;){
