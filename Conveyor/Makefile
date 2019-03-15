@@ -8,7 +8,7 @@ Target: $(bin)
 
 all: $(Target)
 
-conveyor: main.o  Backuper.o utils.o ConfLoader.o RegexFilter.o Worker.o QuotaManager.o lib/tinystr.o lib/tinyxml.o lib/tinyxmlerror.o lib/tinyxmlparser.o
+conveyor: main.o  OnlineBackuper.o DiskBackuper.o utils.o ConfLoader.o RegexFilter.o Worker.o QuotaManager.o OnlineRecover.o DiskRecover.o lib/tinystr.o lib/tinyxml.o lib/tinyxmlerror.o lib/tinyxmlparser.o
 	$(CXX) -g $^ -o $@ $(CXXFLAGS)
 
 clean_files=$(bin) *.o *.d core.* monitor *.so* *.a
