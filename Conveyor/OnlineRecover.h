@@ -1,5 +1,7 @@
 #pragma once
 #include "Recover.h"
+// #include "json/json.h"
+#include <stdlib.h>
 
 class OnlineRecover : public Recover
 {
@@ -12,4 +14,5 @@ class OnlineRecover : public Recover
       RdKafka::KafkaConsumer *consumer = NULL;
       string brokers = "";
       string topic = "";
+      uint64_t getOffsetFromMessage(RdKafka::Message *message);
 };

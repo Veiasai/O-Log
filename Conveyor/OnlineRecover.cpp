@@ -75,8 +75,33 @@ uint64_t OnlineRecover::getOffset()
         uint64_t maxOffset = 0;
         for(auto msg : msgs)
         {
-            msg->payload();
+            uint64_t offset = getOffsetFromMessage(msg);
+            if(maxOffset < offset)
+            {
+                maxOffset = offset;
+            }
+            delete msg;
         }
         return maxOffset;
     }
+}
+
+uint64_t OnlineRecover::getOffsetFromMessage(RdKafka::Message *message)
+{
+    // Json::Reader reader;
+    // Json::Value value;
+    // if (reader.parse(string(static_cast<const char *>(message->payload())), value))
+    // {
+    //     try
+    //     {
+    //         value[""]
+    //     }
+    //     catch(const std::exception& e)
+    //     {
+    //         std::cerr << "Error when parse message while getting recover offset." << '\n';
+    //         return 0;
+    //     }
+        
+    // }
+    return std::atol(message->key()->c_str());
 }
