@@ -21,9 +21,6 @@ int Worker::init(const FileConf & fileConf, const ProducerConf & producerConf, c
     // // init file
     // inFile.open(fileConf.filename, ifstream::in);
     // assert(inFile.is_open());
-
-int Worker::init(const FileConf & fileConf, const ProducerConf & producerConf, const Filter * _filter, Backuper * _backuper){
-    // init file
     inFile.open(fileConf.filename, ifstream::in);
     assert(inFile.is_open());
 
