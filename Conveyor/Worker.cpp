@@ -53,8 +53,9 @@ int Worker::init(const FileConf & fileConf, const ProducerConf & producerConf, c
    */
 void Worker::run(){
     if (state != 1) return;
-
-    while(1){
+    cout << "begin run" << endl;
+    while (1)
+    {
         int sleep_times = 0;
         uint64_t offset = inFile.tellg();
         string offset_s = to_string(offset);
@@ -79,6 +80,7 @@ void Worker::run(){
                 offset = inFile.tellg();
                 offset_s = to_string(offset);
             }else if(sleep_times < 5){
+                cout << "no line" << endl;
                 sleep_times++;
                 sleep(1);
             }else{
