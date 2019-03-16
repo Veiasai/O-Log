@@ -23,6 +23,7 @@ uint64_t OnlineRecover::getOffset()
         RdKafka::Conf *tconf = RdKafka::Conf::create(RdKafka::Conf::CONF_TOPIC);
         string errstr = "";
         conf->set("metadata.broker.list", brokers, errstr);
+        conf->set("group.id", "recover_group", errstr);
         conf->set("default_topic_conf", tconf, errstr);
         consumer = RdKafka::KafkaConsumer::create(conf, errstr);
 
