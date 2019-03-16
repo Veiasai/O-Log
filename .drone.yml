@@ -59,11 +59,8 @@ pipeline:
     commands:
       - cd Conveyor
       - timeout 60 ./conveyor || echo timeout
-      - cat rb1000.backup
       - timeout 60 ./conveyor || echo recover_1_timeout
-      - cat rb1000.backup
       - timeout 60 ./conveyor || echo recover_2_timeout
-      - cat rb1000.backup
       - exit 0
 
 services: 

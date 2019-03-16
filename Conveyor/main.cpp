@@ -17,16 +17,14 @@ int main()
         {
             workerConf->producerConf->clientId = workerConf->fileConf->filename;
             workerConf->producerConf->userId = userId;
-            cout << "recover " << workerConf->producerConf->topic << "from" << workerConf->recover->getOffset() << endl;
+            cout << "recover " << workerConf->producerConf->topic << " from " << workerConf->recover->getOffset() << endl;
             workerConf->fileConf->offset = workerConf->recover->getOffset();
             Worker *worker = new Worker();
-            cout << "created worker" << endl;
             //Tips: fileConf and producerConf will be delete after worker inited, so don't keep those two instance
             //Tips: filter and backuper's life-cycle should be managed by worker, so don't forget to delete them before worker died
             if(worker->init(*workerConf->fileConf, *workerConf->producerConf, workerConf->filter, workerConf->backuper)==0)
             {
                 workerthreads.emplace_back(thread(&Worker::run, worker));
-                cout << "run worker" << endl;
             }
             else
             {

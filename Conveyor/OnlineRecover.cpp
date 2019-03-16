@@ -2,6 +2,7 @@
 
 OnlineRecover::OnlineRecover(const string& _brokers, const string& _topic)
 {
+    cout << "init online recover with " << _brokers << " and " << _topic << endl;
     brokers = _brokers;
     topic = _topic;
 }
