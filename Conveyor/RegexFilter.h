@@ -1,6 +1,7 @@
 #pragma once
 #include "Filter.h"
 #include <regex>
+#include <iostream>
 
 class RegexFilter : public Filter
 {
