@@ -62,6 +62,7 @@ void Worker::run(){
         int i = 0;
         for (;i<batch_size;){
             string line;
+            inFile.clear();
             getline(inFile, line);
             if (!line.empty())
             {
