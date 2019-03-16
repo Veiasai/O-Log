@@ -21,7 +21,7 @@ int Worker::init(const FileConf & fileConf, const ProducerConf & producerConf, c
     // init file
     inFile.open(fileConf.filename, ifstream::in);
     assert(inFile.is_open());
-
+    cout << "open "<<fileConf.filename<<" success" << endl;
     inFile.seekg(fileConf.offset);
     assert(inFile.good());
 
