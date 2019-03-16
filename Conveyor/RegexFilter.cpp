@@ -7,5 +7,6 @@ bool RegexFilter::match(const string & line) const
 
 void RegexFilter::setRule(string &ruleStr)
 {
+    cout << "Filter Rule:" << ruleStr << endl;
     rule = regex(ruleStr.c_str());
 }
