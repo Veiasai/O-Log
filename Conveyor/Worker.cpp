@@ -62,7 +62,9 @@ void Worker::run(){
         int i = 0;
         for (;i<batch_size;){
             string line;
-            if (getline(inFile, line)){
+            getline(inFile, line);
+            if (!line.empty())
+            {
                 cout << line << endl;
                 if (filter == NULL || filter->match(line))
                 {
