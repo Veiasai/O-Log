@@ -67,7 +67,7 @@ void Worker::run(){
             {
                 if (filter == NULL || filter->match(line))
                 {
-                    cout << line << endl;
+                    // cout << line << endl;
                     producer->produce(
                         topic,
                         partition,
