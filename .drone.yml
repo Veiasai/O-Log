@@ -29,6 +29,7 @@ pipeline:
       - exit 0
 
   consumer_0:
+    group: consumer
     image:  jsenon/kafka-consumer:latest
     environment:
       - MY_KAFKABOOTSTRAP=kafka:9092 
