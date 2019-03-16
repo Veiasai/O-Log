@@ -28,6 +28,18 @@ pipeline:
       - timeout 240 ./conveyor
       - exit 0
 
+services: 
+  zookeeper:
+    image: zookeeper:3.4
+
+  kafka:
+    image:  digitalwonderland/kafka:latest
+    environment:
+      - KAFKA_BROKER_ID=0
+      - KAFKA_ADVERTISED_HOST_NAME=kafka
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+
   consumer_0:
     group: consumer
     image:  jsenon/kafka-consumer:latest
@@ -60,18 +72,6 @@ pipeline:
       - MY_TOPIC=rb1003
       - MY_GROUPID=console-consumer
     detach: true
-
-services: 
-  zookeeper:
-    image: zookeeper:3.4
-
-  kafka:
-    image:  digitalwonderland/kafka:latest
-    environment:
-      - KAFKA_BROKER_ID=0
-      - KAFKA_ADVERTISED_HOST_NAME=kafka
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper
-      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
 
 # workspace:
 #   base: /olog
