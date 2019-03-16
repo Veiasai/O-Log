@@ -62,8 +62,10 @@ void Worker::run(){
         for (;i<batch_size;){
             string line;
             if (getline(inFile, line)){
-                if (filter == NULL || filter->match(line)){
-                    cout << line << endl;
+                cout << line << endl;
+                if (filter == NULL || filter->match(line))
+                {
+                    // cout << line << endl;
                     producer->produce(
                         topic,
                         partition,
