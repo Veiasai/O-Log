@@ -17,6 +17,7 @@ int main()
         {
             workerConf->producerConf->clientId = workerConf->fileConf->filename;
             workerConf->producerConf->userId = userId;
+            cout << "recover " << workerConf->producerConf->topic << "from" << workerConf->recover->getOffset() << endl;
             workerConf->fileConf->offset = workerConf->recover->getOffset();
             Worker *worker = new Worker();
             cout << "created worker" << endl;
