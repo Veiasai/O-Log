@@ -59,6 +59,7 @@ void Worker::run(){
     while (1)
     {
         int sleep_times = 0;
+        inFile.clear();
         uint64_t offset = inFile.tellg();
         string offset_s = to_string(offset);
         int i = 0;
@@ -81,6 +82,7 @@ void Worker::run(){
                         NULL);
                     i++;
                 }
+                inFile.clear();
                 offset = inFile.tellg();
                 offset_s = to_string(offset);
             }else if(sleep_times < 5){
@@ -96,7 +98,6 @@ void Worker::run(){
         if (i > 0){
             producer->flush(0);
             if (backuper){
-                cout << "do backup" << endl;
                 backuper->set(offset);
             }
         }
