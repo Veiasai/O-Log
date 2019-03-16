@@ -27,8 +27,11 @@ int Worker::init(const FileConf & fileConf, const ProducerConf & producerConf, c
 
     // init producer
     string errstr;
-    RdKafka::Conf * conf = RdKafka::Conf::create(RdKafka::Conf::ConfType::CONF_GLOBAL); 
+    RdKafka::Conf * conf = RdKafka::Conf::create(RdKafka::Conf::ConfType::CONF_GLOBAL);
+    conf->set("client.id", producerConf.clientId, errstr);
     conf->set("bootstrap.servers", producerConf.bootstrap_server, errstr);
+    conf->set("enable.idempotence", "true", errstr);
+    conf->set("compression.type", "lz4", errstr);
     producer = RdKafka::Producer::create(conf, errstr);
     assert(producer);
 
