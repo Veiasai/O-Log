@@ -95,8 +95,10 @@ void Worker::run(){
         // check: at least one send
         if (i > 0){
             producer->flush(0);
-            if (backuper)
+            if (backuper){
+                cout << "do backup" << endl;
                 backuper->set(offset);
+            }
         }
     }
 }
