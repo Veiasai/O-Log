@@ -1,5 +1,6 @@
 #pragma once
 #include "Recover.h"
+#include <fstream>
 
 using namespace std;
 

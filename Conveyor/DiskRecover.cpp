@@ -2,7 +2,8 @@
 
 uint64_t DiskRecover::getOffset()
 {
-    ifstream ifs(filename);
+    ifstream ifs;
+    ifs.open(filename, ios::in);
     if(ifs.is_open())
     {
         uint64_t offset = 0;
