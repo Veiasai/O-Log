@@ -58,8 +58,11 @@ pipeline:
     image: veiasai/rdkafka:v2
     commands:
       - cd Conveyor
-      - timeout 240 ./conveyor || echo timeout
-      - ls
+      - timeout 60 ./conveyor || echo timeout
+      - cat rb1000.backup
+      - timeout 60 ./conveyor || echo recover_1_timeout
+      - cat rb1000.backup
+      - timeout 60 ./conveyor || echo recover_2_timeout
       - cat rb1000.backup
       - exit 0
 
