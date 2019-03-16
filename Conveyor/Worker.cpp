@@ -63,14 +63,15 @@ void Worker::run(){
             string line;
             if (getline(inFile, line)){
                 if (filter == NULL || filter->match(line)){
+                    cout << line << endl;
                     producer->produce(
-                        topic, 
-                        partition, 
-                        RdKafka::Producer::RK_MSG_COPY, 
+                        topic,
+                        partition,
+                        RdKafka::Producer::RK_MSG_COPY,
                         &line,
                         line.size(),
-                        &offset_s, 
-                        NULL); 
+                        &offset_s,
+                        NULL);
                     i++;
                 }
                 offset = inFile.tellg();
