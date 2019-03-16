@@ -19,6 +19,7 @@ uint64_t OnlineRecover::getOffset()
 {
     if(consumer == NULL)
     {
+        cout << "create consumer" << endl;
         RdKafka::Conf *conf = RdKafka::Conf::create(RdKafka::Conf::CONF_GLOBAL);
         RdKafka::Conf *tconf = RdKafka::Conf::create(RdKafka::Conf::CONF_TOPIC);
         string errstr = "";
@@ -42,6 +43,8 @@ uint64_t OnlineRecover::getOffset()
     vector<RdKafka::TopicPartition* > partitions;
     consumer->position(partitions);
     int expectMsgNum = 0;
+
+    cout << "partitions " << partitions.size() << endl;
     for(auto& partition : partitions)
     {
         if(partition->offset()>0)
@@ -50,6 +53,7 @@ uint64_t OnlineRecover::getOffset()
             expectMsgNum++;
         }
     }
+    cout << "expectMsgNum " << expectMsgNum << endl;
     vector<RdKafka::Message *> msgs;
     while(msgs.size()<expectMsgNum)
     {
@@ -104,5 +108,6 @@ uint64_t OnlineRecover::getOffsetFromMessage(RdKafka::Message *message)
     //     }
         
     // }
+    cout << "key: " << *(message->key()) << endl;
     return std::atol(message->key()->c_str());
 }
