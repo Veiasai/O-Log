@@ -84,7 +84,7 @@ WorkerConf* ConfLoader::loadWorkerConf(TiXmlElement *worker)
         }
         else if(strcmp(backupType.c_str(), "disk") == 0)
         {
-            string backupFilename = workerConf->fileConf->filename.substr(0, workerConf->fileConf->filename.find_first_of('.'));
+            string backupFilename = workerConf->producerConf->topic;
             backupFilename += ".backup";
             workerConf->backuper = new DiskBackuper(backupFilename);
             workerConf->recover = new DiskRecover(backupFilename);
