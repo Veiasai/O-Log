@@ -18,7 +18,7 @@
                     <filter>
                         <!-- <filterType>empty</filterType> -->
                         <filterType>regex</filterType>
-                        <filterRule>^[0-9]{13} \[Info  \] \[DATA_RECORDER\]*</filterRule>
+                        <filterRule>^[0-9]{13}\s\[Info\s+\]\s\[DATA_RECORDER\]</filterRule>
                     </filter>
                 </filters>
             </worker>
@@ -29,9 +29,9 @@
                 <backupType>disk</backupType>
                 <filters>
                     <filter>
-                        <filterType>empty</filterType>
-                        <!-- <filterType>regex</filterType>
-                        <filterRule>^[0-9]{13} \[Info  \] \[DATA_RECORDER\]</filterRule> -->
+                        <!-- <filterType>empty</filterType> -->
+                        <filterType>regex</filterType>
+                        <filterRule>^[0-9]{13}\s\[Info\s+\]\s\[DATA_RECORDER\]\s\[Data\]\sLIMon_StatisticsFeed</filterRule>
                     </filter>
                 </filters>
             </worker>
@@ -44,9 +44,9 @@
                 <backupType>disk</backupType>
                 <filters>
                     <filter>
-                        <filterType>empty</filterType>
-                        <!-- <filterType>regex</filterType>
-                        <filterRule>^[0-9]{13} \[Info  \] \[DATA_RECORDER\]</filterRule> -->
+                        <!-- <filterType>empty</filte/rType> -->
+                        <filterType>regex</filterType>
+                        <filterRule>^[0-9]{13}\s\[Info\s+\]\s\[DATA_RECORDER\]\s\[Data\]\sLIMon_PriceFeed</filterRule>
                     </filter>
                 </filters>
             </worker>

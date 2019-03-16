@@ -53,7 +53,6 @@ int Worker::init(const FileConf & fileConf, const ProducerConf & producerConf, c
    */
 void Worker::run(){
     if (state != 1) return;
-    cout << "begin run" << endl;
     while (1)
     {
         int sleep_times = 0;
@@ -66,10 +65,8 @@ void Worker::run(){
             getline(inFile, line);
             if (!line.empty())
             {
-                cout << line << endl;
                 if (filter == NULL || filter->match(line))
                 {
-                    // cout << line << endl;
                     producer->produce(
                         topic,
                         partition,
