@@ -37,10 +37,17 @@ uint64_t OnlineRecover::getOffset()
             return 0;
         }
     }
-    consumer->unsubscribe();
     vector<string> topics;
     topics.push_back(topic);
     consumer->subscribe(topics);
+
+    auto event = consumer->consume(100);
+    while(event->err()!=RdKafka::ERR__TIMED_OUT)
+    {
+        cout << "one event" << endl;
+        event = consumer->consume(100);
+    }
+
     vector<RdKafka::TopicPartition* > partitions;
     consumer->position(partitions);
     int expectMsgNum = 0;
