@@ -8,5 +8,5 @@ class Backuper
 {
     public:
       virtual int set(uint64_t offset) = 0;
-      virtual ~Backuper() = 0;
+      virtual ~Backuper(){};
 };

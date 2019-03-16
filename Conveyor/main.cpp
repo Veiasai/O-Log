@@ -6,6 +6,9 @@
 int main()
 {
     vector<WorkerConfGroup *> workerConfGroups = ConfLoader::load("conf/conveyor.xml");
+    cout << workerConfGroups.size() << endl;
+    return 0;
+    
     QuotaManager quotaMananger;
     vector<thread> workerthreads;
     for (int i = 0; i < workerConfGroups.size();i++)

@@ -9,5 +9,5 @@ class Recover
 {
     public:
       virtual uint64_t getOffset() = 0;
-      virtual ~Recover() = 0;
+      virtual ~Recover(){};
 };

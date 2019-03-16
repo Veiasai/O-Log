@@ -10,6 +10,14 @@ pipeline:
       - make
     volumes:
       - /tmp/cache:/cache
+  
+  test:
+    group: test
+    image: veiasai/rdkafka:v2
+    commands:
+      - cd Conveyor
+      - ./conveyor
+      - exit 0
 
 # workspace:
 #   base: /olog
