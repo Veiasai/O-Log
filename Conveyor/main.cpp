@@ -7,8 +7,28 @@ int main()
 {
     vector<WorkerConfGroup *> workerConfGroups = ConfLoader::load("conf/conveyor.xml");
     cout << workerConfGroups.size() << endl;
+    cout << workerConfGroups[0]->hostId << endl
+         << workerConfGroups[0]->workerConfs[0]->fileConf->filename << endl
+         << workerConfGroups[0]->workerConfs[0]->fileConf->offset << endl
+         << workerConfGroups[0]->workerConfs[0]->producerConf->bootstrap_server << endl
+         << workerConfGroups[0]->workerConfs[0]->producerConf->topic << endl;
+    cout << workerConfGroups[0]->hostId << endl
+         << workerConfGroups[0]->workerConfs[1]->fileConf->filename << endl
+         << workerConfGroups[0]->workerConfs[1]->fileConf->offset << endl
+         << workerConfGroups[0]->workerConfs[1]->producerConf->bootstrap_server << endl
+         << workerConfGroups[0]->workerConfs[1]->producerConf->topic << endl;
+    cout << workerConfGroups[1]->hostId << endl
+         << workerConfGroups[1]->workerConfs[0]->fileConf->filename << endl
+         << workerConfGroups[1]->workerConfs[0]->fileConf->offset << endl
+         << workerConfGroups[1]->workerConfs[0]->producerConf->bootstrap_server << endl
+         << workerConfGroups[1]->workerConfs[0]->producerConf->topic << endl;
+    cout << workerConfGroups[1]->hostId << endl
+         << workerConfGroups[1]->workerConfs[1]->fileConf->filename << endl
+         << workerConfGroups[1]->workerConfs[1]->fileConf->offset << endl
+         << workerConfGroups[1]->workerConfs[1]->producerConf->bootstrap_server << endl
+         << workerConfGroups[1]->workerConfs[1]->producerConf->topic << endl;
     return 0;
-    
+
     QuotaManager quotaMananger;
     vector<thread> workerthreads;
     for (int i = 0; i < workerConfGroups.size();i++)
