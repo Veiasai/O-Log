@@ -10,7 +10,16 @@ pipeline:
       - make
     volumes:
       - /tmp/cache:/cache
-  
+
+  script:
+    image: python:2.7.15
+    commands:
+      - cd PythonScript
+      - python generateData.py
+      - ls /olog/src/github.com/veiasai/olog/PythonScript/DataDir
+      - exit 0
+    detach: true
+
   test:
     group: test
     image: veiasai/rdkafka:v2
@@ -18,6 +27,50 @@ pipeline:
       - cd Conveyor
       - ./conveyor
       - exit 0
+
+  consumer_0:
+    image:  jsenon/kafka-consumer:latest
+    environment:
+      - MY_KAFKABOOTSTRAP=kafka:9092 
+      - MY_TOPIC=rb1000
+      - MY_GROUPID=console-consumer
+    detach: true
+
+  consumer_1:
+    image:  jsenon/kafka-consumer:latest
+    environment:
+      - MY_KAFKABOOTSTRAP=kafka:9092 
+      - MY_TOPIC=rb1001
+      - MY_GROUPID=console-consumer
+    detach: true
+
+  consumer_2:
+    image:  jsenon/kafka-consumer:latest
+    environment:
+      - MY_KAFKABOOTSTRAP=kafka:9092 
+      - MY_TOPIC=rb1002
+      - MY_GROUPID=console-consumer
+    detach: true
+
+  consumer_3:
+    image:  jsenon/kafka-consumer:latest
+    environment:
+      - MY_KAFKABOOTSTRAP=kafka:9092 
+      - MY_TOPIC=rb1003
+      - MY_GROUPID=console-consumer
+    detach: true
+
+services: 
+  zookeeper:
+    image: zookeeper:3.4
+
+  kafka:
+    image:  digitalwonderland/kafka:latest
+    environment:
+      - KAFKA_BROKER_ID=0
+      - KAFKA_ADVERTISED_HOST_NAME=kafka
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
 
 # workspace:
 #   base: /olog
@@ -65,13 +118,6 @@ pipeline:
 #   #     - MY_GROUPID=stream-consumer
 #   #   detach: true
 
-#   consumer:
-#     image:  jsenon/kafka-consumer:latest
-#     environment:
-#       - MY_KAFKABOOTSTRAP=kafka:9092 
-#       - MY_TOPIC=rdkafkaPtest  
-#       - MY_GROUPID=console-consumer
-#     detach: true
 
 #   test:
 #     group: test
@@ -111,14 +157,4 @@ pipeline:
 #   #   when:
 #   #     branch: master
 
-# services: 
-#   zookeeper:
-#     image: zookeeper:3.4
 
-#   kafka:
-#     image:  digitalwonderland/kafka:latest
-#     environment:
-#       - KAFKA_BROKER_ID=0
-#       - KAFKA_ADVERTISED_HOST_NAME=kafka
-#       - KAFKA_ZOOKEEPER_CONNECT=zookeeper
-#       - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true  

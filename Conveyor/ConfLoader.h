@@ -10,6 +10,7 @@
 #include "DiskBackuper.h"
 #include "OnlineRecover.h"
 #include "DiskRecover.h"
+#include "EmptyFilter.h"
 
 class ConfLoader
 {

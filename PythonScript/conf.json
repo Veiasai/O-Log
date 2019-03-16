@@ -1,44 +1,44 @@
 {
     "base":{
-        "instrumentAmount": 7,
+        "instrumentAmount": 4,
         "messageType": 3,
         "enableNoise": false,
         "feedCodeStartId": 1000,
         "timeLength": 240
     },
     "drop":{
-        "instrumentAmount": 1,
+        "instrumentAmount": 0,
         "feedCodeStartId": 1001,
         "dropAmount": 2,
         "dropInterval": 10
     },
     "delay":{
-        "instrumentAmount": 1,
+        "instrumentAmount": 0,
         "feedCodeStartId": 1002,
         "delayAmount": 3,
         "delayInterval": 10,
         "delayTimeLength": 120
     },
     "errorTurnover":{
-        "instrumentAmount": 1,
+        "instrumentAmount": 0,
         "feedCodeStartId": 1003,
         "errorAmount": 4,
         "errorInterval": 10
     },
     "errorBidAsk":{
-        "instrumentAmount": 1,
+        "instrumentAmount": 0,
         "feedCodeStartId": 1004,
         "errorAmount": 5,
         "errorInterval": 10
     },
     "errorPrice":{
-        "instrumentAmount": 1,
+        "instrumentAmount": 0,
         "feedCodeStartId": 1005,
         "errorAmount": 6,
         "errorInterval": 10
     },
     "errorVolume":{
-        "instrumentAmount": 1,
+        "instrumentAmount": 0,
         "feedCodeStartId": 1006,
         "errorAmount": 7,
         "errorInterval": 10

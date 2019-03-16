@@ -10,52 +10,56 @@
     <groups>
         <group>
             <worker>
-                <filePath>rb1000.log</filePath>
+                <filePath>/olog/src/github.com/veiasai/olog/PythonScript/DataDir/rb1000.log</filePath>
                 <brokers>kafka:9092</brokers>
                 <topic>rb1000</topic>
                 <backupType>disk</backupType>
                 <filters>
                     <filter>
-                        <filterType>regex</filterType>
-                        <filterRule>^[0-9]{13} \[Info  \] \[DATA_RECORDER\]</filterRule>
+                        <filterType>empty</filterType>
+                        <!-- <filterType>regex</filterType>
+                        <filterRule>^[0-9]{13} \[Info  \] \[DATA_RECORDER\]</filterRule> -->
                     </filter>
                 </filters>
             </worker>
             <worker>
-                <filePath>rb1001.log</filePath>
+                <filePath>/olog/src/github.com/veiasai/olog/PythonScript/DataDir/rb1001.log</filePath>
                 <brokers>kafka:9092</brokers>
                 <topic>rb1001</topic>
                 <backupType>disk</backupType>
                 <filters>
                     <filter>
-                        <filterType>regex</filterType>
-                        <filterRule>^[0-9]{13} \[Info  \] \[DATA_RECORDER\]</filterRule>
+                        <filterType>empty</filterType>
+                        <!-- <filterType>regex</filterType>
+                        <filterRule>^[0-9]{13} \[Info  \] \[DATA_RECORDER\]</filterRule> -->
                     </filter>
                 </filters>
             </worker>
         </group>
         <group>
             <worker>
-                <filePath>rb1002.log</filePath>
+                <filePath>/olog/src/github.com/veiasai/olog/PythonScript/DataDir/rb1002.log</filePath>
                 <brokers>kafka:9092</brokers>
                 <topic>rb1002</topic>
                 <backupType>disk</backupType>
                 <filters>
                     <filter>
-                        <filterType>regex</filterType>
-                        <filterRule>^[0-9]{13} \[Info  \] \[DATA_RECORDER\]</filterRule>
+                        <filterType>empty</filterType>
+                        <!-- <filterType>regex</filterType>
+                        <filterRule>^[0-9]{13} \[Info  \] \[DATA_RECORDER\]</filterRule> -->
                     </filter>
                 </filters>
             </worker>
             <worker>
-                <filePath>rb1003.log</filePath>
+                <filePath>/olog/src/github.com/veiasai/olog/PythonScript/DataDir/rb1003.log</filePath>
                 <brokers>kafka:9092</brokers>
                 <topic>rb1003</topic>
                 <backupType>online</backupType>
                 <filters>
                     <filter>
-                        <filterType>regex</filterType>
-                        <filterRule>^[0-9]{13} \[Info  \] \[DATA_RECORDER\]</filterRule>
+                        <filterType>empty</filterType>
+                        <!-- <filterType>regex</filterType>
+                        <filterRule>^[0-9]{13} \[Info  \] \[DATA_RECORDER\]</filterRule> -->
                     </filter>
                 </filters>
             </worker>

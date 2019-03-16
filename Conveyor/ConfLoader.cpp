@@ -98,12 +98,16 @@ Filter* ConfLoader::loadFilter(TiXmlElement *filterElement)
     Filter *filter = NULL;
     if(filterElement != NULL)
     {
-        if(strncmp(filterElement->FirstChildElement()->GetText(),"regex",sizeof("regex"))==0)
+        if(strcmp(filterElement->FirstChildElement()->GetText(),"regex")==0)
         {
             RegexFilter* regexFilter = new RegexFilter();
             string rule = filterElement->FirstChildElement()->NextSiblingElement()->GetText();
             regexFilter->setRule(rule);
             filter = regexFilter;
+        }
+        if(strcmp(filterElement->FirstChildElement()->GetText(),"empty")==0)
+        {
+            filter = new EmptyFilter();
         }
     }
     return filter;
