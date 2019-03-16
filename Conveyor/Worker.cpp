@@ -80,7 +80,6 @@ void Worker::run(){
                 offset = inFile.tellg();
                 offset_s = to_string(offset);
             }else if(sleep_times < 5){
-                cout << "no line" << endl;
                 sleep_times++;
                 sleep(1);
             }else{
