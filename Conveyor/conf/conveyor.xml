@@ -16,9 +16,9 @@
                 <backupType>disk</backupType>
                 <filters>
                     <filter>
-                        <filterType>empty</filterType>
-                        <!-- <filterType>regex</filterType>
-                        <filterRule>^[0-9]{13} \[Info  \] \[DATA_RECORDER\]</filterRule> -->
+                        <!-- <filterType>empty</filterType> -->
+                        <filterType>regex</filterType>
+                        <filterRule>^[0-9]{13} \[Info  \] \[DATA_RECORDER\]</filterRule>
                     </filter>
                 </filters>
             </worker>

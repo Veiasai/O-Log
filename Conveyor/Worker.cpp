@@ -74,7 +74,7 @@ void Worker::run(){
                         topic,
                         partition,
                         RdKafka::Producer::RK_MSG_COPY,
-                        &line,
+                        const_cast<char *>(line.c_str()),
                         line.size(),
                         &offset_s,
                         NULL);
