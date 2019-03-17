@@ -42,14 +42,16 @@ uint64_t OnlineRecover::getOffset()
     topics.push_back(topic);
     consumer->subscribe(topics);
     vector<RdKafka::TopicPartition* > partitions;
-    while(consumer->position(partitions) != RD_KAFKA_RESP_ERR_NO_ERROR)
+    while(partitions.size()==0)
     {
         auto msg = consumer->consume(1000);
         delete msg;
+        consumer->position(partitions);
     }
     cout << "partitions " << partitions.size() << endl;
 
     int expectMsgNum = 0;
+
     for(auto& partition : partitions)
     {
         if(partition->offset()>0)
