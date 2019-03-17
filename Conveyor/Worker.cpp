@@ -39,6 +39,16 @@ int Worker::init(const FileConf & fileConf, const ProducerConf & producerConf, c
     topic = RdKafka::Topic::create(producer, producerConf.topic, tconf, errstr);
     assert(topic);
 
+    string line = "init";
+    producer->produce(
+        topic,
+        partition,
+        RdKafka::Producer::RK_MSG_COPY,
+        const_cast<char *>(line.c_str()),
+        line.size(),
+        NULL,
+        NULL);
+
     partition = RdKafka::Topic::PARTITION_UA;
 
     // filter and backuper
