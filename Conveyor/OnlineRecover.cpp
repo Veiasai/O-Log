@@ -54,6 +54,9 @@ uint64_t OnlineRecover::getOffset()
 
     for(auto& partition : partitions)
     {
+        cout << "partition offset: " << partition->offset() << endl
+             << "partition index: " << partition->partition() << endl
+             << "partition topic: " << partition->topic() << endl;
         if(partition->offset()>0)
         {
             partition->set_offset(partition->offset() - 1);
@@ -116,5 +119,6 @@ uint64_t OnlineRecover::getOffsetFromMessage(RdKafka::Message *message)
         
     // }
     cout << "key: " << *(message->key()) << endl;
+    cout << "msg: " << message->payload() << endl;
     return std::atol(message->key()->c_str());
 }
