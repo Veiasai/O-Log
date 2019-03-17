@@ -41,19 +41,6 @@ int Worker::init(const FileConf & fileConf, const ProducerConf & producerConf, c
 
     partition = RdKafka::Topic::PARTITION_UA;
 
-    string line = "init";
-
-    producer->produce(
-        topic,
-        partition,
-        RdKafka::Producer::RK_MSG_COPY,
-        const_cast<char *>(line.c_str()),
-        line.size(),
-        NULL,
-        NULL);
-
-    producer->flush(100000);
-
     // filter and backuper
     filter = _filter;
     backuper = _backuper;
