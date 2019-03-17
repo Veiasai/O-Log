@@ -23,7 +23,10 @@ pipeline:
   create_topic:
     image: java:8
     commands:
-      - cd kafkaScript/bin
+      - wget https://github.com/apache/kafka/archive/2.1.1.tar.gz
+      - tar -xzf kafka-2.1.1.tar.gz
+      - cd kafka-2.1.1/bin
+      # - cd kafkaScript/bin
       - chmod -R 777 *
       - ./kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic br1000
       - ./kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic br1001
