@@ -52,8 +52,8 @@ int Worker::init(const FileConf & fileConf, const ProducerConf & producerConf, c
         NULL,
         NULL);
 
-    producer->flush(0);
-    
+    producer->flush(100000);
+
     // filter and backuper
     filter = _filter;
     backuper = _backuper;
