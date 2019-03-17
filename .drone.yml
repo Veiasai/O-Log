@@ -24,7 +24,7 @@ pipeline:
     image: java:8
     commands:
       - cd kafkaScript/bin
-      - chmod 777 kafka-topics.sh
+      - chmod -R 777 *
       - ./kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic br1000
       - ./kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic br1001
       - ./kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic br1002
