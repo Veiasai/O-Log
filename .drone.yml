@@ -28,7 +28,7 @@ pipeline:
       - ./kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic br1000
       - ./kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic br1001
       - ./kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic br1002
-      - ./kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic br1003
+      - ./kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 2 --topic br1003
       - ./kafka-topics.sh --list --zookeeper zookeeper:2181
 
   consumer_0:
@@ -69,9 +69,9 @@ pipeline:
     image: veiasai/rdkafka:v2
     commands:
       - cd Conveyor
-      - timeout 200 ./conveyor || echo timeout
-      - timeout 200 ./conveyor || echo recover_1_timeout
-      - timeout 200 ./conveyor || echo recover_2_timeout
+      - timeout 60 ./conveyor || echo timeout
+      - timeout 60 ./conveyor || echo recover_1_timeout
+      - timeout 60 ./conveyor || echo recover_2_timeout
       - exit 0
 
 services: 
