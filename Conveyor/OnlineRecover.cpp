@@ -42,7 +42,7 @@ uint64_t OnlineRecover::getOffset()
     topics.push_back(topic);
     consumer->subscribe(topics);
     vector<RdKafka::TopicPartition* > partitions;
-    while(partitions.size()==0)
+    while(partitions.size()<=1)
     {
         auto msg = consumer->consume(1000);
         delete msg;
