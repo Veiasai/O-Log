@@ -46,7 +46,7 @@ uint64_t OnlineRecover::getOffset()
     {
         auto msg = consumer->consume(1000);
         delete msg;
-        consumer->position(partitions);
+        consumer->assignment(partitions);
     }
     cout << "partitions " << partitions.size() << endl;
 
