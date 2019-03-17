@@ -1,4 +1,5 @@
 #include "OnlineRecover.h"
+#include <unistd.h>
 
 OnlineRecover::OnlineRecover(const string& _brokers, const string& _topic)
 {
@@ -40,19 +41,16 @@ uint64_t OnlineRecover::getOffset()
     vector<string> topics;
     topics.push_back(topic);
     consumer->subscribe(topics);
-
-    auto event = consumer->consume(1000);
-    while(event->err()==RdKafka::ERR__TIMED_OUT)
-    {
-        cout << "one timeout" << endl;
-        event = consumer->consume(1000);
-    }
-
     vector<RdKafka::TopicPartition* > partitions;
-    consumer->position(partitions);
-    int expectMsgNum = 0;
-
+    while(partitions.size()==0)
+    {
+        auto msg = consumer->consume(1000);
+        delete msg;
+        consumer->position(partitions);
+    }
     cout << "partitions " << partitions.size() << endl;
+
+    int expectMsgNum = 0;
     for(auto& partition : partitions)
     {
         if(partition->offset()>0)
