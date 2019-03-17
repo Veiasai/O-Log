@@ -24,12 +24,13 @@ pipeline:
     image: java:8
     commands:
       - cd kafkaScript/bin
+      - chmod 777 kafka-topics.sh
       - ./kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic br1000
       - ./kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic br1001
       - ./kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic br1002
       - ./kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic br1003
       - ./kafka-topics.sh --list --zookeeper zookeeper:2181
-      
+
   consumer_0:
     group: consumer
     image:  jsenon/kafka-consumer:latest
