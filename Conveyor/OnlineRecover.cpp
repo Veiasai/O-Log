@@ -41,11 +41,11 @@ uint64_t OnlineRecover::getOffset()
     topics.push_back(topic);
     consumer->subscribe(topics);
 
-    auto event = consumer->consume(100);
-    while(event->err()!=RdKafka::ERR__TIMED_OUT)
+    auto event = consumer->consume(1000);
+    while(event->err()==RdKafka::ERR__TIMED_OUT)
     {
-        cout << "one event" << endl;
-        event = consumer->consume(100);
+        cout << "one timeout" << endl;
+        event = consumer->consume(1000);
     }
 
     vector<RdKafka::TopicPartition* > partitions;
