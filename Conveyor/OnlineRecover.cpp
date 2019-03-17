@@ -42,14 +42,22 @@ uint64_t OnlineRecover::getOffset()
     topics.push_back(topic);
     consumer->subscribe(topics);
     vector<RdKafka::TopicPartition* > partitions;
-    while(partitions.size()<=1)
+    // while(partitions.size()<=1)
+    // {
+    //     auto msg = consumer->consume(1000);
+    //     delete msg;
+    //     consumer->assignment(partitions);
+    // }
+    // cout << "partitions " << partitions.size() << endl;
+    int64_t low = -1;
+    int64_t high = -1;
+    while(consumer->query_watermark_offsets(topic, 0, &low, &high, 10000) != RdKafka::ERR_NO_ERROR && high >=0)
     {
-        auto msg = consumer->consume(1000);
-        delete msg;
-        consumer->assignment(partitions);
+        cout << "low:" << low << " high:" << high << endl;
     }
-    cout << "partitions " << partitions.size() << endl;
-
+    cout << "low:" << low << " high:" << high << endl;
+    
+    consumer->assignment(partitions);
     int expectMsgNum = 0;
 
     for(auto& partition : partitions)
