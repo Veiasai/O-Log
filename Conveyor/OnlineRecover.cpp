@@ -57,7 +57,13 @@ uint64_t OnlineRecover::getOffset()
     }
     cout << "low:" << low << " high:" << high << endl;
     
-    consumer->assignment(partitions);
+    while(partitions.size()<0||partitions[0]->offset()<high)
+    {
+        auto msg = consumer->consume(1000);
+        delete msg;
+        consumer->assignment(partitions);
+    }
+    // consumer->assignment(partitions);
     int expectMsgNum = 0;
 
     for(auto& partition : partitions)
