@@ -68,11 +68,9 @@ pipeline:
     group: test
     image: plugins/docker
     repo: veiasai/kafka-monitor
-    tags: ["latest"]
+    tags: ["v1"]
     secrets: [ docker_username, docker_password ]
     dockerfile: MonitorDockerfile
-    when:
-      branch: master
 
 services: 
   zookeeper:
