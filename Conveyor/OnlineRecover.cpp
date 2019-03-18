@@ -53,7 +53,7 @@ uint64_t OnlineRecover::getOffset()
     int64_t high = -1;
     while(consumer->query_watermark_offsets(topic, 0, &low, &high, 10000) != RdKafka::ERR_NO_ERROR && high >=0)
     {
-        cout << "low:" << low << " high:" << high << endl;
+        // cout << "low:" << low << " high:" << high << endl;
     }
     cout << "low:" << low << " high:" << high << endl;
     
@@ -61,7 +61,7 @@ uint64_t OnlineRecover::getOffset()
     {
         auto msg = consumer->consume(1000);
         delete msg;
-        consumer->assignment(partitions);
+        consumer->position(partitions);
     }
     // consumer->assignment(partitions);
     int expectMsgNum = 0;
